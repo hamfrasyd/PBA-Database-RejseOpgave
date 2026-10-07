@@ -16,11 +16,23 @@
 */
 
 -- ------------------------------------------------------------
--- Trin 1.A: Opret database og tabeller
+-- Trin 1.A: Opret databasen, hvis den ikke allerede findes
 
-IF DB_ID(N'TravelDb') IS NULL
+USE [master];
+GO
+
+IF NOT EXISTS (
+    SELECT 1
+    FROM sys.databases
+    WHERE name = N'TravelDb'
+)
 BEGIN
-    EXEC(N'CREATE DATABASE [TravelDb]');
+    PRINT 'TravelDb findes ikke. Opretter databasen...';
+    CREATE DATABASE [TravelDb];
+END
+ELSE
+BEGIN
+    PRINT 'TravelDb findes allerede. Fortsætter...';
 END;
 GO
 

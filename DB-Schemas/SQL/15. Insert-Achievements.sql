@@ -40,8 +40,6 @@ BEGIN TRY
         WHERE parent_object_id=OBJECT_ID(N'dbo.Achievement')
           AND name=N'UQ_Achievement_Name'
     )
-        ALTER TABLE dbo.Achievement
-        ADD CONSTRAINT UQ_Achievement_Name UNIQUE (Name);
 
     -- ------------------------------------------------------------
     -- Trin 3: Indsæt kun de navne, som endnu ikke findes.

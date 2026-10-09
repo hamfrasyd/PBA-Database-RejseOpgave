@@ -9,7 +9,6 @@ BEGIN TRY
         THROW 51001,N'Der findes dubletter af statusnavne. Afklar dem først.',1;
     IF NOT EXISTS (SELECT 1 FROM sys.key_constraints
         WHERE parent_object_id=OBJECT_ID(N'dbo.InvitationStatus') AND name=N'UQ_InvitationStatus_StatusName')
-        ALTER TABLE dbo.InvitationStatus ADD CONSTRAINT UQ_InvitationStatus_StatusName UNIQUE(StatusName);
     INSERT dbo.InvitationStatus(StatusName)
     SELECT d.Name FROM (VALUES(N'Pending'),(N'Accepted'),(N'Declined'),(N'Expired')) d(Name)
     WHERE NOT EXISTS (SELECT 1 FROM dbo.InvitationStatus s WHERE s.StatusName=d.Name);

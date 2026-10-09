@@ -3,16 +3,16 @@ using DbUp;
 using System.Diagnostics;
 using System.Reflection;
 
-//var connectionString = "Server=tcp:pba-travel-server.database.windows.net;Database=TravelDb;User ID = sa - travel; Password = rejseopgave123!;";
-var connectionString =
-    "Server=tcp:pba-travel-server.database.windows.net;" +
-    "Database=TravelDb;" +
-    "User ID=sa-travel;" +
-    "Password=rejseopgave123!;" +
-    "Encrypt=True;" +
-    "TrustServerCertificate=False;";
-//"Server = tcp:pba - travel - server.database.windows.net; Database = TravelDb; User ID = sa - travel; Password = rejseopgave123!; Encrypt = True;";
-//
+//var connectionString =
+//    "Server=tcp:pba-travel-server.database.windows.net;" +
+//    "Database=TravelDb;" +
+//    "User ID=sa-travel;" +
+//    "Password=rejseopgave123!;" +
+//    "Encrypt=True;" +
+//    "TrustServerCertificate=False;";
+
+var connectionString = "Server=localhost,1433;User Id=sa;Password=TravelDB!2026Local;TrustServerCertificate=True;";
+
 //opretter en opgraderingsinstans. til databaseændringer.
 var upgrader = DeployChanges.To
         .SqlDatabase(connectionString) //databaseændringerne skal ske på denne database 

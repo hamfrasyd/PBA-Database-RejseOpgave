@@ -16,3 +16,5 @@ services:
 
 volumes:
   travel-mssql-data:
+
+  ##Få en connectionstring ud fra denne fil - opret databasen i docker automatisk når programmet c# kører. 

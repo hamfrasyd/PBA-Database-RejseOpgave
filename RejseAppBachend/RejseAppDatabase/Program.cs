@@ -1,7 +1,8 @@
 ﻿//bruges til at finde SQL-scripts, der er injiceret i programmet
-using DbUp;
-using System.Diagnostics;
-using System.Reflection;
+using RejseAppDatabase.Services;
+
+const string databaseName = "TravelDb";
+const string password = "TravelDB!2026Local";
 
 //var connectionString =
 //    "Server=tcp:pba-travel-server.database.windows.net;" +
@@ -11,31 +12,60 @@ using System.Reflection;
 //    "Encrypt=True;" +
 //    "TrustServerCertificate=False;";
 
-var connectionString = "Server=localhost,1433;User Id=sa;Password=TravelDB!2026Local;TrustServerCertificate=True;";
+var masterConnectionString =
+    $"Server=localhost,1433;" +
+    $"Database=master;" +
+    $"User Id=sa;" +
+    $"Password={password};" +
+    $"TrustServerCertificate=True;" +
+    $"Encrypt=False;";
 
-//opretter en opgraderingsinstans. til databaseændringer.
-var upgrader = DeployChanges.To
-        .SqlDatabase(connectionString) //databaseændringerne skal ske på denne database 
-        .WithScriptsEmbeddedInAssembly(Assembly.GetExecutingAssembly()) // her finder den vores scripts (sql filer - som vi har lagt ind som embedded resources. 
-        .LogToConsole() //dbup skriver information ud i konsollen, så man kan se hvad der sker
-        .Build(); 
+var travelDbConnectionString =
+    $"Server=localhost,1433;" +
+    $"Database={databaseName};" +
+    $"User Id=sa;" +
+    $"Password={password};" +
+    $"TrustServerCertificate=True;" +
+    $"Encrypt=False;";
 
-var result = upgrader.PerformUpgrade(); //her undersøger dbup databaseændringerne og udfører dem, som mangler. 
+DockerService dockerService = new DockerService();
+DatabaseService databaseService = new DatabaseService();
+MigrationService migrationService = new MigrationService();
 
 
-//tester om opdateringen lykkedes. Hvis ikke, så vises fejlbeskeden i konsollen.
-if (!result.Successful)
+try
+{
+    Console.WriteLine("TravelDb setup" + "\n");
+
+    // 1. Start Dcker-container
+    Console.WriteLine("Starter SQL Server Docker-container...");
+    await dockerService.StartAsync();
+    Console.WriteLine("SQL Server Docker-container startet");
+
+    // 2. Vent på SQL Server
+    Console.WriteLine("Venter på SQL Server...");
+    await databaseService.WaitUntilReadyAsync(masterConnectionString);
+    Console.WriteLine("SQL Server er klar.");
+
+    // 3. Opret databasen hvis den ikke findes 
+    Console.WriteLine($"Kontrollerer database '{databaseName}'");
+    await databaseService.CreateDatabaseIfMissingAsync(masterConnectionString, databaseName);
+    Console.WriteLine($"Database '{databaseName}' er klar.");
+
+    // 4. Kør DbUp migrations
+    Console.WriteLine("Kører database-scripts...");
+    migrationService.Run(travelDbConnectionString);
+    Console.WriteLine("Databaseopdateringen blev gennemført!");
+    Console.ForegroundColor = ConsoleColor.Green;
+    Console.WriteLine("Database setup gennemført." + "\n" + "Server: localhost,1433" + "\n" + $"Database: {databaseName}" + "\n" + "User: sa");
+    Console.ResetColor();
+
+    return 0;
+}catch (Exception ex)
 {
     Console.ForegroundColor = ConsoleColor.Red;
-    Console.WriteLine("Databaseopdateringen fejlede:");
-    Console.WriteLine(result.Error);
+    Console.WriteLine("Der opstod en fejl:" + "\n" + ex.Message);
     Console.ResetColor();
 
     return -1;
 }
-
-Console.ForegroundColor = ConsoleColor.Green;
-Console.WriteLine("Databaseopdateringen blev gennemført!");
-Console.ResetColor();
-
-return 0;

@@ -4,14 +4,6 @@ using RejseAppDatabase.Services;
 const string databaseName = "TravelDb";
 const string password = "TravelDB!2026Local";
 
-//var connectionString =
-//    "Server=tcp:pba-travel-server.database.windows.net;" +
-//    "Database=TravelDb;" +
-//    "User ID=sa-travel;" +
-//    "Password=rejseopgave123!;" +
-//    "Encrypt=True;" +
-//    "TrustServerCertificate=False;";
-
 var masterConnectionString =
     $"Server=localhost,1433;" +
     $"Database=master;" +
@@ -37,7 +29,7 @@ try
 {
     Console.WriteLine("TravelDb setup" + "\n");
 
-    // 1. Start Dcker-container
+    //1.Start Dcker - container
     Console.WriteLine("Starter SQL Server Docker-container...");
     await dockerService.StartAsync();
     Console.WriteLine("SQL Server Docker-container startet");
@@ -54,7 +46,7 @@ try
 
     // 4. Kør DbUp migrations
     Console.WriteLine("Kører database-scripts...");
-    migrationService.Run(travelDbConnectionString);
+    migrationService.Run(travelDbConnectionString); //med docker : travelDbConnectionString
     Console.WriteLine("Databaseopdateringen blev gennemført!");
     Console.ForegroundColor = ConsoleColor.Green;
     Console.WriteLine("Database setup gennemført." + "\n" + "Server: localhost,1433" + "\n" + $"Database: {databaseName}" + "\n" + "User: sa");

@@ -11,13 +11,13 @@ END;
 DECLARE @JobId uniqueidentifier;
 DECLARE @ScheduleId int;
 
-EXEC dbo.sp_add_job
+EXEC msdb.dbo.sp_add_job
 @job_name = N'TravelDb - Expire invitations',
 @enabled = 1,
 @description = N'Markerer Pending-invitationer som Expired efter 14 dage.',
 @job_id = @JobId OUTPUT;
 
-EXEC dbo.sp_add_jobstep
+EXEC msdb.dbo.sp_add_jobstep
 @job_id = @JobId,
 @step_name = N'Udløb gamle invitationer',
 @subsystem = N'TSQL',
@@ -33,7 +33,7 @@ N''Antal udløbne invitationer: '',
 @Changed
 );';
 
-EXEC dbo.sp_add_schedule
+EXEC msdb.dbo.sp_add_schedule
 @schedule_name = N'TravelDb - Invitations daily 02:00',
 @enabled = 1,
 @freq_type = 4,
@@ -41,20 +41,9 @@ EXEC dbo.sp_add_schedule
 @active_start_time = 020000,
 @schedule_id = @ScheduleId OUTPUT;
 
-EXEC dbo.sp_attach_schedule
+EXEC msdb.dbo.sp_attach_schedule
 @job_id = @JobId,
 @schedule_id = @ScheduleId;
 
-EXEC dbo.sp_add_jobserver
+EXEC msdb.dbo.sp_add_jobserver
 @job_id = @JobId;
-
-
---Jobbet findes:
---USE msdb;
---GO
-
---SELECT
---name,
---enabled
---FROM dbo.sysjobs
---WHERE name = N'TravelDb - Expire invitations';

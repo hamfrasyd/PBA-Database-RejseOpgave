@@ -1,5 +1,5 @@
 ﻿//bruges til at finde SQL-scripts, der er injiceret i programmet
-using TravelDb.Setup.Services;
+using TravelDb.Setup;
 
 const string databaseName = "TravelDb";
 const string password = "TravelDB!2026Local";

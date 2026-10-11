@@ -1,7 +1,7 @@
 ﻿using DbUp;
 using System.Reflection;
 
-namespace TravelDb.Setup.Services;
+namespace TravelDb.Setup;
 
 /// <summary>
 /// MigrationService er ansvarlig for at køre database-migrationer ved hjælp af DbUp. 

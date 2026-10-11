@@ -1,6 +1,6 @@
 ﻿using System.Diagnostics;
 
-namespace TravelDb.Setup.Services;
+namespace TravelDb.Setup;
 
 /// <summary>
 /// Denne klasse har ansvaret for at starte en SQL Server Docker-container ved hjælp af Docker Compose.

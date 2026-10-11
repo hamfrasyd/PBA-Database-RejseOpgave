@@ -1,6 +1,6 @@
 ﻿using Microsoft.Data.SqlClient;
 
-namespace TravelDb.Setup.Services;
+namespace TravelDb.Setup;
 
 /// <summary>
 /// DatabaseService er ansvarlig for at håndtere database-relaterede operationer, såsom at vente på, at SQL Server er klar, og oprette databasen, hvis den mangler.

@@ -20,8 +20,8 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<EmbeddedResource Include="..\Scripts\**\*.sql">
-  			<Link>Scripts\%(RecursiveDir)%(Filename)%(Extension)</Link>
+		<EmbeddedResource Include="..\TravelDb.Scripts\**\*.sql">
+  			<Link>TravelDb.Scripts\%(RecursiveDir)%(Filename)%(Extension)</Link>
 		</EmbeddedResource>
 	</ItemGroup>
 </Project>

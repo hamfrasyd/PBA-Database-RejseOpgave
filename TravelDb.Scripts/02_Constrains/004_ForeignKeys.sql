@@ -18,10 +18,12 @@ ALTER TABLE dbo.TripStop
 ADD CONSTRAINT FK_TripStop_City_CityId
 FOREIGN KEY (City_Id) REFERENCES dbo.City(Id);
 
+-- Sletter alle stop på rejsen, når selve rejsen slettes.
 ALTER TABLE dbo.TripStop
 ADD CONSTRAINT FK_TripStop_Trip_TripId
 FOREIGN KEY (Trip_Id) REFERENCES dbo.Trip(Id) ON DELETE CASCADE;
 
+-- Sletter rejsens planlagte aktiviteter, når rejsen slettes.
 ALTER TABLE dbo.TripActivity
 ADD CONSTRAINT FK_TripActivity_Trip_TripId
 FOREIGN KEY (Trip_Id) REFERENCES dbo.Trip(Id) ON DELETE CASCADE;
@@ -30,14 +32,17 @@ ALTER TABLE dbo.TripActivity
 ADD CONSTRAINT FK_TripActivity_Activity_ActivityId
 FOREIGN KEY (Activity_Id) REFERENCES dbo.Activity(Id);
 
+-- Fjerner brugeren fra alle rejser, når brugerkontoen slettes
 ALTER TABLE dbo.TripParticipant
 ADD CONSTRAINT FK_TripParticipant_User_UserId
 FOREIGN KEY (User_Id) REFERENCES dbo.[User](Id) ON DELETE CASCADE;
 
+-- Fjerner alle deltagere fra rejsen, når rejsen slettes
 ALTER TABLE dbo.TripParticipant
 ADD CONSTRAINT FK_TripParticipant_Trip_TripId
 FOREIGN KEY (Trip_Id) REFERENCES dbo.Trip(Id) ON DELETE CASCADE;
 
+-- Sletter anmeldelser af rejsen, når rejsen slettes.
 ALTER TABLE dbo.Review
 ADD CONSTRAINT FK_Review_Trip_TripId
 FOREIGN KEY (Trip_Id) REFERENCES dbo.Trip(Id) ON DELETE CASCADE;
@@ -58,14 +63,17 @@ ALTER TABLE dbo.Friendship
 ADD CONSTRAINT FK_Friendship_User_UserBId
 FOREIGN KEY (UserB_Id) REFERENCES dbo.[User](Id);
 
+-- Sletter brugerens optjente achievements, når brugerkontoen slettes.
 ALTER TABLE dbo.EarnedAchievement
 ADD CONSTRAINT FK_EarnedAchievement_User_UserId
 FOREIGN KEY (User_Id) REFERENCES dbo.[User](Id) ON DELETE CASCADE;
 
+-- Fjerner achievementen hos alle brugere, når achievement-definitionen slettes.
 ALTER TABLE dbo.EarnedAchievement
 ADD CONSTRAINT FK_EarnedAchievement_Achievement_AchievementId
 FOREIGN KEY (Achievement_Id) REFERENCES dbo.Achievement(Id) ON DELETE CASCADE;
 
+-- Sletter invitationer til rejsen, når rejsen slettes.
 ALTER TABLE dbo.Invite
 ADD CONSTRAINT FK_Invite_Trip_TripId
 FOREIGN KEY (Trip_Id) REFERENCES dbo.Trip(Id) ON DELETE CASCADE;

@@ -32,17 +32,8 @@ BEGIN TRY
     UPDATE dbo.Achievement
     SET Name=N'Første rejse'
     WHERE Name=N'First completed trip';
-
     -- ------------------------------------------------------------
-    -- Trin 2: Tilføj UNIQUE på Name, hvis denne constraint ikke allerede findes.
-    IF NOT EXISTS (
-        SELECT 1 FROM sys.key_constraints
-        WHERE parent_object_id=OBJECT_ID(N'dbo.Achievement')
-        AND name=N'UQ_Achievement_Name'
-    )
-
-    -- ------------------------------------------------------------
-    -- Trin 3: Indsæt kun de navne, som endnu ikke findes.
+    -- Trin 2: Indsæt kun de navne, som endnu ikke findes.
     INSERT dbo.Achievement(Name,Description)
     SELECT d.Name,d.Description
     FROM (VALUES

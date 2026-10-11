@@ -120,11 +120,11 @@ BEGIN TRY
         SELECT @CityId = CityId FROM @Geo WHERE Seq = ((@i - 1) % 20) + 1;
         INSERT dbo.[User] (FirstName,LastName,Birthday,IsPrivate,CreatedAt,City_Id)
         SELECT f.Name,l.Name,DATEADD(DAY, -(@i * 73), CONVERT(date,'2001-09-15')),
-               CASE WHEN @i % 4 = 0 THEN 1 ELSE 0 END,
-               DATEADD(DAY,-(180 + @i),@Now),@CityId
+            CASE WHEN @i % 4 = 0 THEN 1 ELSE 0 END,
+            DATEADD(DAY,-(180 + @i),@Now),@CityId
         FROM @First f CROSS JOIN @Last l
         WHERE f.N = ((@i - 1) % 20) + 1
-          AND l.N = (((@i - 1) / 20 + (@i - 1) % 20) % 20) + 1;
+        AND l.N = (((@i - 1) / 20 + (@i - 1) % 20) % 20) + 1;
         SET @Id = CONVERT(int,SCOPE_IDENTITY());
         INSERT @Users VALUES (@i,@Id);
         SET @i += 1;
@@ -218,7 +218,7 @@ BEGIN TRY
     INSERT dbo.Activity (City_Id,Name,Description)
     OUTPUT inserted.Id,inserted.City_Id INTO @Activities
     SELECT g.CityId,
-           CONCAT(g.CityName,N' ',v.Label,N' [',@Run,N']'),v.Description
+        CONCAT(g.CityName,N' ',v.Label,N' [',@Run,N']'),v.Description
     FROM @Geo g CROSS JOIN (VALUES
         (N'walking tour',N'A guided walk through historic streets and local landmarks.'),
         (N'food tasting',N'A small-group introduction to regional food at local venues.')
@@ -279,8 +279,8 @@ BEGIN TRY
     -- Trin 8.A: Kontrollér antal og relationer
     -- Afbryd kørslen og rul tilbage, hvis kontrollen finder en fejl.
     IF (SELECT COUNT(*) FROM @Users) <> 100 OR (SELECT COUNT(*) FROM @Trips) <> 100
-       OR (SELECT COUNT(*) FROM @Groups) <> 25 OR (SELECT COUNT(*) FROM @PostIds) <> 50
-       OR (SELECT COUNT(*) FROM @ReviewIds) <> 50
+    OR (SELECT COUNT(*) FROM @Groups) <> 25 OR (SELECT COUNT(*) FROM @PostIds) <> 50
+    OR (SELECT COUNT(*) FROM @ReviewIds) <> 50
         THROW 50001,'Fixture counts do not match the requested counts.',1;
     IF (SELECT COUNT(*) FROM dbo.Friendship f
         JOIN @Users a ON a.Id=f.UserA_Id JOIN @Users b ON b.Id=f.UserB_Id) <> 100
@@ -291,7 +291,7 @@ BEGIN TRY
         THROW 50003,'A fixture trip is missing a stop or participant.',1;
     IF EXISTS (SELECT 1 FROM @ReviewIds r JOIN dbo.Review rv ON rv.Id=r.Id
         WHERE NOT EXISTS (SELECT 1 FROM dbo.TripParticipant p
-                          WHERE p.Trip_Id=rv.Trip_Id AND p.User_Id=rv.User_Id))
+                        WHERE p.Trip_Id=rv.Trip_Id AND p.User_Id=rv.User_Id))
         THROW 50004,'A reviewer is not a trip participant.',1;
 
     -- ------------------------------------------------------------

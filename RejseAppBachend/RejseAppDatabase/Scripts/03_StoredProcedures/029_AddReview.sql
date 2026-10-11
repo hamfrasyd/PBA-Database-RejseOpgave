@@ -34,22 +34,22 @@ BEGIN
     IF NOT EXISTS (SELECT 1 FROM dbo.TripParticipant WHERE Trip_Id = @TripId AND User_Id = @UserId)
     BEGIN
         THROW 51003,
-              N'Brugeren skal være deltager på rejsen for at anmelde den.', 1;
+            N'Brugeren skal være deltager på rejsen for at anmelde den.', 1;
     END;
 
     -- Kontrollér at rejsen er gennemført
     IF NOT EXISTS (SELECT 1 FROM dbo.Trip WHERE Id = @TripId AND IsCompleted = 1)
     BEGIN
         THROW 51004,
-              N'Rejsen skal være gennemført før den kan anmeldes.', 1;
+            N'Rejsen skal være gennemført før den kan anmeldes.', 1;
     END;
 
     -- Kontrollér rating
     IF @Stars < 1 OR @Stars > 6
     BEGIN
         THROW 51005,
-              N'Antal stjerner skal være mellem 1 og 6.',
-              1;
+            N'Antal stjerner skal være mellem 1 og 6.',
+            1;
     END;
 
     INSERT INTO dbo.Review (Trip_Id, User_Id, Content, Stars)

@@ -31,7 +31,7 @@ BEGIN
     UPDATE dbo.Invite
     SET InvitationStatus_Id = @ExpiredId
     WHERE InvitationStatus_Id = @PendingId
-      AND SendDate <= DATEADD(DAY, -14, @AsOfUtc);
+    AND SendDate <= DATEADD(DAY, -14, @AsOfUtc);
 
     SET @ExpiredCount = @@ROWCOUNT;
 END;

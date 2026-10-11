@@ -1,75 +1,56 @@
 ﻿ALTER TABLE dbo.Continent
 ADD CONSTRAINT PK_Continent PRIMARY KEY (Id);
 
-
 ALTER TABLE dbo.Country
 ADD CONSTRAINT PK_Country PRIMARY KEY (Id);
-
 
 ALTER TABLE dbo.City
 ADD CONSTRAINT PK_City PRIMARY KEY (Id);
 
-
 ALTER TABLE dbo.Activity
 ADD CONSTRAINT PK_Activity PRIMARY KEY (Id);
-
 
 ALTER TABLE dbo.Trip
 ADD CONSTRAINT PK_Trip PRIMARY KEY (Id);
 
-
 ALTER TABLE dbo.TripStop
 ADD CONSTRAINT PK_TripStop PRIMARY KEY (City_Id, Trip_Id);
-
 
 ALTER TABLE dbo.TripActivity
 ADD CONSTRAINT PK_TripActivity PRIMARY KEY (Trip_Id, Activity_Id);
 
-
 ALTER TABLE dbo.[User]
 ADD CONSTRAINT PK_User PRIMARY KEY (Id);
-
 
 ALTER TABLE dbo.TripParticipant
 ADD CONSTRAINT PK_TripParticipant PRIMARY KEY (User_Id, Trip_Id);
 
-
 ALTER TABLE dbo.Review
 ADD CONSTRAINT PK_Review PRIMARY KEY (Id);
-
 
 ALTER TABLE dbo.Post
 ADD CONSTRAINT PK_Post PRIMARY KEY (Id);
 
-
 ALTER TABLE dbo.Friendship
 ADD CONSTRAINT PK_Friendship PRIMARY KEY (Id);
-
 
 ALTER TABLE dbo.Achievement
 ADD CONSTRAINT PK_Achievement PRIMARY KEY (Id);
 
-
 ALTER TABLE dbo.EarnedAchievement
 ADD CONSTRAINT PK_EarnedAchievement PRIMARY KEY (User_Id, Achievement_Id);
-
 
 ALTER TABLE dbo.InvitationStatus
 ADD CONSTRAINT PK_InvitationStatus PRIMARY KEY (Id);
 
-
 ALTER TABLE dbo.Invite
 ADD CONSTRAINT PK_Invite PRIMARY KEY (Id);
-
 
 ALTER TABLE dbo.[Group]
 ADD CONSTRAINT PK_Group PRIMARY KEY (Id);
 
-
 ALTER TABLE dbo.GroupMembership
 ADD CONSTRAINT PK_GroupMembership PRIMARY KEY (User_Id, Group_Id);
 
-
 ALTER TABLE dbo.GroupTrip
 ADD CONSTRAINT PK_GroupTrip PRIMARY KEY (Trip_Id, Group_Id);
-

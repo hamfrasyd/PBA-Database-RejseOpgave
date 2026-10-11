@@ -1,4 +1,4 @@
-/*
+﻿/*
     Opbygning:
     1. Kontrollér eksisterende navne
     2. Gør achievement-navne unikke
@@ -26,7 +26,7 @@ BEGIN TRY
         THROW 50100,N'Der findes achievement-navne flere gange. Afklar dubletterne først.',1;
 
     IF EXISTS (SELECT 1 FROM dbo.Achievement WHERE Name=N'First completed trip')
-       AND EXISTS (SELECT 1 FROM dbo.Achievement WHERE Name=N'Første rejse')
+    AND EXISTS (SELECT 1 FROM dbo.Achievement WHERE Name=N'Første rejse')
         THROW 50101,N'Både First completed trip og Første rejse findes. Afklar hvilken række der skal bruges.',1;
 
     UPDATE dbo.Achievement
@@ -38,7 +38,7 @@ BEGIN TRY
     IF NOT EXISTS (
         SELECT 1 FROM sys.key_constraints
         WHERE parent_object_id=OBJECT_ID(N'dbo.Achievement')
-          AND name=N'UQ_Achievement_Name'
+        AND name=N'UQ_Achievement_Name'
     )
 
     -- ------------------------------------------------------------

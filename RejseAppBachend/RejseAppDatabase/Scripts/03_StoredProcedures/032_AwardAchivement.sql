@@ -33,8 +33,8 @@ BEGIN
     ) <> 5
     BEGIN
         THROW 50102,
-              N'En achievement-definition mangler eller er omdøbt.',
-              1;
+            N'En achievement-definition mangler eller er omdøbt.',
+            1;
     END;
 
     DECLARE @OwnTransaction BIT =
@@ -157,7 +157,7 @@ BEGIN
             FROM dbo.EarnedAchievement existing
                 WITH (UPDLOCK, HOLDLOCK)
             WHERE existing.User_Id = e.User_Id
-              AND existing.Achievement_Id = a.Id
+            AND existing.Achievement_Id = a.Id
         );
 
         IF @OwnTransaction = 1
@@ -167,7 +167,7 @@ BEGIN
     BEGIN CATCH
 
         IF @OwnTransaction = 1
-           AND XACT_STATE() <> 0
+        AND XACT_STATE() <> 0
             ROLLBACK;
 
         THROW;

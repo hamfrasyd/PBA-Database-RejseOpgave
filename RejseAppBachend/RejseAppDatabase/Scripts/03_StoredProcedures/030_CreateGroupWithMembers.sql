@@ -24,16 +24,16 @@ BEGIN
         IF @Name IS NULL OR LTRIM(RTRIM(@Name)) = N''
         BEGIN
             THROW 51010,
-                  N'Gruppen skal have et navn.',
-                  1;
+                N'Gruppen skal have et navn.',
+                1;
         END;
 
         -- Kontrollér at MemberIds er gyldig JSON
         IF ISJSON(@MemberIds) <> 1
         BEGIN
             THROW 51011,
-                  N'MemberIds skal være et gyldigt JSON-array.',
-                  1;
+                N'MemberIds skal være et gyldigt JSON-array.',
+                1;
         END;
 
         -- Gem medlemmerne midlertidigt
@@ -48,8 +48,8 @@ BEGIN
         IF NOT EXISTS (SELECT 1 FROM @Members)
         BEGIN
             THROW 51012,
-                  N'Gruppen skal have mindst ét medlem.',
-                  1;
+                N'Gruppen skal have mindst ét medlem.',
+                1;
         END;
 
         -- Kontrollér at alle brugere findes
@@ -64,8 +64,8 @@ BEGIN
         )
         BEGIN
             THROW 51013,
-                  N'En eller flere brugere findes ikke.',
-                  1;
+                N'En eller flere brugere findes ikke.',
+                1;
         END;
 
         -- Opret gruppen

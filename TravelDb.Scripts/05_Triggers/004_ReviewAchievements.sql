@@ -1,4 +1,7 @@
-﻿CREATE OR ALTER TRIGGER dbo.trg_Review_Achievements
+﻿-- Aktiveres når en anmeldelse oprettes eller opdateres.
+-- Kontrollerer om anmeldelsens forfatter har opnået nye achievements.
+
+CREATE OR ALTER TRIGGER dbo.trg_Review_Achievements
 ON dbo.Review
 AFTER INSERT, UPDATE
 AS

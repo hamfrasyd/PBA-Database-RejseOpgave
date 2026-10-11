@@ -1,4 +1,7 @@
-﻿CREATE OR ALTER PROCEDURE dbo.ExpireInvitations
+﻿-- Ændrer invitationer fra Pending til Expired, når de er mindst 14 dage gamle.
+-- Bruger UTC som standard og returnerer antallet af opdaterede invitationer via en outputparameter.
+
+CREATE OR ALTER PROCEDURE dbo.ExpireInvitations
     @AsOfUtc datetime2 = NULL,
     @ExpiredCount int = NULL OUTPUT
 AS
@@ -35,4 +38,3 @@ BEGIN
 
     SET @ExpiredCount = @@ROWCOUNT;
 END;
-GO

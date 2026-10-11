@@ -1,18 +1,37 @@
-﻿-- 4. Åbne invitationer
+﻿-- Viser afventende invitationer med afsender, modtager og udløbsdato.
+-- Test: SELECT * FROM dbo.vw_PendingInvitations;
+
 CREATE OR ALTER VIEW dbo.vw_PendingInvitations
 AS
 SELECT
-    i.Id                                    AS InviteId,
-    i.Trip_Id                               AS TripId,
-    t.StartDate                             AS TripStartDate,
-    s.FirstName + N' ' + s.LastName         AS SenderName,
-    r.FirstName + N' ' + r.LastName         AS ReceiverName,
-    i.SendDate,
-    DATEADD(DAY, 14, i.SendDate)            AS ExpiresAt,
-    DATEDIFF(DAY, SYSUTCDATETIME(), DATEADD(DAY, 14, i.SendDate)) AS DaysUntilExpiry
-FROM dbo.Invite i
-JOIN dbo.InvitationStatus st ON st.Id = i.InvitationStatus_Id
-JOIN dbo.Trip t              ON t.Id  = i.Trip_Id
-JOIN dbo.[User] s            ON s.Id  = i.Sender_Id
-JOIN dbo.[User] r            ON r.Id  = i.Receiver_Id
-WHERE st.StatusName = N'Pending';
+    Invitation.Id AS InviteId,
+    Invitation.Trip_Id AS TripId,
+    Trip.StartDate AS TripStartDate,
+
+    Sender.FirstName + N' ' + Sender.LastName AS SenderName,
+    Receiver.FirstName + N' ' + Receiver.LastName AS ReceiverName,
+
+    Invitation.SendDate,
+    DATEADD(DAY, 14, Invitation.SendDate) AS ExpiresAt,
+
+    DATEDIFF(
+        DAY,
+        SYSUTCDATETIME(),
+        DATEADD(DAY, 14, Invitation.SendDate)
+    ) AS DaysUntilExpiry
+
+FROM dbo.Invite AS Invitation
+
+JOIN dbo.InvitationStatus AS InvitationStatus
+    ON InvitationStatus.Id = Invitation.InvitationStatus_Id
+
+JOIN dbo.Trip AS Trip
+    ON Trip.Id = Invitation.Trip_Id
+
+JOIN dbo.[User] AS Sender
+    ON Sender.Id = Invitation.Sender_Id
+
+JOIN dbo.[User] AS Receiver
+    ON Receiver.Id = Invitation.Receiver_Id
+
+WHERE InvitationStatus.StatusName = N'Pending';

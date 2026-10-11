@@ -1,4 +1,7 @@
-﻿CREATE OR ALTER TRIGGER dbo.trg_Friendship_Achievements
+﻿-- Aktiveres når et venskab oprettes eller opdateres.
+-- Kontrollerer achievements for begge brugere i venskabet.
+
+CREATE OR ALTER TRIGGER dbo.trg_Friendship_Achievements
 ON dbo.Friendship
 AFTER INSERT, UPDATE
 AS
@@ -19,14 +22,3 @@ FROM inserted;
 IF EXISTS (SELECT 1 FROM @Users)
 EXEC dbo.AwardAchievements @Users = @Users;
 END;
-
-/*
-Se alle triggerne i databasen:
-SELECT
-name,
-parent_class_desc,
-create_date,
-modify_date
-FROM sys.triggers
-ORDER BY name;
-*/

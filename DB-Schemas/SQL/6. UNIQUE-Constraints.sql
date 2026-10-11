@@ -12,8 +12,10 @@ GO
 ALTER TABLE dbo.InvitationStatus
 ADD CONSTRAINT UQ_InvitationStatus_StatusName
 UNIQUE(StatusName);
+GO
 
 -- Unik Achievement navn på Achievement tabellen
 ALTER TABLE dbo.Achievement
 ADD CONSTRAINT UQ_Achievement_Name
 UNIQUE (Name);
+GO

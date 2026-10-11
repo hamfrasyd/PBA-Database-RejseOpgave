@@ -29,18 +29,21 @@ CREATE TABLE dbo.Continent (
 Id INT IDENTITY(1,1),
 Name NVARCHAR(64)
 );
+GO
 
 CREATE TABLE dbo.Country (
     Id INT IDENTITY(1,1),
     Continent_Id INT,
     Name NVARCHAR(64)
 );
+GO
 
 CREATE TABLE dbo.City (
     Id INT IDENTITY(1,1),
     Country_Id INT,
     Name NVARCHAR(64)
 );
+GO
 
 CREATE TABLE dbo.Activity (
     Id INT IDENTITY(1,1),
@@ -48,6 +51,7 @@ CREATE TABLE dbo.Activity (
     Name NVARCHAR(128),
     Description NVARCHAR(1024)
 );
+GO
 
 CREATE TABLE dbo.Trip (
     Id INT IDENTITY(1,1),
@@ -57,16 +61,19 @@ CREATE TABLE dbo.Trip (
     ExperienceNotes NVARCHAR(1024),
     PlanNotes NVARCHAR(1024)
 );
+GO
 
 CREATE TABLE dbo.TripStop (
     City_Id INT,
     Trip_Id INT
 );
+GO
 
 CREATE TABLE dbo.TripActivity (
     Trip_Id INT,
     Activity_Id INT
 );
+GO
 
 CREATE TABLE dbo.[User] (
     Id INT IDENTITY(1,1),
@@ -77,11 +84,13 @@ CREATE TABLE dbo.[User] (
     CreatedAt DATETIME2,
     City_Id INT
 );
+GO
 
 CREATE TABLE dbo.TripParticipant (
     User_Id INT,
     Trip_Id INT
 );
+GO
 
 CREATE TABLE dbo.Review (
     Id INT IDENTITY(1,1),
@@ -90,12 +99,14 @@ CREATE TABLE dbo.Review (
     Content NVARCHAR(1024),
     Stars TINYINT
 );
+GO
 
 CREATE TABLE dbo.Post (
     Id INT IDENTITY(1,1),
     User_Id INT,
     Content NVARCHAR(1024)
 );
+GO
 
 CREATE TABLE dbo.Friendship (
     Id INT IDENTITY(1,1),
@@ -103,23 +114,27 @@ CREATE TABLE dbo.Friendship (
     UserB_Id INT,
     StartDate DATETIME2
 );
+GO
 
 CREATE TABLE dbo.Achievement (
     Id INT IDENTITY(1,1),
     Name NVARCHAR(128),
     Description NVARCHAR(1024)
 );
+GO
 
 CREATE TABLE dbo.EarnedAchievement (
     User_Id INT,
     Achievement_Id INT,
     EarnedAt DATETIME2
 );
+GO
 
 CREATE TABLE dbo.InvitationStatus (
     Id INT IDENTITY(1,1),
     StatusName NVARCHAR(64)
 );
+GO
 
 CREATE TABLE dbo.Invite (
     Id INT IDENTITY(1,1),
@@ -129,22 +144,26 @@ CREATE TABLE dbo.Invite (
     InvitationStatus_Id INT,
     SendDate DATETIME2
 );
+GO
 
 CREATE TABLE dbo.[Group] (
 Id INT IDENTITY(1,1),
 Name NVARCHAR(64),
 Description NVARCHAR(64)
 );
+GO
 
 CREATE TABLE dbo.GroupMembership (
     User_Id INT,
     Group_Id INT
 );
+GO
 
 CREATE TABLE dbo.GroupTrip (
     Trip_Id INT,
     Group_Id INT
 );
+GO
 
 -- Definerer en liste af bruger-ID'er, som kan sendes til achievement-proceduren.
 IF TYPE_ID(N'dbo.AchievementUserIds') IS NULL
@@ -155,6 +174,7 @@ BEGIN
         );
     ');
 END;
+GO
 
 -- 02_Constrains
 
@@ -163,23 +183,30 @@ END;
 -- OBS. IDENTITY Id-kolonner er allerede NOT NULL i SQL Server.
 
 ALTER TABLE dbo.Continent ALTER COLUMN Name NVARCHAR(64) NOT NULL;
+GO
 
 ALTER TABLE dbo.Country ALTER COLUMN Continent_Id INT NOT NULL;
 ALTER TABLE dbo.Country ALTER COLUMN Name NVARCHAR(64) NOT NULL;
+GO
 
 ALTER TABLE dbo.City ALTER COLUMN Country_Id INT NOT NULL;
 ALTER TABLE dbo.City ALTER COLUMN Name NVARCHAR(64) NOT NULL;
+GO
 
 ALTER TABLE dbo.Activity ALTER COLUMN City_Id INT NOT NULL;
 ALTER TABLE dbo.Activity ALTER COLUMN Name NVARCHAR(128) NOT NULL;
+GO
 
 ALTER TABLE dbo.Trip ALTER COLUMN IsCompleted BIT NOT NULL;
+GO
 
 ALTER TABLE dbo.TripStop ALTER COLUMN City_Id INT NOT NULL;
 ALTER TABLE dbo.TripStop ALTER COLUMN Trip_Id INT NOT NULL;
+GO
 
 ALTER TABLE dbo.TripActivity ALTER COLUMN Trip_Id INT NOT NULL;
 ALTER TABLE dbo.TripActivity ALTER COLUMN Activity_Id INT NOT NULL;
+GO
 
 ALTER TABLE dbo.[User] ALTER COLUMN FirstName NVARCHAR(128) NOT NULL;
 ALTER TABLE dbo.[User] ALTER COLUMN LastName NVARCHAR(128) NOT NULL;
@@ -187,55 +214,70 @@ ALTER TABLE dbo.[User] ALTER COLUMN Birthday DATE NOT NULL;
 ALTER TABLE dbo.[User] ALTER COLUMN IsPrivate BIT NOT NULL;
 ALTER TABLE dbo.[User] ALTER COLUMN CreatedAt DATETIME2 NOT NULL;
 ALTER TABLE dbo.[User] ALTER COLUMN City_Id INT NOT NULL;
+GO
 
 ALTER TABLE dbo.TripParticipant ALTER COLUMN User_Id INT NOT NULL;
 ALTER TABLE dbo.TripParticipant ALTER COLUMN Trip_Id INT NOT NULL;
+GO
 
 ALTER TABLE dbo.Review ALTER COLUMN Trip_Id INT NOT NULL;
 ALTER TABLE dbo.Review ALTER COLUMN User_Id INT NOT NULL;
 ALTER TABLE dbo.Review ALTER COLUMN Content NVARCHAR(1024) NOT NULL;
 ALTER TABLE dbo.Review ALTER COLUMN Stars TINYINT NOT NULL;
+GO
 
 ALTER TABLE dbo.Post ALTER COLUMN User_Id INT NOT NULL;
 ALTER TABLE dbo.Post ALTER COLUMN Content NVARCHAR(1024) NOT NULL;
+GO
 
 ALTER TABLE dbo.Friendship ALTER COLUMN UserA_Id INT NOT NULL;
 ALTER TABLE dbo.Friendship ALTER COLUMN UserB_Id INT NOT NULL;
 ALTER TABLE dbo.Friendship ALTER COLUMN StartDate DATETIME2 NOT NULL;
+GO
 
 ALTER TABLE dbo.Achievement ALTER COLUMN Name NVARCHAR(128) NOT NULL;
 ALTER TABLE dbo.Achievement ALTER COLUMN Description NVARCHAR(1024) NOT NULL;
+GO
 
 ALTER TABLE dbo.EarnedAchievement ALTER COLUMN User_Id INT NOT NULL;
 ALTER TABLE dbo.EarnedAchievement ALTER COLUMN Achievement_Id INT NOT NULL;
 ALTER TABLE dbo.EarnedAchievement ALTER COLUMN EarnedAt DATETIME2 NOT NULL;
+GO
 
 ALTER TABLE dbo.InvitationStatus ALTER COLUMN StatusName NVARCHAR(64) NOT NULL;
+GO
 
 ALTER TABLE dbo.Invite ALTER COLUMN Trip_Id INT NOT NULL;
 ALTER TABLE dbo.Invite ALTER COLUMN Receiver_Id INT NOT NULL;
 ALTER TABLE dbo.Invite ALTER COLUMN Sender_Id INT NOT NULL;
 ALTER TABLE dbo.Invite ALTER COLUMN InvitationStatus_Id INT NOT NULL;
 ALTER TABLE dbo.Invite ALTER COLUMN SendDate DATETIME2 NOT NULL;
+GO
 
 ALTER TABLE dbo.[Group] ALTER COLUMN Name NVARCHAR(64) NOT NULL;
+GO
 
 ALTER TABLE dbo.GroupMembership ALTER COLUMN User_Id INT NOT NULL;
 ALTER TABLE dbo.GroupMembership ALTER COLUMN Group_Id INT NOT NULL;
+GO
 
 ALTER TABLE dbo.GroupTrip ALTER COLUMN Trip_Id INT NOT NULL;
 ALTER TABLE dbo.GroupTrip ALTER COLUMN Group_Id INT NOT NULL;
+GO
 
 
 -- Trin B: Sæt felter der må være NULL
 ALTER TABLE dbo.Activity ALTER COLUMN Description NVARCHAR(1024) NULL;
+GO
 
 ALTER TABLE dbo.Trip ALTER COLUMN StartDate DATETIME2 NULL;
 ALTER TABLE dbo.Trip ALTER COLUMN EndDate DATETIME2 NULL;
 ALTER TABLE dbo.Trip ALTER COLUMN ExperienceNotes NVARCHAR(1024) NULL;
 ALTER TABLE dbo.Trip ALTER COLUMN PlanNotes NVARCHAR(1024) NULL;
+GO
 
 ALTER TABLE dbo.[Group] ALTER COLUMN Description NVARCHAR(64) NULL;
+GO
 
 -- Computed
 -- Et venskab har ingen retning. UserA_Id og UserB_Id gemmer de valgte brugere,
@@ -250,6 +292,7 @@ ADD UserLow_Id AS
         ELSE UserB_Id
     END
 ) PERSISTED;
+GO
 
 ALTER TABLE dbo.Friendship
 ADD UserHigh_Id AS
@@ -259,173 +302,218 @@ ADD UserHigh_Id AS
         ELSE UserB_Id
     END
 ) PERSISTED;
+GO
 
 -- Primary Keys
 ALTER TABLE dbo.Continent
 ADD CONSTRAINT PK_Continent PRIMARY KEY (Id);
+GO
 
 ALTER TABLE dbo.Country
 ADD CONSTRAINT PK_Country PRIMARY KEY (Id);
+GO
 
 ALTER TABLE dbo.City
 ADD CONSTRAINT PK_City PRIMARY KEY (Id);
+GO
 
 ALTER TABLE dbo.Activity
 ADD CONSTRAINT PK_Activity PRIMARY KEY (Id);
+GO
 
 ALTER TABLE dbo.Trip
 ADD CONSTRAINT PK_Trip PRIMARY KEY (Id);
+GO
 
 ALTER TABLE dbo.TripStop
 ADD CONSTRAINT PK_TripStop PRIMARY KEY (City_Id, Trip_Id);
+GO
 
 ALTER TABLE dbo.TripActivity
 ADD CONSTRAINT PK_TripActivity PRIMARY KEY (Trip_Id, Activity_Id);
+GO
 
 ALTER TABLE dbo.[User]
 ADD CONSTRAINT PK_User PRIMARY KEY (Id);
+GO
 
 ALTER TABLE dbo.TripParticipant
 ADD CONSTRAINT PK_TripParticipant PRIMARY KEY (User_Id, Trip_Id);
+GO
 
 ALTER TABLE dbo.Review
 ADD CONSTRAINT PK_Review PRIMARY KEY (Id);
+GO
 
 ALTER TABLE dbo.Post
 ADD CONSTRAINT PK_Post PRIMARY KEY (Id);
+GO
 
 ALTER TABLE dbo.Friendship
 ADD CONSTRAINT PK_Friendship PRIMARY KEY (Id);
+GO
 
 ALTER TABLE dbo.Achievement
 ADD CONSTRAINT PK_Achievement PRIMARY KEY (Id);
+GO
 
 ALTER TABLE dbo.EarnedAchievement
 ADD CONSTRAINT PK_EarnedAchievement PRIMARY KEY (User_Id, Achievement_Id);
+GO
 
 ALTER TABLE dbo.InvitationStatus
 ADD CONSTRAINT PK_InvitationStatus PRIMARY KEY (Id);
+GO
 
 ALTER TABLE dbo.Invite
 ADD CONSTRAINT PK_Invite PRIMARY KEY (Id);
+GO
 
 ALTER TABLE dbo.[Group]
 ADD CONSTRAINT PK_Group PRIMARY KEY (Id);
+GO
 
 ALTER TABLE dbo.GroupMembership
 ADD CONSTRAINT PK_GroupMembership PRIMARY KEY (User_Id, Group_Id);
+GO
 
 ALTER TABLE dbo.GroupTrip
 ADD CONSTRAINT PK_GroupTrip PRIMARY KEY (Trip_Id, Group_Id);
+GO
 
 -- Foregin Keys
 ALTER TABLE dbo.Country
 ADD CONSTRAINT FK_Country_Continent_ContinentId
 FOREIGN KEY (Continent_Id) REFERENCES dbo.Continent(Id);
+GO
 
 ALTER TABLE dbo.City
 ADD CONSTRAINT FK_City_Country_CountryId
 FOREIGN KEY (Country_Id) REFERENCES dbo.Country(Id);
+GO
 
 ALTER TABLE dbo.Activity
 ADD CONSTRAINT FK_Activity_City_CityId
 FOREIGN KEY (City_Id) REFERENCES dbo.City(Id);
+GO
 
 ALTER TABLE dbo.[User]
 ADD CONSTRAINT FK_User_City_CityId
 FOREIGN KEY (City_Id) REFERENCES dbo.City(Id);
+GO
 
 ALTER TABLE dbo.TripStop
 ADD CONSTRAINT FK_TripStop_City_CityId
 FOREIGN KEY (City_Id) REFERENCES dbo.City(Id);
+GO
 
 -- Sletter alle stop på rejsen, når selve rejsen slettes.
 ALTER TABLE dbo.TripStop
 ADD CONSTRAINT FK_TripStop_Trip_TripId
 FOREIGN KEY (Trip_Id) REFERENCES dbo.Trip(Id) ON DELETE CASCADE;
+GO
 
 -- Sletter rejsens planlagte aktiviteter, når rejsen slettes.
 ALTER TABLE dbo.TripActivity
 ADD CONSTRAINT FK_TripActivity_Trip_TripId
 FOREIGN KEY (Trip_Id) REFERENCES dbo.Trip(Id) ON DELETE CASCADE;
+GO
 
 ALTER TABLE dbo.TripActivity
 ADD CONSTRAINT FK_TripActivity_Activity_ActivityId
 FOREIGN KEY (Activity_Id) REFERENCES dbo.Activity(Id);
+GO
 
 -- Fjerner brugeren fra alle rejser, når brugerkontoen slettes
 ALTER TABLE dbo.TripParticipant
 ADD CONSTRAINT FK_TripParticipant_User_UserId
 FOREIGN KEY (User_Id) REFERENCES dbo.[User](Id) ON DELETE CASCADE;
+GO
 
 -- Fjerner alle deltagere fra rejsen, når rejsen slettes
 ALTER TABLE dbo.TripParticipant
 ADD CONSTRAINT FK_TripParticipant_Trip_TripId
 FOREIGN KEY (Trip_Id) REFERENCES dbo.Trip(Id) ON DELETE CASCADE;
+GO
 
 -- Sletter anmeldelser af rejsen, når rejsen slettes.
 ALTER TABLE dbo.Review
 ADD CONSTRAINT FK_Review_Trip_TripId
 FOREIGN KEY (Trip_Id) REFERENCES dbo.Trip(Id) ON DELETE CASCADE;
+GO
 
 ALTER TABLE dbo.Review
 ADD CONSTRAINT FK_Review_User_UserId
 FOREIGN KEY (User_Id) REFERENCES dbo.[User](Id);
+GO
 
 ALTER TABLE dbo.Post
 ADD CONSTRAINT FK_Post_User_UserId
 FOREIGN KEY (User_Id) REFERENCES dbo.[User](Id);
+GO
 
 ALTER TABLE dbo.Friendship
 ADD CONSTRAINT FK_Friendship_User_UserAId
 FOREIGN KEY (UserA_Id) REFERENCES dbo.[User](Id);
+GO
 
 ALTER TABLE dbo.Friendship
 ADD CONSTRAINT FK_Friendship_User_UserBId
 FOREIGN KEY (UserB_Id) REFERENCES dbo.[User](Id);
+GO
 
 -- Sletter brugerens optjente achievements, når brugerkontoen slettes.
 ALTER TABLE dbo.EarnedAchievement
 ADD CONSTRAINT FK_EarnedAchievement_User_UserId
 FOREIGN KEY (User_Id) REFERENCES dbo.[User](Id) ON DELETE CASCADE;
+GO
 
 -- Fjerner achievementen hos alle brugere, når achievement-definitionen slettes.
 ALTER TABLE dbo.EarnedAchievement
 ADD CONSTRAINT FK_EarnedAchievement_Achievement_AchievementId
 FOREIGN KEY (Achievement_Id) REFERENCES dbo.Achievement(Id) ON DELETE CASCADE;
+GO
 
 -- Sletter invitationer til rejsen, når rejsen slettes.
 ALTER TABLE dbo.Invite
 ADD CONSTRAINT FK_Invite_Trip_TripId
 FOREIGN KEY (Trip_Id) REFERENCES dbo.Trip(Id) ON DELETE CASCADE;
+GO
 
 ALTER TABLE dbo.Invite
 ADD CONSTRAINT FK_Invite_User_ReceiverId
 FOREIGN KEY (Receiver_Id) REFERENCES dbo.[User](Id);
+GO
 
 ALTER TABLE dbo.Invite
 ADD CONSTRAINT FK_Invite_User_SenderId
 FOREIGN KEY (Sender_Id) REFERENCES dbo.[User](Id);
+GO
 
 ALTER TABLE dbo.Invite
 ADD CONSTRAINT FK_Invite_InvitationStatus_InvitationStatusId
 FOREIGN KEY (InvitationStatus_Id) REFERENCES dbo.InvitationStatus(Id);
+GO
 
 ALTER TABLE dbo.GroupMembership
 ADD CONSTRAINT FK_GroupMembership_User_UserId
 FOREIGN KEY (User_Id) REFERENCES dbo.[User](Id) ON DELETE CASCADE;
+GO
 
 ALTER TABLE dbo.GroupMembership
 ADD CONSTRAINT FK_GroupMembership_Group_GroupId
 FOREIGN KEY (Group_Id) REFERENCES dbo.[Group](Id) ON DELETE CASCADE;
+GO
 
 ALTER TABLE dbo.GroupTrip
 ADD CONSTRAINT FK_GroupTrip_Trip_TripId
 FOREIGN KEY (Trip_Id) REFERENCES dbo.Trip(Id) ON DELETE CASCADE;
+GO
 
 ALTER TABLE dbo.GroupTrip
 ADD CONSTRAINT FK_GroupTrip_Group_GroupId
 FOREIGN KEY (Group_Id) REFERENCES dbo.[Group](Id) ON DELETE CASCADE;
+GO
 
 -- Unique Constraints
 -- Både (5,10) og (10,5) bliver normaliseret til (5,10), grundet Computed Column.
@@ -433,37 +521,44 @@ FOREIGN KEY (Group_Id) REFERENCES dbo.[Group](Id) ON DELETE CASCADE;
 ALTER TABLE dbo.Friendship
 ADD CONSTRAINT UQ_Friendship_NormalizedUsers
 UNIQUE (UserLow_Id, UserHigh_Id);
+GO
 
 -- Unik statusnavn for invitationstatus.
 ALTER TABLE dbo.InvitationStatus
 ADD CONSTRAINT UQ_InvitationStatus_StatusName
 UNIQUE(StatusName);
+GO
 
 -- Unik navn for achievement.
 ALTER TABLE dbo.Achievement
 ADD CONSTRAINT UQ_Achievement_Name
 UNIQUE (Name);
+GO
 
 -- Check Constraints
 -- Hvis begge datoer findes, må slutdatoen ikke være før startdatoen.
 ALTER TABLE dbo.Trip
 ADD CONSTRAINT CK_Trip_DateRange
 CHECK (StartDate IS NULL OR EndDate IS NULL OR EndDate >= StartDate);
+GO
 
 -- Review-rating skal være mellem 1 og 6.
 ALTER TABLE dbo.Review
 ADD CONSTRAINT CK_Review_Stars
 CHECK (Stars BETWEEN 1 AND 6);
+GO
 
 -- En bruger kan ikke være ven med sig selv.
 ALTER TABLE dbo.Friendship
 ADD CONSTRAINT CK_Friendship_DifferentUsers
 CHECK (UserA_Id <> UserB_Id);
+GO
 
 -- En bruger kan ikke sende en invitation til sig selv.
 ALTER TABLE dbo.Invite
 ADD CONSTRAINT CK_Invite_DifferentUsers
 CHECK (Sender_Id <> Receiver_Id);
+GO
 
 
 -- 03_StoredProcedures
@@ -518,6 +613,7 @@ BEGIN
     INSERT INTO dbo.Review (Trip_Id, User_Id, Content, Stars)
     VALUES (@TripId, @UserId, @Content, @Stars);
 END;
+GO
 
 -- Opretter en gruppe og tilføjer medlemmer fra en JSON-liste.
 -- Validerer gruppen og brugerne samt sikrer, at hele oprettelsen gennemføres i én transaktion.
@@ -610,6 +706,7 @@ BEGIN
 
     END CATCH;
 END;
+GO
 
 -- Ændrer invitationer fra Pending til Expired, når de er mindst 14 dage gamle.
 -- Bruger UTC som standard og returnerer antallet af opdaterede invitationer via en outputparameter.
@@ -651,6 +748,7 @@ BEGIN
 
     SET @ExpiredCount = @@ROWCOUNT;
 END;
+GO
 
 -- Kontrollerer achievements for de angivne brugere baseret på rejser, byer, anmeldelser og venskaber.
 -- Tildeler kun achievements, som brugerne endnu ikke har modtaget.
@@ -832,6 +930,7 @@ BEGIN
 
     RETURN @FullName;
 END;
+GO
 
 -- Returns the total number of completed trips for a given user
 CREATE FUNCTION dbo.GetAmountOfTripsByUser(@UserId INT)
@@ -848,6 +947,7 @@ BEGIN
 
     RETURN @TripCount;
 END;
+GO
 
 -- Returns the number of days a trip lasts (start and end day both included).
 -- Returns 0 if the trip doesn't exist or has no start/end date.
@@ -868,6 +968,7 @@ BEGIN
 
     RETURN DATEDIFF(DAY, @StartDate, @EndDate) + 1;
 END;
+GO
 
 
 -- 05_Triggers
@@ -894,6 +995,7 @@ BEGIN
     IF EXISTS (SELECT 1 FROM @Users)
         EXEC dbo.AwardAchievements @Users = @Users;
 END;
+GO
 
 -- Aktiveres når deltagere tilføjes eller opdateres på en rejse.
 -- Kontrollerer om de berørte deltagere har opnået nye achievements.
@@ -914,6 +1016,7 @@ BEGIN
     IF EXISTS (SELECT 1 FROM @Users)
         EXEC dbo.AwardAchievements @Users = @Users;
 END;
+GO
 
 -- Aktiveres når destinationer tilføjes eller opdateres på en rejse.
 -- Kontrollerer achievements for alle deltagere på de berørte rejser.
@@ -936,6 +1039,7 @@ BEGIN
     IF EXISTS (SELECT 1 FROM @Users)
         EXEC dbo.AwardAchievements @Users = @Users;
 END;
+GO
 
 -- Aktiveres når en anmeldelse oprettes eller opdateres.
 -- Kontrollerer om anmeldelsens forfatter har opnået nye achievements.
@@ -956,6 +1060,7 @@ BEGIN
     IF EXISTS (SELECT 1 FROM @Users)
         EXEC dbo.AwardAchievements @Users = @Users;
 END;
+GO
 
 -- Aktiveres når et venskab oprettes eller opdateres.
 -- Kontrollerer achievements for begge brugere i venskabet.
@@ -981,6 +1086,7 @@ FROM inserted;
 IF EXISTS (SELECT 1 FROM @Users)
 EXEC dbo.AwardAchievements @Users = @Users;
 END;
+GO
 
 
 -- 06_Views
@@ -1047,6 +1153,7 @@ OUTER APPLY (
     FROM dbo.Review AS Review
     WHERE Review.Trip_Id = Trip.Id
 ) AS ReviewSummary;
+GO
 
 -- Viser brugerprofiler med bopæl, alder, rejser og aktivitet.
 -- Test: SELECT * FROM dbo.vw_UserProfile;
@@ -1121,6 +1228,7 @@ OUTER APPLY (
         ON Trip.Id = Participant.Trip_Id
     WHERE Participant.User_Id = ProfileUser.Id
 ) AS TripSummary;
+GO
 
 -- Viser statistik for hver by med rejser, aktiviteter og anmeldelser.
 -- Test: SELECT * FROM dbo.vw_DestinationStats;
@@ -1173,6 +1281,7 @@ OUTER APPLY (
         ON Trip.Id = TripStop.Trip_Id
     WHERE TripStop.City_Id = DestinationCity.Id
 ) AS TripSummary;
+GO
 
 -- Viser afventende invitationer med afsender, modtager og udløbsdato.
 -- Test: SELECT * FROM dbo.vw_PendingInvitations;
@@ -1211,32 +1320,35 @@ JOIN dbo.[User] AS Receiver
     ON Receiver.Id = Invitation.Receiver_Id
 
 WHERE InvitationStatus.StatusName = N'Pending';
+GO
 
 
 -- 07_Indexes
 -- Find brugere på en bestemt rejse
 CREATE NONCLUSTERED INDEX IX_TripParticipant_TripId
 ON dbo.TripParticipant (Trip_Id, User_Id);
+GO
 
 -- Find byerne på en bestemt rejse
 CREATE NONCLUSTERED INDEX IX_TripStop_TripId
 ON dbo.TripStop (Trip_Id, City_Id);
+GO
 
 -- Find anmeldelser og stjerner for en rejse
 CREATE NONCLUSTERED INDEX IX_Review_TripId
 ON dbo.Review (Trip_Id)
 INCLUDE (Stars);
+GO
 
 -- Find invitationer ud fra status og dato
 CREATE NONCLUSTERED INDEX IX_Invite_Status_SendDate
 ON dbo.Invite (InvitationStatus_Id, SendDate);
-
+GO
 
 -- 08_Events
 
 -- Opretter et dagligt job, der udløber invitationer efter 14 dage.
 -- Test: EXEC msdb.dbo.sp_start_job @job_name = N'TravelDb - Expire invitations';
-
 IF EXISTS (
     SELECT 1
     FROM msdb.dbo.sysjobs
@@ -1288,13 +1400,13 @@ EXEC msdb.dbo.sp_attach_schedule
 
 EXEC msdb.dbo.sp_add_jobserver
     @job_id = @ExpirationJobId;
+GO
 
 
 -- 09_InsertData
 
 -- Indsætter de fem achievements, som tildelingsproceduren bruger.
 -- Test: SELECT Id, Name, Description FROM dbo.Achievement;
-
 SET NOCOUNT ON;
 SET XACT_ABORT ON;
 
@@ -1339,6 +1451,7 @@ WHERE Name IN (
     N'Første anmeldelse',
     N'Social rejsende'
 );
+GO
 
 -- Indsætter de fire invitationsstatusser, som systemet bruger.
 -- Test: SELECT Id, StatusName FROM dbo.InvitationStatus;
@@ -1376,6 +1489,7 @@ SELECT
     Id,
     StatusName
 FROM dbo.InvitationStatus;
+GO
 
 -- Opretter et samlet testsæt: geografi, 100 brugere, 25 grupper og 100 rejser.
 -- Tilføjer også deltagere, aktiviteter, 100 venskaber, 50 opslag og 50 anmeldelser.
@@ -1884,3 +1998,4 @@ BEGIN CATCH
 
     THROW;
 END CATCH;
+GO

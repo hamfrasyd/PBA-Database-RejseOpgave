@@ -98,8 +98,5 @@ BEGIN
 END;
 
 
--- Test
---EXEC dbo.CreateGroupWithMembers
---    @Name = N'Rejseholdet',
---    @Description = N'Vi planlægger en fælles tur til Japan.',
---    @MemberIds = N'[1, 2, 3, 4]';
+-- Test ved at køre følgende:
+-- EXEC dbo.CreateGroupWithMembers @Name = N'Rejseholdet', @Description = N'Vi planlægger en fælles tur til Japan.', @MemberIds = N'[1, 2, 3, 4]';

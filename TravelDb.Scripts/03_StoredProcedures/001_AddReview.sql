@@ -56,8 +56,5 @@ BEGIN
     VALUES (@TripId, @UserId, @Content, @Stars);
 END;
 
---EXEC dbo.AddReview
---    @TripId = 1,
---    @UserId = 1,
---    @Content = N'En rigtig god rejseeeeeeeeeeeeeeeeeeeeeeeeeee.',
---    @Stars = 5;
+-- Test ved at køre følgende:
+-- EXEC dbo.AddReview @TripId = 1, @UserId = 1, @Content = N'En rigtig god rejseeeeeeeee.', @Stars = 5;

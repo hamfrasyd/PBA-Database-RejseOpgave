@@ -1,4 +1,4 @@
-# TravelDb - PBA Database Assignment
+# TravelDb - PBA Database Assignment 1
 
 This repository contains the database schema, procedures, functions, triggers, views, scheduled jobs and sample data, plus a small .NET console app to set everything up.
 

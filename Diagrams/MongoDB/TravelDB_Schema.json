@@ -1,0 +1,82 @@
+{
+    "trip": {
+        "id": "integer",
+        "startDate": "date",
+        "endDate": "date",
+        "isCompleted": "boolean",
+        "experienceNotes": "string",
+        "planNotes": "string",
+        "group": {
+            "id": "integer",
+            "name": "string",
+            "description": "string"
+        },
+        "user": {
+            "id": "integer",
+            "firstName": "string",
+            "lastName": "string"
+        },
+        "reviews": [
+            {
+                "id": "integer",
+                "rating": "integer",
+                "comment": "string",
+                "content": "string",
+                "createdAt": "date",
+                "user": {
+                    "id": "integer",
+                    "firstName": "string",
+                    "lastName": "string"
+                }
+            }
+        ],
+    },
+
+
+
+    "user": {
+        "id": "integer",
+        "city": {
+            "name": "string",
+            "country": {
+                "name": "string",
+                "continent": {
+                    "name": "string"
+                }
+            }
+        },
+        "firstName": "string",
+        "lastName": "string",
+        "email": "string",
+        "bithday": "date",
+        "isPrivate": "boolean",
+        "createdAt": "date",
+        "friendships": [
+            {
+                "id": "integer",
+                "friend": {
+                    "id": "integer",
+                    "firstName": "string",
+                    "lastName": "string"
+                }
+            }
+        ],
+        "achievements": [
+            {
+                "id": "integer",
+                "name": "string",
+                "description": "string",
+                "earnedAt": "date"
+            }
+        ],
+        "posts": [
+            {
+                "id": "integer",
+                "content": "string",
+                "createdAt": "date"
+            }
+        ],
+
+    
+    }
+}

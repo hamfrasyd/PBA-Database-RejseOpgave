@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "TravelDb.Migrator": {
+      "commandName": "Project"
+    },
+    "Container (Dockerfile)": {
+      "commandName": "Docker"
+    }
+  }
+}

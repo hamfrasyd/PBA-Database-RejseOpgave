@@ -1,3 +1,7 @@
 <Solution>
+  <Project Path="TravelDb.API/TravelDb.API.csproj" Id="dc6a7720-1029-4481-bedf-f01eb13c5e6a" />
+  <Project Path="TravelDb.Core/TravelDb.Core.csproj" Id="6e3d2a1b-2376-4f22-ae28-6f2a7b594c53" />
+  <Project Path="TravelDb.Infrastructure/TravelDb.Infrastructure.csproj" Id="f77d3575-70a5-44da-9e69-48c76cb53043" />
+  <Project Path="TravelDb.Migrator/TravelDb.Migrator.csproj" Id="3e84f562-22f6-47a8-b0d2-5ede3065064d" />
   <Project Path="TravelDb.Setup/TravelDb.Setup.csproj" />
 </Solution>

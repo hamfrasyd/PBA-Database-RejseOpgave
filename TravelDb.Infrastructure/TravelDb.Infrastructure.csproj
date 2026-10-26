@@ -6,4 +6,16 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <Compile Include="DockerStuff\SomeDockerFileMaybe.yaml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\TravelDb.Core\TravelDb.Core.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="PipelineStuff\" />
+  </ItemGroup>
+
 </Project>

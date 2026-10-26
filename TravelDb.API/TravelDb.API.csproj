@@ -15,6 +15,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\TravelDb.Core\TravelDb.Core.csproj" />
+    <ProjectReference Include="..\TravelDb.Infrastructure\TravelDb.Infrastructure.csproj" />
   </ItemGroup>
 
 </Project>

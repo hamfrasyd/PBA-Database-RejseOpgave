@@ -30,13 +30,13 @@
     "label-padding": 5,
     "label-margin": 4,
     "directionality": "directed",
-    "detail-position": "above",
+    "detail-position": "inline",
     "detail-orientation": "parallel",
     "arrow-width": 3,
     "arrow-color": "#848484",
     "margin-start": 5,
     "margin-end": 5,
-    "margin-peer": 20,
+    "margin-peer": 30,
     "attachment-start": "normal",
     "attachment-end": "normal",
     "relationship-icon-image": "",
@@ -56,8 +56,8 @@
     {
       "id": "n1",
       "position": {
-        "x": -727.2624623767387,
-        "y": -434.6077540666895
+        "x": -700.9725885657798,
+        "y": -455.4561008395966
       },
       "caption": "Review",
       "labels": [],
@@ -67,8 +67,8 @@
     {
       "id": "n2",
       "position": {
-        "x": -476.82197760358497,
-        "y": -351.48062382358864
+        "x": -469.663000879301,
+        "y": -136.65199114585627
       },
       "caption": "Trip",
       "labels": [],
@@ -78,8 +78,8 @@
     {
       "id": "n3",
       "position": {
-        "x": -109.18955320999794,
-        "y": -686.7656885260755
+        "x": -72.32729534821544,
+        "y": -683.8868445392224
       },
       "caption": "City",
       "labels": [],
@@ -90,7 +90,7 @@
       "id": "n9",
       "position": {
         "x": -469.663000879301,
-        "y": -686.7656885260753
+        "y": -686.7656885260755
       },
       "caption": "User",
       "labels": [],
@@ -100,8 +100,8 @@
     {
       "id": "n10",
       "position": {
-        "x": 601.2172196228213,
-        "y": -973.8868445392224
+        "x": -1220.2284598264378,
+        "y": -569.9911609134206
       },
       "caption": "Group",
       "labels": [],
@@ -111,10 +111,65 @@
     {
       "id": "n11",
       "position": {
-        "x": -805.0244857881819,
-        "y": -686.7656885260753
+        "x": -700.9725885657798,
+        "y": -918.0752762125542
       },
       "caption": "Posts",
+      "style": {},
+      "labels": [],
+      "properties": {}
+    },
+    {
+      "id": "n23",
+      "position": {
+        "x": -911.8064752053739,
+        "y": -515.3460687244027
+      },
+      "caption": "Invite",
+      "style": {},
+      "labels": [],
+      "properties": {}
+    },
+    {
+      "id": "n24",
+      "position": {
+        "x": -469.663000879301,
+        "y": -1013.8868445392224
+      },
+      "caption": "Achievement ",
+      "style": {},
+      "labels": [],
+      "properties": {}
+    },
+    {
+      "id": "n25",
+      "position": {
+        "x": -72.32729534821544,
+        "y": -136.65199114585627
+      },
+      "caption": "Activity",
+      "style": {},
+      "labels": [],
+      "properties": {}
+    },
+    {
+      "id": "n26",
+      "position": {
+        "x": 250.70589397179128,
+        "y": -686.7656885260755
+      },
+      "caption": "Country ",
+      "style": {},
+      "labels": [],
+      "properties": {}
+    },
+    {
+      "id": "n27",
+      "position": {
+        "x": 250.70589397179128,
+        "y": -1013.8868445392224
+      },
+      "caption": "Continent",
       "style": {},
       "labels": [],
       "properties": {}
@@ -184,6 +239,78 @@
       "properties": {},
       "fromId": "n2",
       "toId": "n3"
+    },
+    {
+      "id": "n40",
+      "type": "Sent",
+      "style": {},
+      "properties": {},
+      "fromId": "n9",
+      "toId": "n23"
+    },
+    {
+      "id": "n41",
+      "type": "Recievied_By",
+      "style": {},
+      "properties": {},
+      "fromId": "n23",
+      "toId": "n9"
+    },
+    {
+      "id": "n42",
+      "type": "For_Trip",
+      "style": {},
+      "properties": {},
+      "fromId": "n23",
+      "toId": "n2"
+    },
+    {
+      "id": "n43",
+      "type": "Earned",
+      "style": {},
+      "properties": {},
+      "fromId": "n9",
+      "toId": "n24"
+    },
+    {
+      "id": "n44",
+      "type": "Includes_Activity",
+      "style": {},
+      "properties": {},
+      "fromId": "n2",
+      "toId": "n25"
+    },
+    {
+      "id": "n45",
+      "type": "Takes_Place_In",
+      "style": {},
+      "properties": {},
+      "fromId": "n25",
+      "toId": "n3"
+    },
+    {
+      "id": "n46",
+      "type": "In_Country",
+      "style": {},
+      "properties": {},
+      "fromId": "n3",
+      "toId": "n26"
+    },
+    {
+      "id": "n47",
+      "type": "In_Continent",
+      "style": {},
+      "properties": {},
+      "fromId": "n26",
+      "toId": "n27"
+    },
+    {
+      "id": "n48",
+      "type": "Friend_With",
+      "fromId": "n9",
+      "toId": "n9",
+      "style": {},
+      "properties": {}
     }
   ]
 }

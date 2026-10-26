@@ -7,5 +7,9 @@ namespace TravelDb.Infrastructure.GraphRepos
         // Implementation of the repository methods goes here
 
         // Calls to the graph database and returns the results
+        public void SomeRepositoryMethod()
+        {
+            throw new NotImplementedException();
+        }
     }
 }

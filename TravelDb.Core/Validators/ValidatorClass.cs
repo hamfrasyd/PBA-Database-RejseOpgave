@@ -1,6 +1,6 @@
 ﻿namespace TravelDb.Core.Validators
 {
-    internal class ValidatorClass
+    public class ValidatorClass
     {
     }
 }

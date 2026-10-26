@@ -1,4 +1,7 @@
-﻿CREATE OR ALTER TRIGGER dbo.trg_TripStop_Achievements
+﻿-- Aktiveres når destinationer tilføjes eller opdateres på en rejse.
+-- Kontrollerer achievements for alle deltagere på de berørte rejser.
+
+CREATE OR ALTER TRIGGER dbo.trg_TripStop_Achievements
 ON dbo.TripStop
 AFTER INSERT, UPDATE
 AS

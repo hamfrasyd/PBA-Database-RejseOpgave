@@ -5,12 +5,14 @@
     <TargetFramework>net10.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
+	<UseAppHost>false</UseAppHost>
   </PropertyGroup>
 
 	<ItemGroup>
 		<PackageReference Include="dbup-sqlserver" Version="7.2.0" />
-		<PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="10.0.0" />
-		<PackageReference Include="Microsoft.Extensions.Configuration.EnvironmentVariables" Version="10.0.0" />
+		<PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="11.0.0-rc.2.26504.105" />
+		<PackageReference Include="Microsoft.Extensions.Configuration.EnvironmentVariables" Version="11.0.0-rc.2.26504.105" />
+		<PackageReference Include="System.Security.Cryptography.Pkcs" Version="11.0.0-rc.2.26504.105" />
 	</ItemGroup>
 
 	<ItemGroup>

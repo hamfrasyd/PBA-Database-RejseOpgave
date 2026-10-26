@@ -1,14 +1,5 @@
-﻿IF TYPE_ID(N'dbo.AchievementUserIds') IS NULL
-BEGIN
-    EXEC(N'
-        CREATE TYPE dbo.AchievementUserIds
-        AS TABLE
-        (
-            User_Id INT NOT NULL PRIMARY KEY
-        );
-    ');
-END;
-GO
+﻿-- Kontrollerer achievements for de angivne brugere baseret på rejser, byer, anmeldelser og venskaber.
+-- Tildeler kun achievements, som brugerne endnu ikke har modtaget.
 
 CREATE OR ALTER PROCEDURE dbo.AwardAchievements
     @Users dbo.AchievementUserIds READONLY
@@ -37,143 +28,136 @@ BEGIN
             1;
     END;
 
-    DECLARE @OwnTransaction BIT =
+    DECLARE @StartedOwnTransaction BIT =
         CASE WHEN @@TRANCOUNT = 0 THEN 1 ELSE 0 END;
 
-    BEGIN TRY
+    DECLARE @EligibleAchievements TABLE (
+        UserId INT NOT NULL,
+        AchievementName NVARCHAR(128) NOT NULL,
+        PRIMARY KEY (UserId, AchievementName)
+    );
 
-        IF @OwnTransaction = 1
+    BEGIN TRY
+        IF @StartedOwnTransaction = 1
             BEGIN TRANSACTION;
 
-        ;WITH Completed AS
-        (
+        -- 1. Første rejse og Erfaren rejsende
+        ;WITH CompletedTripCounts AS (
             SELECT
-                p.User_Id,
-                p.Trip_Id
-            FROM dbo.TripParticipant p
-            JOIN @Users u
-                ON u.User_Id = p.User_Id
-            JOIN dbo.Trip t
-                ON t.Id = p.Trip_Id
-            WHERE t.IsCompleted = 1
-        ),
-        TripCounts AS
-        (
+                Participant.User_Id AS UserId,
+                COUNT(*) AS CompletedTrips
+            FROM dbo.TripParticipant AS Participant
+            JOIN dbo.Trip AS Trip
+                ON Trip.Id = Participant.Trip_Id
+            JOIN @Users AS CandidateUser
+                ON CandidateUser.User_Id = Participant.User_Id
+            WHERE Trip.IsCompleted = 1
+            GROUP BY Participant.User_Id
+        )
+        INSERT INTO @EligibleAchievements (UserId, AchievementName)
+        SELECT
+            UserId,
+            N'Første rejse'
+        FROM CompletedTripCounts
+        WHERE CompletedTrips >= 1
+
+        UNION ALL
+
+        SELECT
+            UserId,
+            N'Erfaren rejsende'
+        FROM CompletedTripCounts
+        WHERE CompletedTrips >= 5;
+
+
+        -- 2. Byopdager: 10 forskellige byer på gennemførte rejser
+        INSERT INTO @EligibleAchievements (UserId, AchievementName)
+        SELECT
+            Participant.User_Id,
+            N'Byopdager'
+        FROM dbo.TripParticipant AS Participant
+        JOIN @Users AS CandidateUser
+            ON CandidateUser.User_Id = Participant.User_Id
+        JOIN dbo.Trip AS Trip
+            ON Trip.Id = Participant.Trip_Id
+        JOIN dbo.TripStop AS TripStop
+            ON TripStop.Trip_Id = Trip.Id
+        WHERE Trip.IsCompleted = 1
+        GROUP BY Participant.User_Id
+        HAVING COUNT(DISTINCT TripStop.City_Id) >= 10;
+
+
+        -- 3. Første anmeldelse
+        INSERT INTO @EligibleAchievements (UserId, AchievementName)
+        SELECT
+            CandidateUser.User_Id,
+            N'Første anmeldelse'
+        FROM @Users AS CandidateUser
+        WHERE EXISTS (
+            SELECT 1
+            FROM dbo.Review AS Review
+            WHERE Review.User_Id = CandidateUser.User_Id
+        );
+
+
+        -- 4. Social rejsende: 5 forskellige venner
+        ;WITH UserFriendships AS (
             SELECT
-                User_Id,
-                COUNT(*) AS Total
-            FROM Completed
-            GROUP BY User_Id
-        ),
-        CityCounts AS
-        (
-            SELECT
-                c.User_Id,
-                COUNT(DISTINCT s.City_Id) AS Total
-            FROM Completed c
-            JOIN dbo.TripStop s
-                ON s.Trip_Id = c.Trip_Id
-            GROUP BY c.User_Id
-        ),
-        Reviewers AS
-        (
-            SELECT DISTINCT r.User_Id
-            FROM dbo.Review r
-            JOIN @Users u
-                ON u.User_Id = r.User_Id
-        ),
-        FriendPairs AS
-        (
-            SELECT
-                f.UserA_Id AS User_Id,
-                f.UserB_Id AS Friend_Id
-            FROM dbo.Friendship f
-            JOIN @Users u
-                ON u.User_Id = f.UserA_Id
+                Friendship.UserA_Id AS UserId,
+                Friendship.UserB_Id AS FriendId
+            FROM dbo.Friendship AS Friendship
+            JOIN @Users AS CandidateUser
+                ON CandidateUser.User_Id = Friendship.UserA_Id
 
             UNION
 
             SELECT
-                f.UserB_Id,
-                f.UserA_Id
-            FROM dbo.Friendship f
-            JOIN @Users u
-                ON u.User_Id = f.UserB_Id
-        ),
-        FriendCounts AS
-        (
-            SELECT
-                User_Id,
-                COUNT(*) AS Total
-            FROM FriendPairs
-            GROUP BY User_Id
-        ),
-        Eligible AS
-        (
-            SELECT User_Id, N'Første rejse' AS Name
-            FROM TripCounts
-            WHERE Total >= 1
-
-            UNION ALL
-
-            SELECT User_Id, N'Erfaren rejsende'
-            FROM TripCounts
-            WHERE Total >= 5
-
-            UNION ALL
-
-            SELECT User_Id, N'Byopdager'
-            FROM CityCounts
-            WHERE Total >= 10
-
-            UNION ALL
-
-            SELECT User_Id, N'Første anmeldelse'
-            FROM Reviewers
-
-            UNION ALL
-
-            SELECT User_Id, N'Social rejsende'
-            FROM FriendCounts
-            WHERE Total >= 5
+                Friendship.UserB_Id AS UserId,
+                Friendship.UserA_Id AS FriendId
+            FROM dbo.Friendship AS Friendship
+            JOIN @Users AS CandidateUser
+                ON CandidateUser.User_Id = Friendship.UserB_Id
         )
+        INSERT INTO @EligibleAchievements (UserId, AchievementName)
+        SELECT
+            UserId,
+            N'Social rejsende'
+        FROM UserFriendships
+        GROUP BY UserId
+        HAVING COUNT(*) >= 5;
 
-        INSERT dbo.EarnedAchievement
-        (
+
+        -- 5. Tildel kun achievements, som brugeren mangler
+        INSERT INTO dbo.EarnedAchievement (
             User_Id,
             Achievement_Id,
             EarnedAt
         )
         SELECT
-            e.User_Id,
-            a.Id,
+            Eligible.UserId,
+            Achievement.Id,
             SYSUTCDATETIME()
-        FROM Eligible e
-        JOIN dbo.Achievement a
-            ON a.Name = e.Name
-        WHERE NOT EXISTS
-        (
+        FROM @EligibleAchievements AS Eligible
+        JOIN dbo.Achievement AS Achievement
+            ON Achievement.Name = Eligible.AchievementName
+        WHERE NOT EXISTS (
             SELECT 1
-            FROM dbo.EarnedAchievement existing
+            FROM dbo.EarnedAchievement AS Existing
                 WITH (UPDLOCK, HOLDLOCK)
-            WHERE existing.User_Id = e.User_Id
-            AND existing.Achievement_Id = a.Id
+            WHERE Existing.User_Id = Eligible.UserId
+              AND Existing.Achievement_Id = Achievement.Id
         );
 
-        IF @OwnTransaction = 1
-            COMMIT;
+        IF @StartedOwnTransaction = 1
+            COMMIT TRANSACTION;
 
     END TRY
     BEGIN CATCH
-
-        IF @OwnTransaction = 1
-        AND XACT_STATE() <> 0
-            ROLLBACK;
+        IF @StartedOwnTransaction = 1
+           AND XACT_STATE() <> 0
+            ROLLBACK TRANSACTION;
 
         THROW;
-
     END CATCH;
 END;
 GO
-
-

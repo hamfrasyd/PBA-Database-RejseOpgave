@@ -1,12 +1,5 @@
-﻿/*
-    Tilføjer en anmeldelse til en rejse.
-    Regler:
-    - Rejsen skal eksistere.
-    - Brugeren skal eksistere.
-    - Brugeren skal være deltager på rejsen.
-    - Rejsen skal være gennemført.
-    - Stars skal være mellem 1 og 6.
-*/
+﻿-- Opretter en anmeldelse af en gennemført rejse.
+-- Kontrollerer at brugeren og rejsen findes, at brugeren deltager, og at bedømmelsen er mellem 1 og 6.
 
 CREATE OR ALTER PROCEDURE dbo.AddReview
     @TripId INT,
@@ -55,6 +48,3 @@ BEGIN
     INSERT INTO dbo.Review (Trip_Id, User_Id, Content, Stars)
     VALUES (@TripId, @UserId, @Content, @Stars);
 END;
-
--- Test ved at køre følgende:
--- EXEC dbo.AddReview @TripId = 1, @UserId = 1, @Content = N'En rigtig god rejseeeeeeeee.', @Stars = 5;

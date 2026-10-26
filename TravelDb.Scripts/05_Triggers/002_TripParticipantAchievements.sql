@@ -1,4 +1,7 @@
-﻿CREATE OR ALTER TRIGGER dbo.trg_TripParticipant_Achievements
+﻿-- Aktiveres når deltagere tilføjes eller opdateres på en rejse.
+-- Kontrollerer om de berørte deltagere har opnået nye achievements.
+
+CREATE OR ALTER TRIGGER dbo.trg_TripParticipant_Achievements
 ON dbo.TripParticipant
 AFTER INSERT, UPDATE
 AS

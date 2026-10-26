@@ -1,12 +1,5 @@
-﻿/*
-    Opretter en gruppe og tilføjer brugere som medlemmer.
-
-    @MemberIds sendes som JSON:
-    [1, 4, 8, 12]
-
-    Hele operationen køres i én transaktion.
-    Hvis noget fejler, bliver gruppen ikke oprettet.
-*/
+﻿-- Opretter en gruppe og tilføjer medlemmer fra en JSON-liste.
+-- Validerer gruppen og brugerne samt sikrer, at hele oprettelsen gennemføres i én transaktion.
 
 CREATE OR ALTER PROCEDURE dbo.CreateGroupWithMembers
     @Name NVARCHAR(255),
@@ -96,7 +89,3 @@ BEGIN
 
     END CATCH;
 END;
-
-
--- Test ved at køre følgende:
--- EXEC dbo.CreateGroupWithMembers @Name = N'Rejseholdet', @Description = N'Vi planlægger en fælles tur til Japan.', @MemberIds = N'[1, 2, 3, 4]';

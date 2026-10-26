@@ -1,0 +1,189 @@
+{
+  "style": {
+    "font-family": "Nunito Sans",
+    "background-color": "#F2F2F2",
+    "background-image": "",
+    "background-size": "100%",
+    "node-color": "#4C8EDA",
+    "border-width": 0,
+    "border-color": "#000000",
+    "radius": 75,
+    "node-padding": 5,
+    "node-margin": 2,
+    "outside-position": "auto",
+    "node-icon-image": "",
+    "node-background-image": "",
+    "icon-position": "inside",
+    "icon-size": 64,
+    "caption-position": "inside",
+    "caption-max-width": 200,
+    "caption-color": "#ffffff",
+    "caption-font-size": 20,
+    "caption-font-weight": "normal",
+    "label-position": "inside",
+    "label-display": "bare",
+    "label-color": "#ffffff",
+    "label-background-color": "#848484",
+    "label-border-color": "#848484",
+    "label-border-width": 3,
+    "label-font-size": 20,
+    "label-padding": 5,
+    "label-margin": 4,
+    "directionality": "directed",
+    "detail-position": "above",
+    "detail-orientation": "parallel",
+    "arrow-width": 3,
+    "arrow-color": "#848484",
+    "margin-start": 5,
+    "margin-end": 5,
+    "margin-peer": 20,
+    "attachment-start": "normal",
+    "attachment-end": "normal",
+    "relationship-icon-image": "",
+    "type-color": "#848484",
+    "type-background-color": "#F2F2F2",
+    "type-border-color": "#848484",
+    "type-border-width": 0,
+    "type-font-size": 21,
+    "type-padding": 5,
+    "property-position": "outside",
+    "property-alignment": "colon",
+    "property-color": "#848484",
+    "property-font-size": 20,
+    "property-font-weight": "normal"
+  },
+  "nodes": [
+    {
+      "id": "n1",
+      "position": {
+        "x": -727.2624623767387,
+        "y": -434.6077540666895
+      },
+      "caption": "Review",
+      "labels": [],
+      "properties": {},
+      "style": {}
+    },
+    {
+      "id": "n2",
+      "position": {
+        "x": -476.82197760358497,
+        "y": -351.48062382358864
+      },
+      "caption": "Trip",
+      "labels": [],
+      "properties": {},
+      "style": {}
+    },
+    {
+      "id": "n3",
+      "position": {
+        "x": -109.18955320999794,
+        "y": -686.7656885260755
+      },
+      "caption": "City",
+      "labels": [],
+      "properties": {},
+      "style": {}
+    },
+    {
+      "id": "n9",
+      "position": {
+        "x": -469.663000879301,
+        "y": -686.7656885260753
+      },
+      "caption": "User",
+      "labels": [],
+      "properties": {},
+      "style": {}
+    },
+    {
+      "id": "n10",
+      "position": {
+        "x": 601.2172196228213,
+        "y": -973.8868445392224
+      },
+      "caption": "Group",
+      "labels": [],
+      "properties": {},
+      "style": {}
+    },
+    {
+      "id": "n11",
+      "position": {
+        "x": -805.0244857881819,
+        "y": -686.7656885260753
+      },
+      "caption": "Posts",
+      "style": {},
+      "labels": [],
+      "properties": {}
+    }
+  ],
+  "relationships": [
+    {
+      "id": "n9",
+      "type": "Participates_In",
+      "style": {},
+      "properties": {},
+      "fromId": "n9",
+      "toId": "n2"
+    },
+    {
+      "id": "n14",
+      "type": "Wrote",
+      "style": {},
+      "properties": {},
+      "fromId": "n9",
+      "toId": "n1"
+    },
+    {
+      "id": "n15",
+      "type": "Lives_In",
+      "style": {},
+      "properties": {},
+      "fromId": "n9",
+      "toId": "n3"
+    },
+    {
+      "id": "n16",
+      "type": "Member_Of",
+      "style": {},
+      "properties": {},
+      "fromId": "n9",
+      "toId": "n10"
+    },
+    {
+      "id": "n18",
+      "type": "Organizes",
+      "style": {},
+      "properties": {},
+      "fromId": "n10",
+      "toId": "n2"
+    },
+    {
+      "id": "n19",
+      "type": "Wrote",
+      "style": {},
+      "properties": {},
+      "fromId": "n9",
+      "toId": "n11"
+    },
+    {
+      "id": "n20",
+      "type": "Reviews",
+      "style": {},
+      "properties": {},
+      "fromId": "n1",
+      "toId": "n2"
+    },
+    {
+      "id": "n21",
+      "type": "Has_Stops",
+      "style": {},
+      "properties": {},
+      "fromId": "n2",
+      "toId": "n3"
+    }
+  ]
+}

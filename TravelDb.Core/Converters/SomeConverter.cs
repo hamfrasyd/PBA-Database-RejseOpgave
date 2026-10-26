@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace TravelDb.Infrastructure
+namespace TravelDb.Core.Converters
 {
-    internal class RepoLayer
+    internal class SomeConverter
     {
     }
 }

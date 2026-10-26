@@ -62,7 +62,9 @@
       "caption": "Review",
       "labels": [],
       "properties": {},
-      "style": {}
+      "style": {
+        "node-color": "#E787B8"
+      }
     },
     {
       "id": "n2",
@@ -73,7 +75,9 @@
       "caption": "Trip",
       "labels": [],
       "properties": {},
-      "style": {}
+      "style": {
+        "node-color": "#83B866"
+      }
     },
     {
       "id": "n3",
@@ -84,7 +88,9 @@
       "caption": "City",
       "labels": [],
       "properties": {},
-      "style": {}
+      "style": {
+        "node-color": "#E98B82"
+      }
     },
     {
       "id": "n9",
@@ -95,7 +101,9 @@
       "caption": "User",
       "labels": [],
       "properties": {},
-      "style": {}
+      "style": {
+        "node-color": "#95C1F5"
+      }
     },
     {
       "id": "n10",
@@ -106,7 +114,9 @@
       "caption": "Group",
       "labels": [],
       "properties": {},
-      "style": {}
+      "style": {
+        "node-color": "#8ECAE4"
+      }
     },
     {
       "id": "n11",
@@ -115,7 +125,9 @@
         "y": -918.0752762125542
       },
       "caption": "Posts",
-      "style": {},
+      "style": {
+        "node-color": "#FC93C9"
+      },
       "labels": [],
       "properties": {}
     },
@@ -126,7 +138,9 @@
         "y": -515.3460687244027
       },
       "caption": "Invite",
-      "style": {},
+      "style": {
+        "node-color": "#D8C5FF"
+      },
       "labels": [],
       "properties": {}
     },
@@ -137,7 +151,9 @@
         "y": -1013.8868445392224
       },
       "caption": "Achievement ",
-      "style": {},
+      "style": {
+        "node-color": "#FFC75F"
+      },
       "labels": [],
       "properties": {}
     },
@@ -148,7 +164,9 @@
         "y": -136.65199114585627
       },
       "caption": "Activity",
-      "style": {},
+      "style": {
+        "node-color": "#EDE976"
+      },
       "labels": [],
       "properties": {}
     },
@@ -159,7 +177,9 @@
         "y": -686.7656885260755
       },
       "caption": "Country ",
-      "style": {},
+      "style": {
+        "node-color": "#E86256"
+      },
       "labels": [],
       "properties": {}
     },
@@ -170,7 +190,9 @@
         "y": -1013.8868445392224
       },
       "caption": "Continent",
-      "style": {},
+      "style": {
+        "node-color": "#D45A4F"
+      },
       "labels": [],
       "properties": {}
     }

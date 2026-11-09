@@ -1,13 +1,13 @@
 using System.Data;
 using Microsoft.Data.SqlClient;
 
-namespace SQLInjectionTest;
+namespace Sqlinjectiontest.API;
 
 /// <summary>
-/// Holds both safe and intentionally vulnerable SQL queries for comparison.
-/// All queries connect through a restricted lab SQL login.
+/// Compares unsafe SQL interpolation with parameter binding using the same query.
+/// IMPORTANT: The intentionally unsafe method is for local training only.
 /// </summary>
-public sealed class SQLInjectionTestRepository
+public sealed class SQLInjectionTestRepository : ISQLInjectionTestRepository
 {
     private readonly string _connectionString;
 
@@ -19,7 +19,8 @@ public sealed class SQLInjectionTestRepository
     public async Task<IReadOnlyList<SQLInjectionTestUser>> SearchUnsafeAsync(
         string name, CancellationToken cancellationToken = default)
     {
-        // INTENTIONALLY INSECURE. Input becomes executable SQL, including stacked statements.
+        // VULNERABLE BY DESIGN: input becomes part of the executable SQL batch.
+        // A crafted input can add more SELECTs or DROP lab tables.
         string sql = $"SELECT Id, Name FROM [SQLInjectionTest].[Users] WHERE Name = '{name}'";
 
         return await ExecuteSearchAsync(sql, null, cancellationToken);
@@ -49,21 +50,21 @@ public sealed class SQLInjectionTestRepository
         List<SQLInjectionTestUser> users = new List<SQLInjectionTestUser>();
         await using SqlDataReader reader = await command.ExecuteReaderAsync(cancellationToken);
 
-        // Consume ALL result sets, including those produced by injected stacked SELECT statements.
+        // SQL Server allows multiple statements in the same batch.
+        // Read every matching result set to demonstrate stacked SELECT attacks.
         do
         {
             bool isUserResultSet = reader.FieldCount >= 2 &&
                 string.Equals(reader.GetName(0), "Id", StringComparison.OrdinalIgnoreCase) &&
                 string.Equals(reader.GetName(1), "Name", StringComparison.OrdinalIgnoreCase);
 
-            if (isUserResultSet is false)
+            if (isUserResultSet)
             {
-                continue;
-            }
-
-            while (await reader.ReadAsync(cancellationToken))
-            {
-                users.Add(new SQLInjectionTestUser(reader.GetInt32(0), reader.GetString(1)));
+                while (await reader.ReadAsync(cancellationToken))
+                {
+                    users.Add(new SQLInjectionTestUser(
+                        reader.GetInt32(0), reader.GetString(1)));
+                }
             }
         }
         while (await reader.NextResultAsync(cancellationToken));
@@ -71,9 +72,14 @@ public sealed class SQLInjectionTestRepository
         return users;
     }
 
-    public async Task<bool> DisposableTableExistsAsync(CancellationToken cancellationToken = default)
+    public async Task<bool> DisposableTableExistsAsync(
+        CancellationToken cancellationToken = default)
     {
-        const string sql = "SELECT CAST(CASE WHEN OBJECT_ID(N'SQLInjectionTest.Disposable', N'U') IS NOT NULL THEN 1 ELSE 0 END AS bit)";
+        const string sql = """
+            SELECT CAST(
+                CASE WHEN OBJECT_ID(N'SQLInjectionTest.Disposable', N'U') IS NOT NULL
+                THEN 1 ELSE 0 END AS bit)
+            """;
 
         await using SqlConnection connection = new SqlConnection(_connectionString);
         await connection.OpenAsync(cancellationToken);
@@ -86,7 +92,7 @@ public sealed class SQLInjectionTestRepository
 
     public async Task ResetAsync(CancellationToken cancellationToken = default)
     {
-        // Only recreate objects in the restricted SQLInjectionTest schema.
+        // Only recreates tables inside the SQLInjectionTest schema.
         const string sql = """
             SET XACT_ABORT ON;
             BEGIN TRANSACTION;
@@ -115,7 +121,7 @@ public sealed class SQLInjectionTestRepository
 
             DELETE FROM [SQLInjectionTest].[Disposable];
             INSERT INTO [SQLInjectionTest].[Disposable] (Id, Description)
-            VALUES (1, N'This table is intentionally safe to DROP in the lab.');
+            VALUES (1, N'This lab table may be dropped and recreated.');
 
             COMMIT TRANSACTION;
             """;
@@ -127,5 +133,3 @@ public sealed class SQLInjectionTestRepository
         await command.ExecuteNonQueryAsync(cancellationToken);
     }
 }
-
-public sealed record SQLInjectionTestUser(int Id, string Name);

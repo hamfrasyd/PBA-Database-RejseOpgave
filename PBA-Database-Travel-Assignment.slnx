@@ -1,3 +1,4 @@
 <Solution>
+  <Project Path="Sqlinjectiontest.API/Sqlinjectiontest.API.csproj" Id="09fbd963-5277-4b0f-b6af-f14e183481bc" />
   <Project Path="TravelDb.Setup/TravelDb.Setup.csproj" />
 </Solution>

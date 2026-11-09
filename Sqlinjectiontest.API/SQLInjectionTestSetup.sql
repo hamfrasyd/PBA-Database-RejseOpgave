@@ -1,22 +1,22 @@
--- Run manually in SSMS/sqlcmd, only against a local disposable TravelDb instance.
--- IMPORTANT: This file is intentionally outside TravelDb.Scripts/ so DbUp won't auto-run it.
--- Do not run this against production or shared databases.
+-- SQL Injection demo setup. Execute only on your own local SQL Server.
+-- Uses an isolated schema and a restricted login in the existing TravelDb database.
+-- IMPORTANT: Never use sa or an application login in the API connection string.
 
 USE [master];
 GO
 
 IF DB_ID(N'TravelDb') IS NULL
 BEGIN
-    THROW 50000, 'TravelDb does not exist. Run the original TravelDb.Setup first.', 1;
+    THROW 50000, N'TravelDb is missing. Run TravelDb.Setup before this script.', 1;
 END;
 GO
 
--- A restricted LOGIN is important: the unsafe endpoint can execute arbitrary injected SQL.
--- It must never be able to alter existing TravelDb application tables.
 IF NOT EXISTS (SELECT 1 FROM sys.sql_logins WHERE name = N'SQLInjectionTestLabLogin')
 BEGIN
     CREATE LOGIN [SQLInjectionTestLabLogin]
-        WITH PASSWORD = 'SQLInjectionTest!2026LocalOnly', CHECK_POLICY = OFF;
+        WITH PASSWORD = 'SQLInjectionTest!2026LocalOnly',
+             CHECK_POLICY = OFF,
+             CHECK_EXPIRATION = OFF;
 END;
 GO
 
@@ -29,13 +29,16 @@ BEGIN
 END;
 GO
 
-IF NOT EXISTS (SELECT 1 FROM sys.database_principals WHERE name = N'SQLInjectionTestLabUser')
+IF NOT EXISTS (
+    SELECT 1 FROM sys.database_principals
+    WHERE name = N'SQLInjectionTestLabUser'
+)
 BEGIN
     CREATE USER [SQLInjectionTestLabUser] FOR LOGIN [SQLInjectionTestLabLogin];
 END;
 GO
 
--- This user can create/drop/read tables only in the lab schema, not in dbo.
+-- The account may create/drop/read only lab objects in SQLInjectionTest schema.
 GRANT CONNECT TO [SQLInjectionTestLabUser];
 GRANT CREATE TABLE TO [SQLInjectionTestLabUser];
 GRANT CONTROL ON SCHEMA::[SQLInjectionTest] TO [SQLInjectionTestLabUser];
@@ -49,7 +52,6 @@ BEGIN
         Name NVARCHAR(128) NOT NULL
     );
 END;
-GO
 
 IF OBJECT_ID(N'SQLInjectionTest.Disposable', N'U') IS NULL
 BEGIN
@@ -59,7 +61,6 @@ BEGIN
         Description NVARCHAR(200) NOT NULL
     );
 END;
-GO
 
 DELETE FROM [SQLInjectionTest].[Users];
 INSERT INTO [SQLInjectionTest].[Users] (Name)
@@ -67,5 +68,9 @@ VALUES (N'Alice'), (N'Bob'), (N'Charlie');
 
 DELETE FROM [SQLInjectionTest].[Disposable];
 INSERT INTO [SQLInjectionTest].[Disposable] (Id, Description)
-VALUES (1, N'This table is intentionally safe to DROP in the lab.');
+VALUES (1, N'This lab table may be dropped and recreated.');
+GO
+
+SELECT Id, Name FROM [SQLInjectionTest].[Users];
+SELECT OBJECT_ID(N'SQLInjectionTest.Disposable', N'U') AS DisposableTableObjectId;
 GO

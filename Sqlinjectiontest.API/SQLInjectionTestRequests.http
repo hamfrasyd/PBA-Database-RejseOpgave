@@ -1,0 +1,25 @@
+@host = http://localhost:5162
+
+### Normal: unsafe returns Alice
+GET {{host}}/api/sql-injection-test/unsafe?name=Alice
+
+### Normal: safe returns Alice
+GET {{host}}/api/sql-injection-test/safe?name=Alice
+
+### Unsafe: bypass WHERE condition (three users)
+GET {{host}}/api/sql-injection-test/unsafe?name=%27%20OR%201%3D1%20--
+
+### Safe: the same input is treated as plain text (zero users)
+GET {{host}}/api/sql-injection-test/safe?name=%27%20OR%201%3D1%20--
+
+### Unsafe: stacked SELECT (Alice plus all three users)
+GET {{host}}/api/sql-injection-test/unsafe?name=Alice%27%3B%20SELECT%20Id%2C%20Name%20FROM%20%5BSQLInjectionTest%5D.%5BUsers%5D%3B%20--
+
+### Unsafe: DROP the disposable lab table (never TravelDb real tables)
+GET {{host}}/api/sql-injection-test/unsafe?name=Alice%27%3B%20DROP%20TABLE%20%5BSQLInjectionTest%5D.%5BDisposable%5D%3B%20--
+
+### Safe: the same DROP string must NOT drop the table
+GET {{host}}/api/sql-injection-test/safe?name=Alice%27%3B%20DROP%20TABLE%20%5BSQLInjectionTest%5D.%5BDisposable%5D%3B%20--
+
+### Reset after destructive experiments
+POST {{host}}/api/sql-injection-test/reset

@@ -1,4 +1,7 @@
 using Microsoft.OpenApi;
+using TravelApp.API.DatabaseSelection;
+using TravelApp.BusinessLogic.DatabaseSelection;
+using TravelApp.BusinessLogic.DependencyInjection;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -28,16 +31,21 @@ builder.Services.AddSwaggerGen(options =>
 });
 
 // Add CORS policy
-builder.Services.AddCors(options =>
+// Taken from Configuration via fx. appsettings.json
+// If the Section is missing, or the array is empty, no CORS policy will be added.
+string[] allowedOrigins = builder.Configuration.GetSection("Cors:AllowedOrigins").Get<string[]>() ?? [];
+if (allowedOrigins.Length > 0)
 {
-    options.AddPolicy("AllowFrontend", policy =>
-        policy.WithOrigins("https://localhost:4200", "http://localhost:4200")
-              .AllowAnyHeader()
-              .AllowAnyMethod());
-});
+    builder.Services.AddCors(options => options.AddPolicy("TravelAppFrontend", policy =>
+        policy.WithOrigins(allowedOrigins)
+              .WithHeaders("Content-Type", HeaderName_For_DatabaseProvider.Key)
+              .WithMethods("GET", "POST", "PUT", "PATCH", "DELETE")
+              .AllowCredentials()));
+}
 
 // Register Application Services
 // -- Add Business Logic Services
+builder.Services.AddBusinessLogic();
 
 // -- Add Data Access Services
 
@@ -50,6 +58,15 @@ app.UseSwaggerUI();
 
 
 app.UseHttpsRedirection();
+
+// Use CORS policy
+if (allowedOrigins.Length > 0)
+{
+    app.UseCors("TravelAppFrontend");
+}
+
+// Use DatabaseProviderMiddleware to select the appropriate database provider based on the request
+app.UseMiddleware<DatabaseProviderMiddleware>();
 
 app.UseAuthorization();
 

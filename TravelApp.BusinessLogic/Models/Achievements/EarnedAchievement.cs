@@ -1,5 +1,3 @@
-using TravelApp.BusinessLogic.Models.Users;
-
 namespace TravelApp.BusinessLogic.Models
 {
     public class EarnedAchievement

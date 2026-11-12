@@ -8,11 +8,10 @@
 
   <ItemGroup>
     <Folder Include="Exceptions\Filters\" />
-    <Folder Include="Handlers\" />
     <Folder Include="DependencyInjection\" />
-    <Folder Include="Auth\" />
     <Folder Include="DatabaseSelection\" />
-    <Folder Include="Interfaces\" />
+    <Folder Include="Handlers\Trips\" />
+    <Folder Include="Interfaces\UnitOfWork-Interfaces\" />
     <Folder Include="Models\" />
   </ItemGroup>
 

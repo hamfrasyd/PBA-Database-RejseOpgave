@@ -7,6 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Folder Include="DependencyInjection\" />
     <Folder Include="MongoRepositories\" />
     <Folder Include="GraphRepositories\" />
     <Folder Include="SQLRepositories\EntityFramework\" />

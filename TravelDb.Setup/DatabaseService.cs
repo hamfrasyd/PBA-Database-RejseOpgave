@@ -75,7 +75,7 @@ public class DatabaseService
         // Opretter en forbindelse til master-databasen
         await using SqlConnection connection = new SqlConnection(masterConnectionString);
 
-        // Udskriver SQL Servers statusbeskeder (STATS) i konsollen
+        // Udskriver STATS-beskeder, som viser progressen af backup-operationen
         connection.InfoMessage += (_, e) => Console.WriteLine(e.Message);
         await connection.OpenAsync();
 

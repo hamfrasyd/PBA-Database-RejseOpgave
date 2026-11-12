@@ -7,7 +7,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Exceptions\Filters\" />
     <Folder Include="DependencyInjection\" />
     <Folder Include="DatabaseSelection\" />
     <Folder Include="Handlers\Trips\" />

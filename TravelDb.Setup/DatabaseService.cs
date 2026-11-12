@@ -65,4 +65,36 @@ public class DatabaseService
         command.Parameters.AddWithValue("@DatabaseName", databaseName);
         await command.ExecuteNonQueryAsync();
     }
+
+    /// <summary>
+    /// BackupDatabaseAsync laver en fuld backup af databasen.
+    /// Backup-filen bliver skrevet på SQL Server-siden, dvs. inde i Docker-containeren.
+    /// </summary>
+    public async Task BackupDatabaseAsync(string masterConnectionString, string databaseName, string backupFilePath)
+    {
+        // Opretter en forbindelse til master-databasen
+        await using SqlConnection connection = new SqlConnection(masterConnectionString);
+
+        // Udskriver SQL Servers statusbeskeder (STATS) i konsollen
+        connection.InfoMessage += (_, e) => Console.WriteLine(e.Message);
+        await connection.OpenAsync();
+
+        string safeName = databaseName.Replace("]", "]]");
+
+        string backupDatabaseSql = $"""
+        BACKUP DATABASE [{safeName}]
+        TO DISK = @BackupPath
+        WITH FORMAT, INIT, CHECKSUM, STATS = 10,
+             NAME = @BackupName;
+        """;
+
+        await using SqlCommand command = new SqlCommand(backupDatabaseSql, connection);
+
+        command.CommandTimeout = 1800; // Timeout på 30 min
+
+        command.Parameters.AddWithValue("@BackupPath", backupFilePath);
+        command.Parameters.AddWithValue("@BackupName", $"{databaseName}-full-{DateTime.Now:yyyyMMdd-HHmmss}");
+
+        await command.ExecuteNonQueryAsync();
+    }
 }

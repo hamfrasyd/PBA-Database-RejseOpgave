@@ -11,6 +11,24 @@ namespace TravelApp.DataAccess.SQLRepositories.EntityFramework
         }
 
         public DbSet<Continent> ContinentEntities => Set<Continent>();
+        public DbSet<Country> CountryEntities => Set<Country>();
+        public DbSet<City> CityEntities => Set<City>();
+        public DbSet<Activity> ActivityEntities => Set<Activity>();
+        public DbSet<Trip> TripEntities => Set<Trip>();
+        public DbSet<User> TravelUserEntities => Set<User>();
+        public DbSet<Review> ReviewEntities => Set<Review>();
+        public DbSet<Post> PostEntities => Set<Post>();
+        public DbSet<Friendship> FriendshipEntities => Set<Friendship>();
+        public DbSet<Achievement> AchievementEntities => Set<Achievement>();
+        public DbSet<InvitationStatus> InvitationStatusEntities => Set<InvitationStatus>();
+        public DbSet<Invite> InviteEntities => Set<Invite>();
+        public DbSet<TravelGroup> TravelGroupEntities => Set<TravelGroup>();
+        public DbSet<TripParticipant> TripParticipantEntities => Set<TripParticipant>();
+        public DbSet<TripStop> TripStopEntities => Set<TripStop>();
+        public DbSet<TripActivity> TripActivityEntities => Set<TripActivity>();
+        public DbSet<EarnedAchievement> EarnedAchievementEntities => Set<EarnedAchievement>();
+        public DbSet<GroupMembership> GroupMembershipEntities => Set<GroupMembership>();
+        public DbSet<GroupTrip> GroupTripEntities => Set<GroupTrip>();
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

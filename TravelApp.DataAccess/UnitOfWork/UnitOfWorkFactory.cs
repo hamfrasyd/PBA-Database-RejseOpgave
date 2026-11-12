@@ -25,7 +25,6 @@ namespace TravelApp.DataAccess.SQLRepositories.UnitOfWork
             {
                 case DatabaseProviderTypes.Sql:
                     return new SqlUnitOfWork(_connectionStrings.Sql, _loggerFactory.CreateLogger<SqlUnitOfWork>());
-                    throw new NotSupportedException($"Database provider '{_providerSelection.Provider}' is not implemented yet.");
 
                 case DatabaseProviderTypes.Mongo:
                     throw new NotSupportedException($"Database provider '{_providerSelection.Provider}' is not implemented yet.");

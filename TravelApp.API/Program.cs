@@ -2,6 +2,7 @@ using Microsoft.OpenApi;
 using TravelApp.API.DatabaseSelection;
 using TravelApp.BusinessLogic.DatabaseSelection;
 using TravelApp.BusinessLogic.DependencyInjection;
+using TravelApp.DataAccess.DependencyInjection;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -12,18 +13,6 @@ builder.Services.AddControllers();
 // Add Swagger
 builder.Services.AddSwaggerGen(options =>
 {
-    options.SwaggerDoc("v1", new OpenApiInfo { Title = "TravelDB API", Version = "v1" });
-    options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
-    {
-        Type = SecuritySchemeType.Http,
-        Scheme = "bearer",
-        BearerFormat = "JWT",
-        Description = "Paste the access token from POST /api/auth/login."
-    });
-    options.AddSecurityRequirement(document => new OpenApiSecurityRequirement
-    {
-        [new OpenApiSecuritySchemeReference("Bearer", document)] = new List<string>()
-    });
     string xmlFileName = $"{typeof(Program).Assembly.GetName().Name}.xml";
     string xmlFilePath = Path.Combine(AppContext.BaseDirectory, xmlFileName);
 
@@ -48,7 +37,7 @@ if (allowedOrigins.Length > 0)
 builder.Services.AddBusinessLogic();
 
 // -- Add Data Access Services
-
+builder.Services.AddDataAccess(builder.Configuration);
 
 var app = builder.Build();
 

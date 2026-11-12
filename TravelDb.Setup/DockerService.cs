@@ -54,4 +54,27 @@ public class DockerService
         }
         throw new FileNotFoundException("Kunne ikke finde compose.yaml.");
     }
+
+    /// <summary>
+    /// CreateFolderIfMissingAsync opretter en mappe inde i containeren, hvis den ikke allerede findes.
+    /// mkdir -p fejler ikke, hvis mappen allerede findes, så metoden kan køres hver gang.
+    /// </summary>
+    public async Task CreateFolderIfMissingAsync(string containerName, string folderPath)
+    {
+        // -u mssql sikrer, at mappen bliver ejet af samme bruger, som SQL Server kører som.
+        // Ellers kan SQL Server risikere ikke at have skriverettigheder til mappen.
+        using var proces = Process.Start("docker", $"exec -u mssql {containerName} mkdir -p {folderPath}");
+
+        if (proces is null)
+        {
+            throw new Exception("Docker kunne ikke startes");
+        }
+
+        await proces.WaitForExitAsync();
+
+        if (proces.ExitCode != 0)
+        {
+            throw new Exception($"Kunne ikke oprette mappen '{folderPath}' i containeren '{containerName}'.");
+        }
+    }
 }

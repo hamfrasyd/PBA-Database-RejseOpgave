@@ -1,3 +1,7 @@
 <Solution>
+  <Project Path="TravelApp.API/TravelApp.API.csproj" Id="8e7caa7a-0078-4cce-af67-9b6d99f454e6" />
+  <Project Path="TravelApp.BusinessLogic/TravelApp.BusinessLogic.csproj" Id="e08875ac-92a6-40ee-8010-08f66c2e651b" />
+  <Project Path="TravelApp.DataAccess/TravelApp.DataAccess.csproj" Id="673eb3a3-9a6e-4dd5-8cc6-76d759e8b8c7" />
+  <Project Path="TravelDb.Migrator/TravelDb.Migrator.csproj" Id="3e84f562-22f6-47a8-b0d2-5ede3065064d" />
   <Project Path="TravelDb.Setup/TravelDb.Setup.csproj" />
 </Solution>

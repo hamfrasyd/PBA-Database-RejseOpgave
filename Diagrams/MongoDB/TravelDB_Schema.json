@@ -1,61 +1,109 @@
 {
     "trip": {
-        "id": "integer",
+        "_id": "string",
         "startDate": "date",
         "endDate": "date",
         "isCompleted": "boolean",
         "experienceNotes": "string",
         "planNotes": "string",
-        "group": {
-            "id": "integer",
-            "name": "string",
-            "description": "string"
-        },
-        "user": {
-            "id": "integer",
+        "destinations": [
+            {
+                "city": {
+                    "cityId": "string",
+                    "name": "string",
+                    "country": {
+                        "countryId": "string",
+                        "name": "string",
+                        "continent": {
+                            "continentId": "string",
+                            "name": "string"
+                        }
+                    }
+                }
+            }
+        ],
+        "admin": {
+            "userId": "string",
             "firstName": "string",
             "lastName": "string"
         },
+
+        "participants": [
+            {
+                "userId": "string"
+            }
+        ],
+        "groupParticipants": [
+            {
+                "groupId": "string"
+            }
+        ],
+
         "reviews": [
             {
-                "id": "integer",
+                "reviewId": "string",
                 "rating": "integer",
                 "comment": "string",
                 "content": "string",
                 "createdAt": "date",
                 "user": {
-                    "id": "integer",
+                    "userId": "string",
                     "firstName": "string",
                     "lastName": "string"
                 }
             }
         ],
+        "activities": [
+            {
+                "activityId": "string",
+                "name": "string",
+                "description": "string",
+                "location": {
+                    "city": {
+                        "cityId": "string",
+                        "name": "string",
+                        "country": {
+                            "countryId": "string",
+                            "name": "string",
+                            "continent": {
+                                "continentId": "string",
+                                "name": "string"
+                            }
+                        }
+                    }
+                }
+            }
+        ]
     },
 
 
 
     "user": {
-        "id": "integer",
+        "_id": "string",
+        "firstName": "string",
+        "lastName": "string",
+        "email": "string",
+        "birthday": "date",
+        "isPrivate": "boolean",
+        "createdAt": "date",
         "city": {
+            "cityId": "string",
             "name": "string",
             "country": {
+                "countryId": "string",
                 "name": "string",
                 "continent": {
+                    "continentId": "string",
                     "name": "string"
                 }
             }
         },
-        "firstName": "string",
-        "lastName": "string",
-        "email": "string",
-        "bithday": "date",
-        "isPrivate": "boolean",
-        "createdAt": "date",
         "friendships": [
             {
-                "id": "integer",
+                "_id": "string",
+                "startDate": "date", 
                 "friend": {
-                    "id": "integer",
+                    "userId": "string",
                     "firstName": "string",
                     "lastName": "string"
                 }
@@ -63,7 +111,12 @@
         ],
         "achievements": [
             {
-                "id": "integer",
+                "achievementId": "string"
+            }
+        ],
+        "earnedAchievements": [
+            {
+                "achievementId": "string",
                 "name": "string",
                 "description": "string",
                 "earnedAt": "date"
@@ -71,12 +124,127 @@
         ],
         "posts": [
             {
-                "id": "integer",
+                "_id": "string",
                 "content": "string",
                 "createdAt": "date"
             }
         ],
+        "invitesSent": [
+            {
+                "_id": "string",
+                "status": "string",
+                "trip": {
+                    "tripId": "string",
+                    "startDate": "date",
+                    "endDate": "date"
+                },
+                "recipient": {
+                    "userId": "string",
+                    "firstName": "string",
+                    "lastName": "string"
+                }
+            }
+        ],
+        "invitesReceived": [
+            {
+                "_id": "string",
+                "status": "string",
+                "sender": {
+                    "userId": "string",
+                    "firstName": "string",
+                    "lastName": "string"
+                },
+                "trip": {
+                    "tripId": "string",
+                    "startDate": "date",
+                    "endDate": "date",
+                    "destination": {
+                        "city": {
+                            "cityId": "string",
+                            "name": "string",
+                            "country": {
+                                "countryId": "string",
+                                "name": "string",
+                                "continent": {
+                                    "continentId": "string",
+                                    "name": "string"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        ]
+    },
+
+
+
+    "city": {
+        "_id": "string",
+        "name": "string",
+        "country": {
+            "_id": "string",
+            "name": "string",
+            "continent": {
+                "_id": "string",
+                "name": "string"
+            }
+        },
+        "activities": [
+            {
+                "activityId": "string"
+            }
+        ]
+    },
+
 
     
-    }
+    "activities": [
+        {
+            "_id": "string",
+            "name": "string",
+            "description": "string",
+            "location": {
+                "city": {
+                    "cityId": "string",
+                    "name": "string",
+                    "country": {
+                        "countryId": "string",
+                        "name": "string",
+                        "continent": {
+                            "continentId": "string",
+                            "name": "string"
+                        }
+                    }
+                }
+            }
+        }
+    ],
+
+
+
+    "groups": [
+        {
+            "_id": "string",
+            "name": "string",
+            "description": "string",
+            "users": [
+                {
+                    "userId": "string",
+                    "firstName": "string",
+                    "lastName": "string"
+                }
+            ]
+        }
+    ],
+
+
+
+    "achievements": [
+        {
+            "_id": "string",
+            "name": "string",
+            "description": "string"
+            }
+    ]
 }

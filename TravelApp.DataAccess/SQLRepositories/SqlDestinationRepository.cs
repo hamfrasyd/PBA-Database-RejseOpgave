@@ -56,9 +56,6 @@ namespace TravelApp.DataAccess.SQLRepositories
         public async Task<City?> GetCityByIdAsync(int cityId)
         {
             City? matchingCity = await _context.CityEntities.Include(city => city.Country).FirstOrDefaultAsync(city => city.Id == cityId);
-            
-            if null return matchingCity;
-
             return matchingCity;
         }
 

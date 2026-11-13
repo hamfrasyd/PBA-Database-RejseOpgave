@@ -30,9 +30,8 @@ namespace TravelApp.BusinessLogic.Handlers.Destinations
                 throw new TravelAppValidationException("Country is required.");
             }
 
-            City? updatedCity = await unitOfWork.Destinations.UpdateCityAsync(request);
-            
-            if (updatedCity is null)
+            bool dbOperationSuccessful = await unitOfWork.Destinations.UpdateCityAsync(request);
+            if (dbOperationSuccessful is false)
             {
                 throw new TravelAppNotFoundException($"City {request.CityId} was not found.");
             }

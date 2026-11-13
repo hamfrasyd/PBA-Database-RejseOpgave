@@ -115,18 +115,19 @@ namespace TravelApp.DataAccess.SQLRepositories
             await _context.ActivityEntities.AddAsync(activity);
         }
 
-        public async Task<City?> UpdateCityAsync(UpdateCityRequest request)
+        /// <inheritdoc />
+        public async Task<bool> UpdateCityAsync(UpdateCityRequest request)
         {
             City? cityInDb = await _context.CityEntities.FirstOrDefaultAsync(city => city.Id == request.CityId);
             if (cityInDb is null)
             {
-                return null;
+                return false;
             }
 
             cityInDb.Name = request.Name.Trim();
             cityInDb.Country = request.Country;
 
-            return cityInDb;
+            return true;
         }
 
         public Task UpdateActivityAsync(Activity activity)

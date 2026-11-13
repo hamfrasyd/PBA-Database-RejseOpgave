@@ -7,7 +7,7 @@ namespace TravelApp.BusinessLogic.Models
         private string _content;
         private byte _stars;
         private Trip? _trip;
-        private User? _user;
+        private TravelUser? _user;
 
         // Properties
         public int Id
@@ -34,7 +34,7 @@ namespace TravelApp.BusinessLogic.Models
             set { _trip = value; }
         }
 
-        public User? User
+        public TravelUser? User
         {
             get { return _user; }
             set { _user = value; }

@@ -1,4 +1,7 @@
+using Microsoft.AspNetCore.Authentication.Cookies;
+using TravelApp.API.Auth;
 using TravelApp.API.DatabaseSelection;
+using TravelApp.BusinessLogic.Auth;
 using TravelApp.BusinessLogic.DatabaseSelection;
 using TravelApp.BusinessLogic.DependencyInjection;
 using TravelApp.DataAccess.DependencyInjection;
@@ -32,6 +35,32 @@ if (allowedOrigins.Length > 0)
 }
 
 // Register Application Services
+// -- Add API Services
+// --- Add AUTH services
+builder.Services.AddScoped<ICurrentUser, CurrentUser>();
+// Cookie session for the local demonstration login (no user passwords exist in dbo.User).
+builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+    .AddCookie(options =>
+    {
+        options.Cookie.Name = "TravelApp.Session";
+        options.Cookie.HttpOnly = true;
+        options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
+        options.Cookie.SameSite = SameSiteMode.Strict;
+        options.ExpireTimeSpan = TimeSpan.FromHours(8);
+        options.Events.OnRedirectToLogin = context =>
+        {
+            context.Response.StatusCode = StatusCodes.Status401Unauthorized;
+            return Task.CompletedTask;
+        };
+        options.Events.OnRedirectToAccessDenied = context =>
+        {
+            context.Response.StatusCode = StatusCodes.Status403Forbidden;
+            return Task.CompletedTask;
+        };
+    });
+builder.Services.AddAuthorization();
+
+
 // -- Add Business Logic Services
 builder.Services.AddBusinessLogic();
 
@@ -56,6 +85,8 @@ if (allowedOrigins.Length > 0)
 // Use DatabaseProviderMiddleware to select the appropriate database provider based on the request
 app.UseMiddleware<DatabaseProviderMiddleware>();
 
+// Use Authentication and Authorization. Authenticaton must be before Authorization, otherwise the user will not be authenticated and will always get a 403 Forbidden response.
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();

@@ -4,7 +4,7 @@ namespace TravelApp.BusinessLogic.Models
     {
         // Fields
         private DateTime _earnedAt;
-        private User? _user;
+        private TravelUser? _user;
         private Achievement? _achievement;
 
         // Properties
@@ -14,7 +14,7 @@ namespace TravelApp.BusinessLogic.Models
             set { _earnedAt = value; }
         }
 
-        public User? User
+        public TravelUser? User
         {
             get { return _user; }
             set { _user = value; }

@@ -4,7 +4,7 @@ namespace TravelApp.BusinessLogic.Models
     {
         // Fields
         private Trip? _trip;
-        private User? _user;
+        private TravelUser? _user;
 
         // Properties
         public Trip? Trip
@@ -13,7 +13,7 @@ namespace TravelApp.BusinessLogic.Models
             set { _trip = value; }
         }
 
-        public User? User
+        public TravelUser? User
         {
             get { return _user; }
             set { _user = value; }

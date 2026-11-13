@@ -10,16 +10,32 @@ namespace TravelApp.DataAccess.SQLRepositories
     {
         private readonly TravelAppContext _context;
 
-        /// <summary>Initializes a new SqlAchievementRepository instance.</summary>
         public SqlAchievementRepository(TravelAppContext context)
         {
             _context = context;
         }
 
-        /// <summary>Retrieves definitions.</summary>
         public async Task<List<Achievement>> GetDefinitionsAsync()
         {
             List<Achievement> result = await _context.AchievementEntities.AsNoTracking().OrderBy(item => item.Name).ToListAsync();
+            return result;
+        }
+
+        public async Task<List<GetEarnedAchievementsResponse>> GetEarnedByUserAsync(int userId)
+        {
+            IQueryable<GetEarnedAchievementsResponse> earnedAchievements = _context.EarnedAchievementEntities
+                .AsNoTracking()
+                .Where(earned => earned.User!.Id == userId)
+                .OrderByDescending(earned => earned.EarnedAt)
+                .Select(earned => new GetEarnedAchievementsResponse
+                {
+                    AchievementId = earned.Achievement!.Id,
+                    Name = earned.Achievement.Name,
+                    Description = earned.Achievement.Description,
+                    EarnedAt = earned.EarnedAt
+                });
+
+            List<GetEarnedAchievementsResponse> result = await earnedAchievements.ToListAsync();
             return result;
         }
     }

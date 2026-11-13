@@ -1,6 +1,6 @@
 namespace TravelApp.BusinessLogic.Models
 {
-    public class User
+    public class TravelUser
     {
         // Fields
         private int _id;
@@ -104,7 +104,7 @@ namespace TravelApp.BusinessLogic.Models
         }
 
         // Constructor
-        public User()
+        public TravelUser()
         {
             _firstName = string.Empty;
             _lastName = string.Empty;

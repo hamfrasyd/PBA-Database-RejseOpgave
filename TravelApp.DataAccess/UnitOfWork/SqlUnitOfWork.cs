@@ -7,12 +7,16 @@ using TravelApp.DataAccess.SQLRepositories.EntityFramework;
 namespace TravelApp.DataAccess.SQLRepositories.UnitOfWork
 {
     /// <summary>Coordinates EF Core repositories over one DbContext and commit boundary.</summary>
-    internal class SqlUnitOfWork : IUnitOfWork
+    public class SqlUnitOfWork : IUnitOfWork
     {
         private readonly TravelAppContext _context;
         private readonly ILogger<SqlUnitOfWork> _logger;
 
+        /// <summary>Gets the destinations.</summary>
         public IDestinationRepository Destinations { get; }
+
+        /// <summary>Gets the achievements.</summary>
+        public IAchievementRepository Achievements { get; }
 
         public SqlUnitOfWork(string connectionString, ILogger<SqlUnitOfWork> logger)
         {
@@ -20,7 +24,10 @@ namespace TravelApp.DataAccess.SQLRepositories.UnitOfWork
 
             DbContextOptions<TravelAppContext> options = new DbContextOptionsBuilder<TravelAppContext>().UseSqlServer(connectionString).Options;
             _context = new TravelAppContext(options);
+
             Destinations = new SqlDestinationRepository(_context);
+            Achievements = new SqlAchievementRepository(_context);
+
         }
 
         /// <summary>Persists all pending EF Core changes as one atomic database save.</summary>
@@ -29,6 +36,12 @@ namespace TravelApp.DataAccess.SQLRepositories.UnitOfWork
             try
             {
                 int changedEntities = await _context.SaveChangesAsync();
+
+                if (_context.Database.CurrentTransaction is not null)
+                {
+                    await _context.Database.CommitTransactionAsync();
+                }
+
                 _logger.LogDebug("Committed {ChangedEntities} TravelDB entities.", changedEntities);
             }
             catch (Exception exception)

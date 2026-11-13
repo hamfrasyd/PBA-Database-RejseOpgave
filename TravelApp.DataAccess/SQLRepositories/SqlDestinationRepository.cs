@@ -6,7 +6,7 @@ using TravelApp.DataAccess.SQLRepositories.EntityFramework;
 
 namespace TravelApp.DataAccess.SQLRepositories
 {
-    internal class SqlDestinationRepository : IDestinationRepository
+    public class SqlDestinationRepository : IDestinationRepository
     {
         private readonly TravelAppContext _context;
 

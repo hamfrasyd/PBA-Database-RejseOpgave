@@ -16,7 +16,39 @@ services:
     volumes:
       - travel-mssql-data:/var/opt/mssql
 
+  ##Få en connectionstring ud fra denne fil - opret databasen i docker automatisk når programmet c# kører. 
+
+  mongodb:
+    image: mongo:8
+    container_name: travel-mongodb
+    restart: unless-stopped
+
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: admin
+      MONGO_INITDB_ROOT_PASSWORD: "TravelDB!2026Local"
+
+    ports:
+      - "27018:27017"
+
+    volumes:
+      - travel-mongodb-data:/data/db
+
+  neo4j:
+    image: neo4j:5
+    container_name: travel-neo4j
+    restart: unless-stopped
+
+    environment:
+      NEO4J_AUTH: neo4j/TravelDB!2026Local
+
+    ports:
+      - "7474:7474"
+      - "7687:7687"
+
+    volumes:
+      - travel-neo4j-data:/data
+
 volumes:
   travel-mssql-data:
-
-  ##Få en connectionstring ud fra denne fil - opret databasen i docker automatisk når programmet c# kører. 
+  travel-mongodb-data:
+  travel-neo4j-data:

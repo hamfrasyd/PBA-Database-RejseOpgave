@@ -12,6 +12,9 @@ namespace TravelApp.BusinessLogic.Interfaces
         /// <summary>Provides access to the users repository.</summary>
         public IUserRepository Users { get; }
 
+        /// <summary>Provides access to the posts repository.</summary>
+        public IPostRepository Posts { get; }
+
         /// <summary>Saves pending changes and commits the transaction.</summary>
         public Task CommitAsync();
     }

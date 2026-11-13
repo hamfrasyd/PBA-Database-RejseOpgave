@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using TravelApp.BusinessLogic.Interfaces;
+using TravelApp.BusinessLogic.Interfaces.Repository_Interfaces;
 using TravelApp.BusinessLogic.Models;
 using TravelApp.DataAccess.SQLRepositories;
 using TravelApp.DataAccess.SQLRepositories.EntityFramework;
@@ -17,6 +18,8 @@ namespace TravelApp.DataAccess.SQLRepositories.UnitOfWork
         public IAchievementRepository Achievements { get; }
         public IUserRepository Users { get; }
 
+        public IPostRepository Posts { get; }
+
         public SqlUnitOfWork(string connectionString, ILogger<SqlUnitOfWork> logger)
         {
             _logger = logger;
@@ -27,6 +30,7 @@ namespace TravelApp.DataAccess.SQLRepositories.UnitOfWork
             Destinations = new SqlDestinationRepository(_context);
             Achievements = new SqlAchievementRepository(_context);
             Users = new SqlUserRepository(_context);
+            Posts = new SqlPostRepository(_context);
         }
 
         /// <summary>Persists all pending EF Core changes as one atomic database save.</summary>

@@ -26,9 +26,20 @@ namespace TravelApp.BusinessLogic.DependencyInjection
 
         private static void RegisterDestinations(IServiceCollection services)
         {
+            services.AddScoped<CreateActivityHandler>();
+            services.AddScoped<CreateCityHandler>();
+            services.AddScoped<DeleteActivityHandler>();
+            services.AddScoped<DeleteCityHandler>();
+            services.AddScoped<GetActivityHandler>();
+            services.AddScoped<GetCitiesHandler>();
+            services.AddScoped<GetCityActivitiesHandler>();
+            services.AddScoped<GetCityHandler>();
             services.AddScoped<GetContinentsHandler>();
             services.AddScoped<GetCountriesHandler>();
-            services.AddScoped<GetCitiesHandler>();
+            services.AddScoped<GetDestinationStatsHandler>();
+            services.AddScoped<UpdateActivityHandler>();
+            services.AddScoped<UpdateCityHandler>();
+
         }
     }
 }

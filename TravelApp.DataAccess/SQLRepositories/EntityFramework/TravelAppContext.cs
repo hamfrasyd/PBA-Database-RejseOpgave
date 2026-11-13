@@ -1,11 +1,13 @@
 using Microsoft.EntityFrameworkCore;
 using TravelApp.BusinessLogic.Models;
+using TravelApp.BusinessLogic.Handlers.Destinations;
 
 namespace TravelApp.DataAccess.SQLRepositories.EntityFramework
 {
     /// <summary>Maps the SQL-first TravelDb schema. EF migrations do not own this database.</summary>
     public class TravelAppContext : DbContext
     {
+        /// <summary>Initializes a new TravelAppContext instance.</summary>
         public TravelAppContext(DbContextOptions<TravelAppContext> options) : base(options)
         {
         }
@@ -15,7 +17,7 @@ namespace TravelApp.DataAccess.SQLRepositories.EntityFramework
         public DbSet<City> CityEntities => Set<City>();
         public DbSet<Activity> ActivityEntities => Set<Activity>();
         public DbSet<Trip> TripEntities => Set<Trip>();
-        public DbSet<User> TravelUserEntities => Set<User>();
+        public DbSet<User> UserEntities => Set<User>();
         public DbSet<Review> ReviewEntities => Set<Review>();
         public DbSet<Post> PostEntities => Set<Post>();
         public DbSet<Friendship> FriendshipEntities => Set<Friendship>();
@@ -29,6 +31,8 @@ namespace TravelApp.DataAccess.SQLRepositories.EntityFramework
         public DbSet<EarnedAchievement> EarnedAchievementEntities => Set<EarnedAchievement>();
         public DbSet<GroupMembership> GroupMembershipEntities => Set<GroupMembership>();
         public DbSet<GroupTrip> GroupTripEntities => Set<GroupTrip>();
+
+        public DbSet<GetDestinationStatsResponse> DestinationStatistics => Set<GetDestinationStatsResponse>();
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -211,7 +215,6 @@ namespace TravelApp.DataAccess.SQLRepositories.EntityFramework
                 entity.Property<int>("GroupId").HasColumnName("Group_Id").IsRequired();
             });
 
-
             // Explicit relationship mappings mirror the foreign keys in the SQL-first schema.
             modelBuilder.Entity<Country>()
                 .HasOne(item => item.Continent)
@@ -366,6 +369,8 @@ namespace TravelApp.DataAccess.SQLRepositories.EntityFramework
                 .HasForeignKey("GroupId")
                 .IsRequired()
                 .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<GetDestinationStatsResponse>(entity => entity.HasNoKey().ToView("vw_DestinationStats", "dbo"));
         }
     }
 }

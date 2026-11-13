@@ -148,11 +148,14 @@ namespace TravelApp.API.Controllers
         [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status403Forbidden)]
         [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status404NotFound)] // Thrown from UpdateCityHandler for missing resources.
         [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult<int>> UpdateCity([FromRoute] int cityId, [FromBody] UpdateCityRequest request, [FromServices] UpdateCityHandler updateCityHandler)
+        public async Task<ActionResult<UpdateCityRequest>> UpdateCity(
+            [FromRoute] int cityId,
+            [FromBody] UpdateCityRequest request,
+            [FromServices] UpdateCityHandler updateCityHandler)
         {
             request.CityId = cityId;
             await updateCityHandler.UpdateCityAsync(request);
-            return Ok(cityId);
+            return Ok(request);
         }
 
         /// <summary>Deletes a city and returns its ID.</summary>

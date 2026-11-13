@@ -56,6 +56,9 @@ namespace TravelApp.DataAccess.SQLRepositories
         public async Task<City?> GetCityByIdAsync(int cityId)
         {
             City? matchingCity = await _context.CityEntities.Include(city => city.Country).FirstOrDefaultAsync(city => city.Id == cityId);
+            
+            if null return matchingCity;
+
             return matchingCity;
         }
 
@@ -112,10 +115,19 @@ namespace TravelApp.DataAccess.SQLRepositories
             await _context.ActivityEntities.AddAsync(activity);
         }
 
-        public Task UpdateCityAsync(City city)
+        /// <inheritdoc />
+        public async Task<bool> UpdateCityAsync(UpdateCityRequest request)
         {
-            // The handler updated an entity already tracked by this Unit of Work.
-            return Task.CompletedTask;
+            City? cityInDb = await _context.CityEntities.FirstOrDefaultAsync(city => city.Id == request.CityId);
+            if (cityInDb is null)
+            {
+                return false;
+            }
+
+            cityInDb.Name = request.Name.Trim();
+            cityInDb.Country = request.Country;
+
+            return true;
         }
 
         public Task UpdateActivityAsync(Activity activity)

@@ -4,14 +4,17 @@ using TravelApp.API.DatabaseSelection;
 using TravelApp.BusinessLogic.Auth;
 using TravelApp.BusinessLogic.DatabaseSelection;
 using TravelApp.BusinessLogic.DependencyInjection;
+using TravelApp.BusinessLogic.Exceptions.Filters;
 using TravelApp.DataAccess.DependencyInjection;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
-builder.Services.AddControllers();
-
+builder.Services.AddControllers(options =>
+{
+    options.Filters.Add<TravelExceptionFilter>();
+});
 // Add Swagger
 builder.Services.AddSwaggerGen(options =>
 {

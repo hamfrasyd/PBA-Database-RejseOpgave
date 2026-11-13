@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using TravelApp.BusinessLogic.Exceptions.Filters;
 using TravelApp.BusinessLogic.Handlers.Achievements;
 
 namespace TravelApp.API.Controllers
@@ -18,7 +19,7 @@ namespace TravelApp.API.Controllers
         [AllowAnonymous]
         [ProducesResponseType(typeof(List<GetAchievementDefinitionsResponse>), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
-        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status500InternalServerError)]
         public async Task<ActionResult<List<GetAchievementDefinitionsResponse>>> GetDefinitions([FromServices] GetAchievementDefinitionsHandler getAchievementDefinitionsHandler)
         {
             List<GetAchievementDefinitionsResponse> result = await getAchievementDefinitionsHandler.GetAchievementDefinitionsAsync();
@@ -35,9 +36,9 @@ namespace TravelApp.API.Controllers
         [Authorize]
         [ProducesResponseType(typeof(List<GetEarnedAchievementsResponse>), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
-        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-        [ProducesResponseType(StatusCodes.Status403Forbidden)]
-        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        [ProducesResponseType(typeof(UnauthorizedResult), StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status500InternalServerError)]
         public async Task<ActionResult<List<GetEarnedAchievementsResponse>>> GetEarned([FromRoute] int userId, [FromServices] GetEarnedAchievementsHandler getEarnedAchievementsHandler)
         {
             List<GetEarnedAchievementsResponse> result = await getEarnedAchievementsHandler.GetEarnedAchievementsAsync(userId);

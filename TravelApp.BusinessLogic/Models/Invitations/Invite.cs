@@ -6,8 +6,8 @@ namespace TravelApp.BusinessLogic.Models
         private int _id;
         private DateTime _sendDate;
         private Trip? _trip;
-        private User? _receiver;
-        private User? _sender;
+        private TravelUser? _receiver;
+        private TravelUser? _sender;
         private InvitationStatus? _invitationStatus;
 
         // Properties
@@ -29,13 +29,13 @@ namespace TravelApp.BusinessLogic.Models
             set { _trip = value; }
         }
 
-        public User? Receiver
+        public TravelUser? Receiver
         {
             get { return _receiver; }
             set { _receiver = value; }
         }
 
-        public User? Sender
+        public TravelUser? Sender
         {
             get { return _sender; }
             set { _sender = value; }

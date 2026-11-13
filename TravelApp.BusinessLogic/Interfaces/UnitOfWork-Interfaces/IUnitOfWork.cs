@@ -9,6 +9,9 @@ namespace TravelApp.BusinessLogic.Interfaces
         /// <summary>Provides access to the achievements repository.</summary>
         public IAchievementRepository Achievements { get; }
 
+        /// <summary>Provides access to the users repository.</summary>
+        public IUserRepository Users { get; }
+
         /// <summary>Saves pending changes and commits the transaction.</summary>
         public Task CommitAsync();
     }

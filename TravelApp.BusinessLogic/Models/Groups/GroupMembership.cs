@@ -3,11 +3,11 @@ namespace TravelApp.BusinessLogic.Models
     public class GroupMembership
     {
         // Fields
-        private User? _user;
+        private TravelUser? _user;
         private TravelGroup? _group;
 
         // Properties
-        public User? User
+        public TravelUser? User
         {
             get { return _user; }
             set { _user = value; }

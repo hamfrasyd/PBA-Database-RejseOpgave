@@ -5,8 +5,8 @@ namespace TravelApp.BusinessLogic.Models
         // Fields
         private int _id;
         private DateTime _startDate;
-        private User? _userA;
-        private User? _userB;
+        private TravelUser? _userA;
+        private TravelUser? _userB;
 
         public int Id
         {
@@ -20,13 +20,13 @@ namespace TravelApp.BusinessLogic.Models
             set { _startDate = value; }
         }
 
-        public User? UserA
+        public TravelUser? UserA
         {
             get { return _userA; }
             set { _userA = value; }
         }
 
-        public User? UserB
+        public TravelUser? UserB
         {
             get { return _userB; }
             set { _userB = value; }

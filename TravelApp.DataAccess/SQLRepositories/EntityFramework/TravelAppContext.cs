@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using TravelApp.BusinessLogic.Models;
 using TravelApp.BusinessLogic.Handlers.Destinations;
+using TravelApp.BusinessLogic.Handlers.Users;
 
 namespace TravelApp.DataAccess.SQLRepositories.EntityFramework
 {
@@ -17,7 +18,7 @@ namespace TravelApp.DataAccess.SQLRepositories.EntityFramework
         public DbSet<City> CityEntities => Set<City>();
         public DbSet<Activity> ActivityEntities => Set<Activity>();
         public DbSet<Trip> TripEntities => Set<Trip>();
-        public DbSet<User> UserEntities => Set<User>();
+        public DbSet<TravelUser> TravelUserEntities => Set<TravelUser>();
         public DbSet<Review> ReviewEntities => Set<Review>();
         public DbSet<Post> PostEntities => Set<Post>();
         public DbSet<Friendship> FriendshipEntities => Set<Friendship>();
@@ -31,7 +32,7 @@ namespace TravelApp.DataAccess.SQLRepositories.EntityFramework
         public DbSet<EarnedAchievement> EarnedAchievementEntities => Set<EarnedAchievement>();
         public DbSet<GroupMembership> GroupMembershipEntities => Set<GroupMembership>();
         public DbSet<GroupTrip> GroupTripEntities => Set<GroupTrip>();
-
+        public DbSet<GetUserProfileResponse> UserProfiles => Set<GetUserProfileResponse>();
         public DbSet<GetDestinationStatsResponse> DestinationStatistics => Set<GetDestinationStatsResponse>();
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -78,7 +79,7 @@ namespace TravelApp.DataAccess.SQLRepositories.EntityFramework
                 entity.Property(item => item.PlanNotes).HasMaxLength(1024);
             });
 
-            modelBuilder.Entity<User>(entity =>
+            modelBuilder.Entity<TravelUser>(entity =>
             {
                 entity.ToTable("User", "dbo");
                 entity.HasKey(item => item.Id);
@@ -215,6 +216,7 @@ namespace TravelApp.DataAccess.SQLRepositories.EntityFramework
                 entity.Property<int>("GroupId").HasColumnName("Group_Id").IsRequired();
             });
 
+
             // Explicit relationship mappings mirror the foreign keys in the SQL-first schema.
             modelBuilder.Entity<Country>()
                 .HasOne(item => item.Continent)
@@ -237,7 +239,7 @@ namespace TravelApp.DataAccess.SQLRepositories.EntityFramework
                 .IsRequired()
                 .OnDelete(DeleteBehavior.NoAction);
 
-            modelBuilder.Entity<User>()
+            modelBuilder.Entity<TravelUser>()
                 .HasOne(item => item.City)
                 .WithMany()
                 .HasForeignKey("CityId")
@@ -370,6 +372,7 @@ namespace TravelApp.DataAccess.SQLRepositories.EntityFramework
                 .IsRequired()
                 .OnDelete(DeleteBehavior.Cascade);
 
+            modelBuilder.Entity<GetUserProfileResponse>(entity => entity.HasNoKey().ToView("vw_UserProfile", "dbo"));
             modelBuilder.Entity<GetDestinationStatsResponse>(entity => entity.HasNoKey().ToView("vw_DestinationStats", "dbo"));
         }
     }

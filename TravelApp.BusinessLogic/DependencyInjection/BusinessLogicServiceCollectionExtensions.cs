@@ -26,6 +26,7 @@ namespace TravelApp.BusinessLogic.DependencyInjection
         private static void RegisterDestinations(IServiceCollection services)
         {
             services.AddScoped<GetContinentsHandler>();
+            services.AddScoped<GetCountriesHandler>();
         }
     }
 }

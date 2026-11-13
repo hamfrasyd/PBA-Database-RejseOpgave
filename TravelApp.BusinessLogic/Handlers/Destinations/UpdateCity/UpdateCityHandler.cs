@@ -20,29 +20,22 @@ namespace TravelApp.BusinessLogic.Handlers.Destinations
         {
             await using IUnitOfWork unitOfWork = _unitOfWorkFactory.Create();
 
-            City? entityFromDb = await unitOfWork.Destinations.GetCityByIdAsync(request.CityId);
-
-            if (entityFromDb is null)
-            {
-                throw new TravelAppNotFoundException($"City {request.CityId} was not found.");
-            }
-
             if (string.IsNullOrWhiteSpace(request.Name))
             {
                 throw new TravelAppValidationException("City name is required.");
             }
 
-            Country? countryFromDb = await unitOfWork.Destinations.GetCountryByIdAsync(request.CountryId);
-
-            if (countryFromDb is null)
+            if (request.Country is null)
             {
-                throw new TravelAppValidationException("The parent destination does not exist.");
+                throw new TravelAppValidationException("Country is required.");
             }
 
-            entityFromDb.Name = request.Name.Trim();
-            entityFromDb.Country = countryFromDb;
-
-            await unitOfWork.Destinations.UpdateCityAsync(entityFromDb);
+            City? updatedCity = await unitOfWork.Destinations.UpdateCityAsync(request);
+            
+            if (updatedCity is null)
+            {
+                throw new TravelAppNotFoundException($"City {request.CityId} was not found.");
+            }
 
             await unitOfWork.CommitAsync();
         }

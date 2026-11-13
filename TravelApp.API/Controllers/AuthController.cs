@@ -1,9 +1,10 @@
-using System.Security.Claims;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 using TravelApp.BusinessLogic.Auth;
+using TravelApp.BusinessLogic.Exceptions.Filters;
 using TravelApp.BusinessLogic.Handlers.Accounts;
 using TravelApp.BusinessLogic.Handlers.Users;
 
@@ -27,9 +28,9 @@ namespace TravelApp.API.Controllers
         [HttpPost("login")]
         [AllowAnonymous]
         [ProducesResponseType(typeof(LoginResponse), StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)] // Thrown from LoginHandler for an invalid ID.
-        [ProducesResponseType(StatusCodes.Status404NotFound)] // Thrown from LoginHandler when the user does not exist.
-        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status400BadRequest)] // Thrown from LoginHandler for an invalid ID.
+        [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status404NotFound)] // Thrown from LoginHandler when the user does not exist.
+        [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status500InternalServerError)]
         public async Task<ActionResult<LoginResponse>> Login([FromBody] LoginRequest request, [FromServices] LoginHandler loginHandler)
         {
             LoginResponse result = await loginHandler.LoginAsync(request);
@@ -53,8 +54,8 @@ namespace TravelApp.API.Controllers
         [HttpPost("logout")]
         [Authorize]
         [ProducesResponseType(typeof(string), StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        [ProducesResponseType(typeof(UnauthorizedResult), StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status500InternalServerError)]
         public async Task<ActionResult<string>> Logout()
         {
             await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
@@ -68,9 +69,9 @@ namespace TravelApp.API.Controllers
         [HttpGet("me")]
         [Authorize]
         [ProducesResponseType(typeof(GetUserProfileResponse), StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)] // Thrown from GetUserProfileHandler.
-        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        [ProducesResponseType(typeof(UnauthorizedResult), StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status404NotFound)] // Thrown from GetUserProfileHandler.
+        [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status500InternalServerError)]
         public async Task<ActionResult<GetUserProfileResponse>> Me([FromServices] GetUserProfileHandler getUserProfileHandler)
         {
             GetUserProfileResponse result = await getUserProfileHandler.GetUserProfileAsync(_currentUser.UserId);

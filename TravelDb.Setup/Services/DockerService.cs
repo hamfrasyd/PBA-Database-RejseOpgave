@@ -1,15 +1,11 @@
 ﻿using System.Diagnostics;
 
-namespace TravelDb.Setup;
+namespace TravelDb.Setup.Services;
 
-/// <summary>
-/// Denne klasse har ansvaret for at starte en SQL Server Docker-container ved hjælp af Docker Compose.
-/// </summary>
+//Denne klasse har ansvaret for at starte en SQL Server Docker-container ved hjælp af Docker Compose.
 public class DockerService
 {
-    /// <summary>
-    /// Finder compose.yaml og starter Docker-containeren.
-    /// </summary>
+    //Finder compose.yaml og starter Docker-containeren.
     public async Task StartAsync()
     {
         var composeFile = FindComposeFile();
@@ -32,9 +28,7 @@ public class DockerService
     }
 
 
-    /// <summary>
-    /// Finder compose.yaml ved at gå op gennem mappestrukturen.
-    /// </summary>
+    //Finder compose.yaml ved at gå op gennem mappestrukturen.
     private static string FindComposeFile()
     {
         //DirectoryInfo er en klasse der repræsenterer en mappe på filsystemet, her finder den den mappe hvor programmet kører fra

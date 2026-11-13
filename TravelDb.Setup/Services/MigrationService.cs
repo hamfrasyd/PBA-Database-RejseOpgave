@@ -1,12 +1,10 @@
 ﻿using DbUp;
 using System.Reflection;
 
-namespace TravelDb.Setup;
+namespace TravelDb.Setup.Services;
 
-/// <summary>
-/// MigrationService er ansvarlig for at køre database-migrationer ved hjælp af DbUp. 
-/// Den finder og udfører alle SQL-scripts, der er indlejret i assemblyen, for at opdatere databasen til den nyeste version.
-/// </summary>
+//MigrationService er ansvarlig for at køre database-migrationer ved hjælp af DbUp. 
+//Den finder og udfører alle SQL-scripts, der er indlejret i assemblyen, for at opdatere databasen til den nyeste version.
 public class MigrationService
 {
     public void Run(string connectionString)

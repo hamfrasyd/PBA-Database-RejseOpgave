@@ -1,16 +1,12 @@
 ﻿using Microsoft.Data.SqlClient;
 
-namespace TravelDb.Setup;
+namespace TravelDb.Setup.Services;
 
-/// <summary>
-/// DatabaseService er ansvarlig for at håndtere database-relaterede operationer, såsom at vente på, at SQL Server er klar, og oprette databasen, hvis den mangler.
-/// </summary>
+//DatabaseService er ansvarlig for at håndtere database-relaterede operationer, såsom at vente på, at SQL Server er klar, og oprette databasen, hvis den mangler.
 public class DatabaseService
 {
-    /// <summary>
-    /// WaitUntilReady tester forbindelsen til SQL Server ved at forsøge at åbne en forbindelse. 
-    /// Hvis forbindelsen ikke kan åbnes, venter den i 2 sekunder og prøver igen, indtil timeout-perioden på 60 sekunder er nået.
-    /// </summary>
+    //WaitUntilReady tester forbindelsen til SQL Server ved at forsøge at åbne en forbindelse. 
+    //Hvis forbindelsen ikke can åbnes, venter den i 2 sekunder og prøver igen, indtil timeout-perioden på 60 sekunder er nået.
     public async Task WaitUntilReadyAsync(string connectionString)
     {
         TimeSpan timeout = TimeSpan.FromSeconds(60);
@@ -34,10 +30,8 @@ public class DatabaseService
         throw new TimeoutException("SQL Server blev ikke klar inden for 60 sekunder.");
     }
 
-    /// <summary>
-    /// CreateDatabaseIfMissingAsync laver en ny database, hvis den ikke allerede findes. 
-    /// Den bruger master-databasen til at kontrollere, om databasen eksisterer, og opretter den, hvis den ikke gør.
-    /// </summary>
+    //CreateDatabaseIfMissingAsync laver en ny database, hvis den ikke allerede findes. 
+    //Den bruger master-databasen til at kontrollere, om databasen eksisterer, og opretter den, hvis den ikke gør.
     public async Task CreateDatabaseIfMissingAsync(string masterConnectionString, string databaseName)
     {
         // Opretter en forbindelse til master-databasen

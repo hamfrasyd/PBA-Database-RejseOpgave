@@ -3,15 +3,18 @@ using TravelApp.BusinessLogic.Interfaces;
 
 namespace TravelApp.BusinessLogic.Handlers.Destinations
 {
+    /// <summary>Handles the get countries use case.</summary>
     public class GetCountriesHandler
     {
         private readonly IUnitOfWorkFactory _unitOfWorkFactory;
 
+        /// <summary>Initializes a new GetCountriesHandler instance.</summary>
         public GetCountriesHandler(IUnitOfWorkFactory unitOfWorkFactory)
         {
             _unitOfWorkFactory = unitOfWorkFactory;
         }
 
+        /// <summary>Retrieves countries.</summary>
         public async Task<List<GetCountriesResponse>> GetCountriesAsync(int? continentId)
         {
             await using IUnitOfWork unitOfWork = _unitOfWorkFactory.Create();

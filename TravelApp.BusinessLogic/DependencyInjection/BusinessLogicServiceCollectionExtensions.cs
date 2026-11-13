@@ -10,6 +10,7 @@ namespace TravelApp.BusinessLogic.DependencyInjection
     /// <summary>Registers application handlers grouped by feature.</summary>
     public static class BusinessLogicServiceCollectionExtensions
     {
+        /// <summary>Adds business logic.</summary>
         public static IServiceCollection AddBusinessLogic(this IServiceCollection services)
         {
             RegisterDatabaseSelection(services);
@@ -27,6 +28,7 @@ namespace TravelApp.BusinessLogic.DependencyInjection
         {
             services.AddScoped<GetContinentsHandler>();
             services.AddScoped<GetCountriesHandler>();
+            services.AddScoped<GetCitiesHandler>();
         }
     }
 }

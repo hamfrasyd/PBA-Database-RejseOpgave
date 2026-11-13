@@ -16,6 +16,7 @@ namespace TravelApp.API.DatabaseSelection
             _configuration = configuration;
         }
 
+        /// <summary>Processes the operation.</summary>
         public async Task InvokeAsync(HttpContext context, SelectedDatabaseProvider selectedDatabaseProvider)
         {
             string selectedProvider = context.Request.Headers[ProviderHeaderName].ToString();

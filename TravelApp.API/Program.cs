@@ -1,4 +1,3 @@
-using Microsoft.OpenApi;
 using TravelApp.API.DatabaseSelection;
 using TravelApp.BusinessLogic.DatabaseSelection;
 using TravelApp.BusinessLogic.DependencyInjection;

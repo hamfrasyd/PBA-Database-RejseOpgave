@@ -31,7 +31,7 @@ namespace TravelApp.BusinessLogic.Interfaces
         /// <summary>Adds activity.</summary>
         public Task AddActivityAsync(Activity activity);
         /// <summary>Updates city.</summary>
-        public Task<bool> UpdateCityAsync(UpdateCityRequest request);
+        public Task UpdateCityAsync(UpdateCityRequest request);
         /// <summary>Updates activity.</summary>
         public Task UpdateActivityAsync(Activity activity);
         /// <summary>Deletes city.</summary>

@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using TravelApp.BusinessLogic.Exceptions.SpecificCustomException;
 using TravelApp.BusinessLogic.Handlers.Destinations;
 using TravelApp.BusinessLogic.Interfaces;
 using TravelApp.BusinessLogic.Models;
@@ -113,18 +114,23 @@ namespace TravelApp.DataAccess.SQLRepositories
         }
 
         /// <inheritdoc />
-        public async Task<bool> UpdateCityAsync(UpdateCityRequest request)
+        public async Task UpdateCityAsync(UpdateCityRequest request)
         {
             City? cityInDb = await _context.CityEntities.FirstOrDefaultAsync(city => city.Id == request.CityId);
             if (cityInDb is null)
             {
-                return false;
+                throw new TravelAppNotFoundException($"City {request.CityId} was not found.");
             }
 
             cityInDb.Name = request.Name.Trim();
-            cityInDb.Country = request.Country;
 
-            return true;
+            Country? countryInDb = await _context.CountryEntities.FirstOrDefaultAsync(country => country.Id == request.CountryId);
+            if (countryInDb is null)
+            {
+                throw new TravelAppNotFoundException($"Country {request.CountryId} was not found.");
+            }
+
+            cityInDb.Country = countryInDb;
         }
 
         public Task UpdateActivityAsync(Activity activity)

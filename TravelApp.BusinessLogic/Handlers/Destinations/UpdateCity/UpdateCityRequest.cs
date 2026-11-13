@@ -9,13 +9,13 @@ namespace TravelApp.BusinessLogic.Handlers.Destinations
     {
         /// <summary>Gets or sets the city id.</summary>
         [JsonIgnore]
-        public int CityId { get; set; }
+        public int CityId { get; set; } // 2
 
         /// <summary>Gets or sets the name.</summary>
         [Required, StringLength(64)]
         public string Name { get; set; } = string.Empty;
 
         /// <summary>Gets or sets the Country for the city.</summary>
-        public Country Country { get; set; } = new Country();
+        public int CountryId { get; set; }
     }
 }

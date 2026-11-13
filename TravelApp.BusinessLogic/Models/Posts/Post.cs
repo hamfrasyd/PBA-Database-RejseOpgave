@@ -5,7 +5,7 @@ namespace TravelApp.BusinessLogic.Models
         // Fields
         private int _id;
         private string _content;
-        private User? _user;
+        private TravelUser? _user;
 
         // Properties
         public int Id
@@ -20,7 +20,7 @@ namespace TravelApp.BusinessLogic.Models
             set { _content = value; }
         }
 
-        public User? User
+        public TravelUser? User
         {
             get { return _user; }
             set { _user = value; }

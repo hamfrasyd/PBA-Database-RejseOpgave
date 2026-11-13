@@ -8,14 +8,12 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="DependencyInjection\" />
     <Folder Include="MongoRepositories\" />
     <Folder Include="GraphRepositories\" />
-    <Folder Include="SQLRepositories\EntityFramework\" />
-    <Folder Include="SQLRepositories\" />
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="10.0.15" />
     <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="11.0.0" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="11.0.0" />
     <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="11.0.0" />

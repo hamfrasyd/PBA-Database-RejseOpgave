@@ -73,7 +73,11 @@ namespace TravelApp.DataAccess.SQLRepositories.EntityFramework
 
             modelBuilder.Entity<Trip>(entity =>
             {
-                entity.ToTable("Trip", "dbo");
+                entity.ToTable("Trip", "dbo", table =>
+                {
+                    // EF Core 8.0+ supports the SQL Server OUTPUT clause for INSERT/UPDATE/DELETE operations. Bruges til tabeller med triggere
+                    table.UseSqlOutputClause(false);
+                });
                 entity.HasKey(item => item.Id);
                 entity.Property(item => item.ExperienceNotes).HasMaxLength(1024);
                 entity.Property(item => item.PlanNotes).HasMaxLength(1024);
@@ -155,7 +159,10 @@ namespace TravelApp.DataAccess.SQLRepositories.EntityFramework
 
             modelBuilder.Entity<TripParticipant>(entity =>
             {
-                entity.ToTable("TripParticipant", "dbo");
+                entity.ToTable("TripParticipant", "dbo", table =>
+                {
+                    table.UseSqlOutputClause(false);
+                });
                 entity.HasKey("UserId", "TripId");
                 entity.Property<int>("UserId").HasColumnName("User_Id").IsRequired();
                 entity.Property<int>("TripId").HasColumnName("Trip_Id").IsRequired();

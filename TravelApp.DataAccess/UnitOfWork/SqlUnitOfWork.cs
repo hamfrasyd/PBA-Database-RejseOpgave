@@ -16,6 +16,7 @@ namespace TravelApp.DataAccess.SQLRepositories.UnitOfWork
         public IDestinationRepository Destinations { get; }
         public IAchievementRepository Achievements { get; }
         public IUserRepository Users { get; }
+        public ITripRepository Trips { get; }
 
         public SqlUnitOfWork(string connectionString, ILogger<SqlUnitOfWork> logger)
         {
@@ -27,6 +28,7 @@ namespace TravelApp.DataAccess.SQLRepositories.UnitOfWork
             Destinations = new SqlDestinationRepository(_context);
             Achievements = new SqlAchievementRepository(_context);
             Users = new SqlUserRepository(_context);
+            Trips = new SqlTripRepository(_context);
         }
 
         /// <summary>Persists all pending EF Core changes as one atomic database save.</summary>

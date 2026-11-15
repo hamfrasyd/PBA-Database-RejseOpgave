@@ -4,6 +4,8 @@ using TravelApp.BusinessLogic.Handlers.Accounts;
 using TravelApp.BusinessLogic.Handlers.Achievements;
 using TravelApp.BusinessLogic.Handlers.DatabaseSelection;
 using TravelApp.BusinessLogic.Handlers.Destinations;
+using TravelApp.BusinessLogic.Handlers.Trips;
+using TravelApp.BusinessLogic.Handlers.Trips.GetTrip;
 using TravelApp.BusinessLogic.Handlers.Users;
 using TravelApp.BusinessLogic.Interfaces;
 
@@ -21,6 +23,7 @@ namespace TravelApp.BusinessLogic.DependencyInjection
             RegisterAchievements(services);
             RegisterDestinations(services);
             RegisterUsers(services);
+            RegisterTrips(services);
 
             return services;
         }
@@ -66,6 +69,19 @@ namespace TravelApp.BusinessLogic.DependencyInjection
             services.AddScoped<GetUserProfileHandler>();
             services.AddScoped<GetUserProfilesHandler>();
             services.AddScoped<UpdateUserHandler>();
+        }
+
+        private static void RegisterTrips(IServiceCollection services)
+        {
+            services.AddScoped<CreateTripHandler>();
+            services.AddScoped<GetTripHandler>();
+            services.AddScoped<GetTripsHandler>();
+            services.AddScoped<UpdateTripHandler>();
+            services.AddScoped<DeleteTripHandler>();
+            services.AddScoped<ManageTripRelationsHandler>();
+
+            services.AddScoped<GetTripActivitiesHandler>();
+            services.AddScoped<GetTripParticipantsHandler>();
         }
     }
 }

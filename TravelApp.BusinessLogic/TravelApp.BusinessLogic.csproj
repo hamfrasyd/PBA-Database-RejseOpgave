@@ -9,7 +9,6 @@
 
   <ItemGroup>
     <Folder Include="Handlers\Friendships\" />
-    <Folder Include="Handlers\Trips\" />
   </ItemGroup>
 
   <ItemGroup>

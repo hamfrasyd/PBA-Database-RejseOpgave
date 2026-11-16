@@ -1,4 +1,5 @@
 ﻿using TravelApp.BusinessLogic.Auth;
+using TravelApp.BusinessLogic.DTOs.Trips;
 using TravelApp.BusinessLogic.Interfaces;
 using TravelApp.BusinessLogic.Models;
 
@@ -15,11 +16,11 @@ namespace TravelApp.BusinessLogic.Handlers.Trips.GetTrip
             _currentUser = currentUser;
         }
 
-        public async Task<List<GetTripsResponse>> GetTripsAsync()
+        public async Task<List<GetTripsResponse>> GetTripsAsync(int? countryId = null, int? continentId = null)
         {
             await using IUnitOfWork unitOfWork = _unitOfWorkFactory.Create();
 
-            List<Trip> trips = await unitOfWork.Trips.GetByUserAsync(_currentUser.UserId);
+            List<TripSummaryDTO> trips = await unitOfWork.Trips.GetSummariesByUserAsync(_currentUser.UserId, countryId, continentId);
 
             return trips.Select(trip => new GetTripsResponse
             {
@@ -28,7 +29,16 @@ namespace TravelApp.BusinessLogic.Handlers.Trips.GetTrip
                 EndDate = trip.EndDate,
                 IsCompleted = trip.IsCompleted,
                 PlanNotes = trip.PlanNotes,
-                ExperienceNotes = trip.ExperienceNotes
+                ExperienceNotes = trip.ExperienceNotes,
+
+                Cities = trip.Cities.Select(city => new GetTripsCityResponse
+                {
+                    Id = city.Id,
+                    Name = city.Name
+                }).ToList(),
+
+                ActivityCount = trip.ActivityCount,
+                ParticipantCount = trip.ParticipantCount
             }).ToList();
         }
     }

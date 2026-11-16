@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using TravelApp.BusinessLogic.Exceptions.Filters;
 using TravelApp.BusinessLogic.Handlers.Destinations;
 using TravelApp.BusinessLogic.Handlers.Trips;
+using TravelApp.BusinessLogic.Handlers.Trips.CreateTrip;
 using TravelApp.BusinessLogic.Handlers.Trips.GetTrip;
 using TravelApp.BusinessLogic.Handlers.Trips.TripParticipants;
 
@@ -20,9 +21,9 @@ namespace TravelApp.API.Controllers
         [ProducesResponseType(typeof(List<GetTripsResponse>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(UnauthorizedResult), StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult<List<GetTripsResponse>>> GetTrips([FromServices] GetTripsHandler getTripsHandler)
+        public async Task<ActionResult<List<GetTripsResponse>>> GetTrips([FromQuery] int? countryId, [FromQuery] int? continentId, [FromServices] GetTripsHandler handler)
         {
-            List<GetTripsResponse> result = await getTripsHandler.GetTripsAsync();
+            List<GetTripsResponse> result = await handler.GetTripsAsync(countryId, continentId);
             return Ok(result);
         }
 
@@ -78,9 +79,9 @@ namespace TravelApp.API.Controllers
         [ProducesResponseType(typeof(UnauthorizedResult), StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status404NotFound)]
         [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult<GetTripResponse>> CreateTrip([FromBody] CreateTripRequest request, [FromServices] CreateTripHandler createTripHandler)
+        public async Task<ActionResult<CreateTripResponse>> CreateTrip([FromBody] CreateTripRequest request, [FromServices] CreateTripHandler createTripHandler)
         {
-            GetTripResponse result = await createTripHandler.CreateTripAsync(request);
+            CreateTripResponse result = await createTripHandler.CreateTripAsync(request);
             return Created($"/api/trips/{result.Id}", result);
         }
 

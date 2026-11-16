@@ -16,6 +16,7 @@ builder.Services.AddControllers(options =>
 {
     options.Filters.Add<TravelExceptionFilter>();
 });
+
 // Add Swagger
 builder.Services.AddSwaggerGen(options =>
 {

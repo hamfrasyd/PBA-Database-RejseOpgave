@@ -45,6 +45,7 @@ namespace TravelApp.BusinessLogic.Handlers.Trips
             trip.PlanNotes = request.PlanNotes;
             trip.ExperienceNotes = request.ExperienceNotes;
 
+            unitOfWork.Trips.Update(trip);
             await unitOfWork.CommitAsync();
         }
     }

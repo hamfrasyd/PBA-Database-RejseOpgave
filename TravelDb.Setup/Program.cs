@@ -64,23 +64,16 @@ try
 
     // 5. Opret backup af databasen hvis programmet startes med argumentet "backup".
     Console.WriteLine("Starter backup af databasen...");
-    if (args.Contains("backup"))
-    {
-        const string containerName = "travel-mssql";
-        const string backupFolder = "/var/opt/mssql/backup";
+    const string containerName = "travel-mssql";
+    const string backupFolder = "/var/opt/mssql/backup";
 
-        string fileName = $"{databaseName}-{DateTime.Now:yyyyMMdd-HHmmss}.bak";
-        string containerPath = $"{backupFolder}/{fileName}";
+    string fileName = $"{databaseName}-{DateTime.Now:yyyyMMdd-HHmmss}.bak";
+    string containerPath = $"{backupFolder}/{fileName}";
 
-        Console.WriteLine("Opretter backup...");
-        await dockerService.CreateFolderIfMissingAsync(containerName, backupFolder);
-        await databaseService.BackupDatabaseAsync(masterConnectionString, databaseName, containerPath);
-        Console.WriteLine($"Backup gemt i containeren: {containerPath}");
-    }
-    else
-    {
-        Console.WriteLine("Manglede argumentet 'backup', backup blev ikke oprettet.");
-    }
+    Console.WriteLine("Opretter backup...");
+    await dockerService.CreateFolderIfMissingAsync(containerName, backupFolder);
+    await databaseService.BackupDatabaseAsync(masterConnectionString, databaseName, containerPath);
+    Console.WriteLine($"Backup gemt i containeren: {containerPath}");
 
     // 6. Opsætning færdig
     Console.ForegroundColor = ConsoleColor.Green;
@@ -102,8 +95,9 @@ try
     Console.WriteLine("Alle tre databaser er klar!");
     Console.ResetColor();
 
-return 0;
-}catch (Exception ex)
+    return 0;
+}
+catch (Exception ex)
 {
     Console.ForegroundColor = ConsoleColor.Red;
     Console.WriteLine("Der opstod en fejl:" + "\n" + ex.Message);

@@ -1,7 +1,7 @@
 ﻿using TravelApp.BusinessLogic.Auth;
+using TravelApp.BusinessLogic.DTOs.Trips;
 using TravelApp.BusinessLogic.Exceptions.SpecificCustomException;
 using TravelApp.BusinessLogic.Interfaces;
-using TravelApp.BusinessLogic.Models;
 
 namespace TravelApp.BusinessLogic.Handlers.Trips
 {
@@ -18,24 +18,21 @@ namespace TravelApp.BusinessLogic.Handlers.Trips
 
         public async Task DeleteTripAsync(int tripId)
         {
-            await using IUnitOfWork unitOfWork = _unitOfWorkFactory.Create();
+            await using IUnitOfWork unitOfWork =  _unitOfWorkFactory.Create();
 
-            Trip? trip = await unitOfWork.Trips.GetByIdAsync(tripId);
+            TripAccessInfoDTO? access = await unitOfWork.Trips.GetAccessInfoAsync(tripId, _currentUser.UserId);
 
-            if (trip is null)
+            if (access is null)
             {
                 throw new TravelAppNotFoundException($"Trip {tripId} was not found.");
             }
 
-            bool isParticipant = trip.TripParticipants.Any(p => p.User?.Id == _currentUser.UserId);
-
-            if (!isParticipant && !_currentUser.IsAdmin)
+            if (!access.IsParticipant && !_currentUser.IsAdmin)
             {
                 throw new TravelAppForbiddenException("You cannot delete this trip.");
             }
 
-            unitOfWork.Trips.Delete(trip);
-
+            await unitOfWork.Trips.DeleteAsync(tripId);
             await unitOfWork.CommitAsync();
         }
     }

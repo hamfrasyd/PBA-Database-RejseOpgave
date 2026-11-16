@@ -1,4 +1,6 @@
-﻿using TravelApp.BusinessLogic.Auth;
+﻿
+using TravelApp.BusinessLogic.Auth;
+using TravelApp.BusinessLogic.DTOs.Trips;
 using TravelApp.BusinessLogic.Exceptions.SpecificCustomException;
 using TravelApp.BusinessLogic.Interfaces;
 using TravelApp.BusinessLogic.Models;
@@ -10,57 +12,51 @@ namespace TravelApp.BusinessLogic.Handlers.Trips
         private readonly IUnitOfWorkFactory _unitOfWorkFactory;
         private readonly ICurrentUser _currentUser;
 
-        public ManageTripRelationsHandler(IUnitOfWorkFactory unitOfWorkFactory, ICurrentUser currentUser)
+        public ManageTripRelationsHandler(
+            IUnitOfWorkFactory unitOfWorkFactory,
+            ICurrentUser currentUser)
         {
             _unitOfWorkFactory = unitOfWorkFactory;
             _currentUser = currentUser;
         }
 
-        private static async Task<Trip> GetTripAsync(IUnitOfWork unitOfWork, int tripId, ICurrentUser currentUser)
+        private static async Task<TripRelationsDTO> GetTripRelationsAsync(IUnitOfWork unitOfWork, int tripId, ICurrentUser currentUser)
         {
-            Trip? trip = await unitOfWork.Trips.GetByIdAsync(tripId);
-
-            if (trip is null)
+            TripAccessInfoDTO? access = await unitOfWork.Trips.GetAccessInfoAsync(tripId, currentUser.UserId);
+            if (access is null)
             {
                 throw new TravelAppNotFoundException($"Trip {tripId} was not found.");
             }
-
-            bool isParticipant = trip.TripParticipants.Any(p => p.User?.Id == currentUser.UserId);
-
-            if (!isParticipant && !currentUser.IsAdmin)
+            if (!access.IsParticipant && !currentUser.IsAdmin)
             {
                 throw new TravelAppForbiddenException("You cannot modify this trip.");
             }
 
-            return trip;
+            TripRelationsDTO? relations = await unitOfWork.Trips.GetRelationsAsync(tripId);
+            if (relations is null)
+            {
+                throw new TravelAppNotFoundException($"Trip {tripId} was not found.");
+            }
+            return relations;
         }
 
         public async Task AddCityAsync(int tripId, int cityId)
         {
             await using IUnitOfWork unitOfWork = _unitOfWorkFactory.Create();
 
-            Trip trip = await GetTripAsync(unitOfWork, tripId, _currentUser);
+            TripRelationsDTO trip = await GetTripRelationsAsync(unitOfWork, tripId, _currentUser);
 
             City? city = await unitOfWork.Destinations.GetCityByIdAsync(cityId);
-
             if (city is null)
             {
                 throw new TravelAppNotFoundException($"City {cityId} was not found.");
             }
-
-            bool exists = trip.TripStops.Any(s => s.City?.Id == cityId);
-
+            bool exists = trip.CityIds.Contains(cityId);
             if (exists)
             {
                 throw new TravelAppConflictException("City is already part of the trip.");
             }
-
-            unitOfWork.Trips.AddStop(new TripStop
-            {
-                Trip = trip,
-                City = city
-            });
-
+            await unitOfWork.Trips.AddCityAsync(tripId, cityId);
             await unitOfWork.CommitAsync();
         }
 
@@ -68,24 +64,22 @@ namespace TravelApp.BusinessLogic.Handlers.Trips
         {
             await using IUnitOfWork unitOfWork = _unitOfWorkFactory.Create();
 
-            Trip trip = await GetTripAsync(unitOfWork, tripId, _currentUser);
+            TripRelationsDTO trip = await GetTripRelationsAsync(unitOfWork, tripId, _currentUser);
 
-            TripStop? stop = trip.TripStops.FirstOrDefault(s => s.City?.Id == cityId);
-
-            if (stop is null)
+            bool exists = trip.CityIds.Contains(cityId);
+            if (!exists)
             {
                 throw new TravelAppNotFoundException("City is not part of the trip.");
             }
 
-            // Prevent activities from becoming disconnected from the trip's selected destinations.
-            bool hasActivities = trip.TripActivities.Any(a => a.Activity?.City?.Id == cityId);
+            bool hasActivities = trip.Activities.Any(activity => activity.CityId == cityId);
 
             if (hasActivities)
             {
                 throw new TravelAppConflictException("Remove the city's activities first.");
             }
 
-            unitOfWork.Trips.RemoveStop(stop);
+            await unitOfWork.Trips.RemoveCityAsync(tripId, cityId);
             await unitOfWork.CommitAsync();
         }
 
@@ -93,7 +87,7 @@ namespace TravelApp.BusinessLogic.Handlers.Trips
         {
             await using IUnitOfWork unitOfWork = _unitOfWorkFactory.Create();
 
-            Trip trip = await GetTripAsync(unitOfWork, tripId, _currentUser);
+            TripRelationsDTO trip = await GetTripRelationsAsync(unitOfWork, tripId, _currentUser);
 
             Activity? activity = await unitOfWork.Destinations.GetActivityByIdAsync(activityId);
 
@@ -102,26 +96,21 @@ namespace TravelApp.BusinessLogic.Handlers.Trips
                 throw new TravelAppNotFoundException($"Activity {activityId} was not found.");
             }
 
-            bool cityIsOnTrip = trip.TripStops.Any(s => s.City?.Id == activity.City?.Id);
+            bool cityIsOnTrip = trip.CityIds.Contains(activity.City!.Id);
 
             if (!cityIsOnTrip)
             {
                 throw new TravelAppValidationException("Add the activity's city to the trip first.");
             }
 
-            bool exists = trip.TripActivities.Any(a => a.Activity?.Id == activityId);
+            bool exists = trip.Activities.Any(a => a.Id == activityId);
 
             if (exists)
             {
                 throw new TravelAppConflictException("Activity is already part of the trip.");
             }
 
-            unitOfWork.Trips.AddTripActivity(new TripActivity
-            {
-                Trip = trip,
-                Activity = activity
-            });
-
+            await unitOfWork.Trips.AddActivityAsync(tripId, activityId);
             await unitOfWork.CommitAsync();
         }
 
@@ -129,16 +118,16 @@ namespace TravelApp.BusinessLogic.Handlers.Trips
         {
             await using IUnitOfWork unitOfWork = _unitOfWorkFactory.Create();
 
-            Trip trip = await GetTripAsync(unitOfWork, tripId, _currentUser);
+            TripRelationsDTO trip = await GetTripRelationsAsync(unitOfWork, tripId, _currentUser);
 
-            TripActivity? activity = trip.TripActivities.FirstOrDefault(a => a.Activity?.Id == activityId);
+            bool exists = trip.Activities.Any(activity => activity.Id == activityId);
 
-            if (activity is null)
+            if (!exists)
             {
                 throw new TravelAppNotFoundException("Activity is not part of the trip.");
             }
 
-            unitOfWork.Trips.RemoveTripActivity(activity);
+            await unitOfWork.Trips.RemoveActivityAsync(tripId, activityId);
             await unitOfWork.CommitAsync();
         }
 
@@ -146,24 +135,22 @@ namespace TravelApp.BusinessLogic.Handlers.Trips
         {
             await using IUnitOfWork unitOfWork = _unitOfWorkFactory.Create();
 
-            Trip trip = await GetTripAsync(unitOfWork, tripId, _currentUser);
+            TripRelationsDTO trip = await GetTripRelationsAsync(unitOfWork, tripId, _currentUser);
+
             TravelUser? user = await unitOfWork.Users.GetByIdAsync(userId);
             if (user is null)
             {
                 throw new TravelAppNotFoundException($"User {userId} was not found.");
             }
 
-            bool exists = trip.TripParticipants.Any(p => p.User?.Id == userId);
+            bool exists = trip.ParticipantIds.Contains(userId);
+
             if (exists)
             {
                 throw new TravelAppConflictException("User is already participating.");
             }
 
-            unitOfWork.Trips.AddParticipant(new TripParticipant
-            {
-                Trip = trip,
-                User = user
-            });
+            await unitOfWork.Trips.AddParticipantAsync(tripId, userId);
             await unitOfWork.CommitAsync();
         }
 
@@ -171,21 +158,20 @@ namespace TravelApp.BusinessLogic.Handlers.Trips
         {
             await using IUnitOfWork unitOfWork = _unitOfWorkFactory.Create();
 
-            Trip trip = await GetTripAsync(unitOfWork, tripId, _currentUser);
+            TripRelationsDTO trip = await GetTripRelationsAsync(unitOfWork, tripId, _currentUser);
 
-            TripParticipant? participant = trip.TripParticipants.FirstOrDefault(p => p.User?.Id == userId);
-
-            if (participant is null)
+            bool exists = trip.ParticipantIds.Contains(userId);
+            if (!exists)
             {
                 throw new TravelAppNotFoundException("User is not participating in the trip.");
             }
 
-            if (trip.TripParticipants.Count == 1)
+            if (trip.ParticipantIds.Count == 1)
             {
                 throw new TravelAppConflictException("A trip must have at least one participant.");
             }
 
-            unitOfWork.Trips.RemoveParticipant(participant);
+            await unitOfWork.Trips.RemoveParticipantAsync(tripId, userId);
             await unitOfWork.CommitAsync();
         }
     }

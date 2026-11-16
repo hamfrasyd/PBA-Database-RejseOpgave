@@ -1,7 +1,6 @@
 ﻿using TravelApp.BusinessLogic.Auth;
 using TravelApp.BusinessLogic.Exceptions.SpecificCustomException;
-using TravelApp.BusinessLogic.Handlers.Trips.GetTrip;
-using TravelApp.BusinessLogic.Handlers.Trips.TripCity;
+using TravelApp.BusinessLogic.Handlers.Trips.CreateTrip;
 using TravelApp.BusinessLogic.Interfaces;
 using TravelApp.BusinessLogic.Models;
 
@@ -18,7 +17,7 @@ namespace TravelApp.BusinessLogic.Handlers.Trips
             _currentUser = currentUser;
         }
 
-        public async Task<GetTripResponse> CreateTripAsync(CreateTripRequest request)
+        public async Task<CreateTripResponse> CreateTripAsync(CreateTripRequest request)
         {
             if (request.StartDate > request.EndDate)
             {
@@ -28,7 +27,6 @@ namespace TravelApp.BusinessLogic.Handlers.Trips
             await using IUnitOfWork unitOfWork = _unitOfWorkFactory.Create();
 
             TravelUser? user = await unitOfWork.Users.GetByIdAsync(_currentUser.UserId);
-
             if (user is null)
             {
                 throw new TravelAppNotFoundException( "The current user was not found.");
@@ -42,31 +40,17 @@ namespace TravelApp.BusinessLogic.Handlers.Trips
                 IsCompleted = false
             };
 
-            trip.TripParticipants.Add(new TripParticipant
-            {
-                User = user
-            });
-
-            await unitOfWork.Trips.AddAsync(trip);
+            await unitOfWork.Trips.AddForUserAsync(trip, user.Id);
 
             await unitOfWork.CommitAsync();
 
-            return new GetTripResponse
+            return new CreateTripResponse
             {
                 Id = trip.Id,
                 StartDate = trip.StartDate,
                 EndDate = trip.EndDate,
-                IsCompleted = trip.IsCompleted,
                 PlanNotes = trip.PlanNotes,
-                ExperienceNotes = trip.ExperienceNotes,
-
-                Cities = trip.TripStops.Select(stop => new GetTripCityResponse
-                {
-                    Id = stop.City!.Id,
-                    City = stop.City.Name,
-                    Country = stop.City.Country!.Name,
-                    Continent = stop.City.Country.Continent!.Name
-                }).ToList()
+                IsCompleted = trip.IsCompleted
             };
         }
     }

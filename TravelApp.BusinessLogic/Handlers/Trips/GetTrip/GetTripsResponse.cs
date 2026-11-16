@@ -1,5 +1,4 @@
-﻿using TravelApp.BusinessLogic.Handlers.Destinations;
-
+﻿
 namespace TravelApp.BusinessLogic.Handlers.Trips.GetTrip
 {
     public class GetTripsResponse
@@ -14,8 +13,9 @@ namespace TravelApp.BusinessLogic.Handlers.Trips.GetTrip
         public string? PlanNotes { get; set; }
         public string? ExperienceNotes { get; set; }
 
-        public List<int> CityIds { get; set; } = [];
-        public List<int> ActivityIds { get; set; } = [];
-        public List<int> ParticipantIds { get; set; } = [];
+        public List<GetTripsCityResponse> Cities { get; set; } = [];
+
+        public int ActivityCount { get; set; }
+        public int ParticipantCount { get; set; }
     }
 }

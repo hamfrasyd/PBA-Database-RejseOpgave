@@ -1,8 +1,11 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using TravelApp.BusinessLogic.Exceptions.Filters;
-using TravelApp.BusinessLogic.Handlers.Destinations;
-using TravelApp.BusinessLogic.Handlers.Users;
+using TravelApp.API.ExceptionFilters;
+using TravelApp.BusinessLogic.Handlers.Locations.GetVisitedCountries;
+using TravelApp.BusinessLogic.Handlers.Users.DeleteUser;
+using TravelApp.BusinessLogic.Handlers.Users.GetUserProfile;
+using TravelApp.BusinessLogic.Handlers.Users.GetUserProfiles;
+using TravelApp.BusinessLogic.Handlers.Users.UpdateUser;
 
 namespace TravelApp.API.Controllers
 {

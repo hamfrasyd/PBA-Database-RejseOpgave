@@ -1,7 +1,6 @@
 using TravelApp.BusinessLogic.DatabaseSelection;
-using TravelApp.BusinessLogic.Interfaces;
 
-namespace TravelApp.BusinessLogic.Handlers.DatabaseSelection
+namespace TravelApp.BusinessLogic.Handlers.DatabaseSelection.GetDatabaseProviders
 {
     /// <summary>Provides a database-independent description of selectable persistence providers.</summary>
     public class GetDatabaseProvidersHandler

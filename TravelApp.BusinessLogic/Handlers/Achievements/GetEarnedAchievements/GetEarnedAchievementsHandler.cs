@@ -1,9 +1,9 @@
-using TravelApp.BusinessLogic.Handlers.Users;
 using TravelApp.BusinessLogic.Exceptions.SpecificCustomException;
 using TravelApp.BusinessLogic.Interfaces;
 using TravelApp.BusinessLogic.Auth;
+using TravelApp.BusinessLogic.Handlers.Users.GetUserProfile;
 
-namespace TravelApp.BusinessLogic.Handlers.Achievements
+namespace TravelApp.BusinessLogic.Handlers.Achievements.GetEarnedAchievements
 {
     /// <summary>Handles the get earned achievements use case.</summary>
     public class GetEarnedAchievementsHandler

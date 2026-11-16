@@ -3,10 +3,10 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
+using TravelApp.API.ExceptionFilters;
 using TravelApp.BusinessLogic.Auth;
-using TravelApp.BusinessLogic.Exceptions.Filters;
-using TravelApp.BusinessLogic.Handlers.Accounts;
-using TravelApp.BusinessLogic.Handlers.Users;
+using TravelApp.BusinessLogic.Handlers.Accounts.Login;
+using TravelApp.BusinessLogic.Handlers.Users.GetUserProfile;
 
 namespace TravelApp.API.Controllers
 {

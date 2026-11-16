@@ -1,4 +1,4 @@
-﻿namespace TravelApp.BusinessLogic.Exceptions.Filters
+﻿namespace TravelApp.API.ExceptionFilters
 {
     /// <summary>
     /// Represents an error response returned by the API.

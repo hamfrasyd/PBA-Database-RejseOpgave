@@ -1,4 +1,7 @@
-namespace TravelApp.BusinessLogic.Models
+using TravelApp.BusinessLogic.Models.Invitations;
+using TravelApp.BusinessLogic.Models.Reviews;
+
+namespace TravelApp.BusinessLogic.Models.Trips
 {
     public class Trip
     {

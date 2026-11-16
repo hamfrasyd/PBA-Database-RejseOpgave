@@ -1,7 +1,8 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using TravelApp.BusinessLogic.Exceptions.Filters;
-using TravelApp.BusinessLogic.Handlers.Achievements;
+using TravelApp.API.ExceptionFilters;
+using TravelApp.BusinessLogic.Handlers.Achievements.GetAchievementDefinitions;
+using TravelApp.BusinessLogic.Handlers.Achievements.GetEarnedAchievements;
 
 namespace TravelApp.API.Controllers
 {

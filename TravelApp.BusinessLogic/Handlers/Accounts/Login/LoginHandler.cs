@@ -1,8 +1,8 @@
 using TravelApp.BusinessLogic.Exceptions.SpecificCustomException;
 using TravelApp.BusinessLogic.Interfaces;
-using TravelApp.BusinessLogic.Models;
+using TravelApp.BusinessLogic.Models.Users;
 
-namespace TravelApp.BusinessLogic.Handlers.Accounts
+namespace TravelApp.BusinessLogic.Handlers.Accounts.Login
 {
     /// <summary>Finds an existing user for local demo sign-in; does not authenticate identity.</summary>
     public class LoginHandler

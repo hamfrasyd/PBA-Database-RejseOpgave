@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.EntityFrameworkCore;
 using TravelApp.BusinessLogic.Exceptions.SpecificCustomException;
 
-namespace TravelApp.BusinessLogic.Exceptions.Filters
+namespace TravelApp.API.ExceptionFilters
 {
     /// <summary>
     /// Centralized exception filter that converts exceptions thrown during

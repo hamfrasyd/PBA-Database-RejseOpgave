@@ -4,7 +4,10 @@ namespace TravelApp.BusinessLogic.Interfaces
     public interface IUnitOfWork : IAsyncDisposable
     {
         /// <summary>Provides access to the destinations repository.</summary>
-        public IDestinationRepository Destinations { get; }
+        public IActivitiesRepository Activities { get; }
+
+        /// <summary>Provides access to the locations repository.</summary>
+        public ILocationsRepository Locations { get; }
 
         /// <summary>Provides access to the achievements repository.</summary>
         public IAchievementRepository Achievements { get; }

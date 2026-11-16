@@ -9,12 +9,15 @@ namespace TravelApp.BusinessLogic.Handlers.Locations.DeleteCity
         private readonly IUnitOfWorkFactory _unitOfWorkFactory;
 
         /// <summary>Initializes a new DeleteCityHandler instance.</summary>
+        /// <param name="unitOfWorkFactory">The unit of work factory.</param>
         public DeleteCityHandler(IUnitOfWorkFactory unitOfWorkFactory)
         {
             _unitOfWorkFactory = unitOfWorkFactory;
         }
 
         /// <summary>Deletes city.</summary>
+        /// <param name="resourceId">The city identifier.</param>
+        /// <exception cref="TravelAppNotFoundException">Thrown when the city does not exist.</exception>
         public async Task DeleteCityAsync(int resourceId)
         {
             await using IUnitOfWork unitOfWork = _unitOfWorkFactory.Create();

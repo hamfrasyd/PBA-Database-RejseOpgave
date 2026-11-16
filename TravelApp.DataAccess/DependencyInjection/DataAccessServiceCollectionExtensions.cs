@@ -9,6 +9,11 @@ namespace TravelApp.DataAccess.DependencyInjection
     /// <summary>Registers database configuration and the provider-neutral Unit of Work factory.</summary>
     public static class DataAccessServiceCollectionExtensions
     {
+        /// <summary>Registers data access services.</summary>
+        /// <param name="services">The service collection to register data access in.</param>
+        /// <param name="configuration">The application configuration that contains the connection strings.</param>
+        /// <returns>The same service collection, so registration can be chained.</returns>
+        /// <exception cref="InvalidOperationException">Thrown when the SQL connection string is missing or empty.</exception>
         public static IServiceCollection AddDataAccess(this IServiceCollection services, IConfiguration configuration)
         {
             // Register Services

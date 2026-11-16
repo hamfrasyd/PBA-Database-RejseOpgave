@@ -2,8 +2,14 @@
 using System.Globalization;
 using TravelDb.Migrator.Models;
 
+/// <summary>Creates the links between Neo4j nodes from the SQL foreign keys.</summary>
 public static class Neo4jRelationshipMapper
 {
+    /// <summary>Creates the relationships between nodes.</summary>
+    /// <param name="session">The open Neo4j session.</param>
+    /// <param name="snapshot">The copied SQL data.</param>
+    /// <returns>A task that finishes when the relationships are created.</returns>
+    /// <exception cref="InvalidOperationException">Thrown when a SQL table is missing or a relationship was not created.</exception>
     public static async Task MigrateAsync(IAsyncSession session,SqlSnapshot snapshot)
     {
         var mappings = new[]
@@ -165,6 +171,13 @@ public static class Neo4jRelationshipMapper
         }
     }
 
+    /// <summary>Describes one link from a SQL table to two Neo4j nodes.</summary>
+    /// <param name="Table">The SQL table that holds the link.</param>
+    /// <param name="FromLabel">The node label at the start of the link.</param>
+    /// <param name="FromColumn">The column that holds the start node's id.</param>
+    /// <param name="ToLabel">The node label at the end of the link.</param>
+    /// <param name="ToColumn">The column that holds the end node's id.</param>
+    /// <param name="Type">The relationship name in Neo4j.</param>
     private record Relation(
         string Table,
         string FromLabel,

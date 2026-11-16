@@ -13,6 +13,8 @@ namespace TravelApp.BusinessLogic.Handlers.Locations.GetVisitedCountries
         private readonly ICurrentUser _currentUser;
 
         /// <summary>Initializes a new GetVisitedCountriesHandler instance.</summary>
+        /// <param name="unitOfWorkFactory">The unit of work factory.</param>
+        /// <param name="currentUser">The current logged-in user.</param>
         public GetVisitedCountriesHandler(IUnitOfWorkFactory unitOfWorkFactory, ICurrentUser currentUser)
         {
             _unitOfWorkFactory = unitOfWorkFactory;
@@ -20,6 +22,9 @@ namespace TravelApp.BusinessLogic.Handlers.Locations.GetVisitedCountries
         }
 
         /// <summary>Retrieves visited countries.</summary>
+        /// <param name="userId">The user identifier.</param>
+        /// <returns>The countries visited on completed trips.</returns>
+        /// <exception cref="TravelAppNotFoundException">Thrown when the user does not exist or the profile is private.</exception>
         public async Task<List<GetVisitedCountriesResponse>> GetVisitedCountriesAsync(int userId)
         {
             await using IUnitOfWork unitOfWork = _unitOfWorkFactory.Create();

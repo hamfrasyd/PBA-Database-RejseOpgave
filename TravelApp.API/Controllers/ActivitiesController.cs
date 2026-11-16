@@ -2,8 +2,10 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using TravelApp.API.ExceptionFilters;
+using TravelApp.BusinessLogic.Exceptions.SpecificCustomException;
 using TravelApp.BusinessLogic.Handlers.Activities.CreateActivity;
 using TravelApp.BusinessLogic.Handlers.Activities.DeleteActivity;
+using TravelApp.BusinessLogic.Handlers.Activities.GetActivitiesByCity;
 using TravelApp.BusinessLogic.Handlers.Activities.GetActivity;
 using TravelApp.BusinessLogic.Handlers.Activities.UpdateActivity;
 
@@ -14,47 +16,13 @@ namespace TravelApp.API.Controllers
     [Route("api/activities")]
     public class ActivitiesController : ControllerBase
     {
-        #region GET All - Activities
-
-        ///// <summary>Lists activities, optionally filtered by city.</summary>
-        //// GET api/activities
-        //// GET api/activities?cityId=5
-        //[HttpGet]
-        //[AllowAnonymous]
-        //[ProducesResponseType(typeof(List<GetCityActivitiesResponse>), StatusCodes.Status200OK)]
-        //[ProducesResponseType(StatusCodes.Status204NoContent)]
-        //[ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status500InternalServerError)]
-        //public async Task<ActionResult<List<GetCityActivitiesResponse>>> GetActivities([FromQuery] int? cityId, [FromServices] GetActivitiesHandler getActivitiesHandler)
-        //{
-        //    // TODO: Implement GetActivitiesHandler with optional cityId filtering.
-        //    List<GetCityActivitiesResponse> result = await getActivitiesHandler.GetActivitiesAsync(cityId);
-
-        //    return Ok(result);
-        //}
-
-        #endregion
-
-        #region GET By ID - Activities
-
-        /// <summary>Retrieves one activity.</summary>
-        // GET api/activities/{activityId}
-        [HttpGet("{activityId:int}")]
-        [AllowAnonymous]
-        [ProducesResponseType(typeof(GetActivityResponse), StatusCodes.Status200OK)]
-        [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status404NotFound)]
-        [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult<GetActivityResponse>> GetActivity([FromRoute] int activityId, [FromServices] GetActivityHandler getActivityHandler)
-        {
-            GetActivityResponse result = await getActivityHandler.GetActivityAsync(activityId);
-
-            return Ok(result);
-        }
-
-        #endregion
-
-        #region Create - Activities
+        #region POST - Create-new Activity for a city
 
         /// <summary>Creates an activity and returns its ID.</summary>
+        /// <param name="request">The activity to create.</param>
+        /// <param name="createActivityHandler">The handler that creates the activity.</param>
+        /// <returns>The identifier of the created activity.</returns>
+        /// <exception cref="TravelAppValidationException">Thrown when the name is missing or the city does not exist.</exception>
         // POST api/activities
         [HttpPost]
         [Authorize(Roles = "Admin")]
@@ -72,9 +40,60 @@ namespace TravelApp.API.Controllers
 
         #endregion
 
-        #region Update - Activities
+        #region GET - All Activities By City
+
+        /// <summary>Lists activities for a specific city.</summary>
+        /// <param name="cityId">The city identifier.</param>
+        /// <param name="getActivitiesByCityHandler">The handler that loads the city's activities.</param>
+        /// <returns>The activities in the city.</returns>
+        /// <exception cref="InvalidOperationException">Thrown when an activity's city was not loaded.</exception>
+        // GET api/activities/cities/{cityId}
+        [HttpGet("cities/{cityId:int}")]
+        [AllowAnonymous]
+        [ProducesResponseType(typeof(List<GetActivitiesByCityResponse>), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status500InternalServerError)]
+        public async Task<ActionResult<List<GetActivitiesByCityResponse>>> GetActivitiesByCity([FromRoute] int cityId, [FromServices] GetActivitiesByCityHandler getActivitiesByCityHandler)
+        {
+            List<GetActivitiesByCityResponse> result = await getActivitiesByCityHandler.GetActivitiesByCityIdAsync(cityId);
+
+            return Ok(result);
+        }
+
+        #endregion
+
+        #region GET - Activity By ID
+
+        /// <summary>Retrieves one activity.</summary>
+        /// <param name="activityId">The activity identifier.</param>
+        /// <param name="getActivityHandler">The handler that loads the activity.</param>
+        /// <returns>The activity.</returns>
+        /// <exception cref="TravelAppNotFoundException">Thrown when the activity does not exist.</exception>
+        /// <exception cref="TravelAppValidationException">Thrown when the activity has no city.</exception>
+        // GET api/activities/{activityId}
+        [HttpGet("{activityId:int}")]
+        [AllowAnonymous]
+        [ProducesResponseType(typeof(GetActivityResponse), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status404NotFound)]
+        [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status500InternalServerError)]
+        public async Task<ActionResult<GetActivityResponse>> GetActivity([FromRoute] int activityId, [FromServices] GetActivityHandler getActivityHandler)
+        {
+            GetActivityResponse result = await getActivityHandler.GetActivityAsync(activityId);
+
+            return Ok(result);
+        }
+
+        #endregion
+
+        #region PUT - Update Activity
 
         /// <summary>Updates an activity and returns its ID.</summary>
+        /// <param name="activityId">The activity identifier.</param>
+        /// <param name="request">The updated activity details.</param>
+        /// <param name="updateActivityHandler">The handler that updates the activity.</param>
+        /// <returns>The identifier of the updated activity.</returns>
+        /// <exception cref="TravelAppNotFoundException">Thrown when the activity does not exist.</exception>
+        /// <exception cref="TravelAppValidationException">Thrown when the name is missing or the city does not exist.</exception>
         // PUT api/activities/{activityId}
         [HttpPut("{activityId:int}")]
         [Authorize(Roles = "Admin")]
@@ -93,9 +112,13 @@ namespace TravelApp.API.Controllers
 
         #endregion
 
-        #region Delete - Activities
+        #region DELETE - Activity
 
         /// <summary>Deletes an activity and returns its ID.</summary>
+        /// <param name="activityId">The activity identifier.</param>
+        /// <param name="deleteActivityHandler">The handler that deletes the activity.</param>
+        /// <returns>The identifier of the deleted activity.</returns>
+        /// <exception cref="TravelAppNotFoundException">Thrown when the activity does not exist.</exception>
         // DELETE api/activities/{activityId}
         [HttpDelete("{activityId:int}")]
         [Authorize(Roles = "Admin")]

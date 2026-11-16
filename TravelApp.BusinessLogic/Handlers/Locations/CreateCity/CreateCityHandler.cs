@@ -10,12 +10,16 @@ namespace TravelApp.BusinessLogic.Handlers.Locations.CreateCity
         private readonly IUnitOfWorkFactory _unitOfWorkFactory;
 
         /// <summary>Initializes a new CreateCityHandler instance.</summary>
+        /// <param name="unitOfWorkFactory">The unit of work factory.</param>
         public CreateCityHandler(IUnitOfWorkFactory unitOfWorkFactory)
         {
             _unitOfWorkFactory = unitOfWorkFactory;
         }
 
         /// <summary>Creates city.</summary>
+        /// <param name="request">The city to create.</param>
+        /// <returns>The identifier of the created city.</returns>
+        /// <exception cref="TravelAppValidationException">Thrown when the name is missing or the country does not exist.</exception>
         public async Task<int> CreateCityAsync(CreateCityRequest request)
         {
             if (string.IsNullOrWhiteSpace(request.Name))

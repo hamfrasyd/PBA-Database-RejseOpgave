@@ -12,12 +12,22 @@ namespace TravelApp.DataAccess.UnitOfWork
         private readonly TravelAppContext _context;
         private readonly ILogger<SqlUnitOfWork> _logger;
 
-        public IActivitiesRepository Activities { get; }
-        public ILocationsRepository Locations { get; }
+        /// <inheritdoc/>
         public IAchievementRepository Achievements { get; }
-        public IUserRepository Users { get; }
+        /// <inheritdoc/>
+        public IActivitiesRepository Activities { get; }
+        /// <inheritdoc/>
+        public ILocationsRepository Locations { get; }
+        /// <inheritdoc/>
         public ITripRepository Trips { get; }
+        /// <inheritdoc/>
+        public IUserRepository Users { get; }
 
+        /// <summary>
+        /// Initializes a new instance of the SQL unit of work with the specified database connection and logger.
+        /// </summary>
+        /// <param name="connectionString">The connection string used to configure the SQL Server data context.</param>
+        /// <param name="logger">The logger used to record unit-of-work activity and diagnostics.</param>
         public SqlUnitOfWork(string connectionString, ILogger<SqlUnitOfWork> logger)
         {
             _logger = logger;
@@ -25,14 +35,16 @@ namespace TravelApp.DataAccess.UnitOfWork
             DbContextOptions<TravelAppContext> options = new DbContextOptionsBuilder<TravelAppContext>().UseSqlServer(connectionString).Options;
             _context = new TravelAppContext(options);
 
+            Achievements = new SqlAchievementRepository(_context);
             Activities = new SqlActivitiesRepository(_context);
             Locations = new SqlLocationsRepository(_context);
-            Achievements = new SqlAchievementRepository(_context);
-            Users = new SqlUserRepository(_context);
             Trips = new SqlTripRepository(_context);
+            Users = new SqlUserRepository(_context);
         }
 
         /// <summary>Persists all pending EF Core changes as one atomic database save.</summary>
+        /// <returns>A task that completes when the changes are saved.</returns>
+        /// <exception cref="Exception">Rethrown when saving the changes fails.</exception>
         public async Task CommitAsync()
         {
             try
@@ -53,6 +65,8 @@ namespace TravelApp.DataAccess.UnitOfWork
             }
         }
 
+        /// <summary>Releases the database context.</summary>
+        /// <returns>A task that completes when the context is disposed.</returns>
         public async ValueTask DisposeAsync()
         {
             await _context.DisposeAsync();

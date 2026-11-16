@@ -34,9 +34,9 @@ if (allowedOrigins.Length > 0)
 {
     builder.Services.AddCors(options => options.AddPolicy("TravelAppFrontend", policy =>
         policy.WithOrigins(allowedOrigins)
-              .WithHeaders("Content-Type", HeaderName_For_DatabaseProvider.Key)
-              .WithMethods("GET", "POST", "PUT", "PATCH", "DELETE")
-              .AllowCredentials()));
+        .WithHeaders("Content-Type", HeaderName_For_DatabaseProvider.Key)
+        .WithMethods("GET", "POST", "PUT", "PATCH", "DELETE")
+        .AllowCredentials()));
 }
 
 // Register Application Services
@@ -65,7 +65,6 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
     });
 builder.Services.AddAuthorization();
 
-
 // -- Add Business Logic Services
 builder.Services.AddBusinessLogic();
 
@@ -77,7 +76,6 @@ var app = builder.Build();
 // Use Swagger
 app.UseSwagger();
 app.UseSwaggerUI();
-
 
 app.UseHttpsRedirection();
 

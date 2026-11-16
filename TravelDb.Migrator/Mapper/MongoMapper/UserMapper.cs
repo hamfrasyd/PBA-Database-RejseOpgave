@@ -5,8 +5,13 @@ using static TravelDb.Migrator.Mapper.MongoMapper.SqlMapping;
 
 namespace TravelDb.Migrator.Mapper.MongoMapper;
 
+/// <summary>Turns SQL users into MongoDB documents.</summary>
 public static class UserMapper
 {
+    /// <summary>Creates a short user document that can sit inside another document.</summary>
+    /// <param name="snapshot">The copied SQL data.</param>
+    /// <param name="userId">The user id.</param>
+    /// <returns>The user's id and name.</returns>
     // Opretter korte brugeroplysninger til andre dokumenter.
     public static BsonDocument MapReference(SqlSnapshot snapshot, string userId)
     {
@@ -20,6 +25,9 @@ public static class UserMapper
         };
     }
 
+    /// <summary>Creates one document for each user, including friends, posts, and invites.</summary>
+    /// <param name="snapshot">The copied SQL data.</param>
+    /// <returns>The user documents.</returns>
     // Opretter alle brugere som dokumenter til MongoDB.
     public static List<BsonDocument> Map(SqlSnapshot snapshot)
     {
@@ -124,6 +132,11 @@ public static class UserMapper
         return documents;
     }
 
+    /// <summary>Creates an invite document with its status, trip, and user.</summary>
+    /// <param name="snapshot">The copied SQL data.</param>
+    /// <param name="invite">The SQL invite row.</param>
+    /// <param name="received">True when the user received the invite. False when the user sent it.</param>
+    /// <returns>The invite document.</returns>
     // Opretter en invitation med status, rejse og brugeroplysninger.
     private static BsonDocument MapInvite(SqlSnapshot snapshot, Dictionary<string, object?> invite, bool received)
     {

@@ -9,10 +9,13 @@ using TravelApp.DataAccess.SQLRepositories.EntityFramework;
 
 namespace TravelApp.DataAccess.SQLRepositories
 {
+    /// <summary>Implements database operations for cities, countries, and continents using Entity Framework Core.</summary>
     public class SqlLocationsRepository : ILocationsRepository
     {
         private readonly TravelAppContext _context;
 
+        /// <summary>Initializes a new instance of the <see cref="SqlLocationsRepository"/> class.</summary>
+        /// <param name="context">The Entity Framework Core context connected to SQL Server.</param>
         public SqlLocationsRepository(TravelAppContext context)
         {
             _context = context;
@@ -20,6 +23,7 @@ namespace TravelApp.DataAccess.SQLRepositories
 
         #region Create - Cities
 
+        /// <inheritdoc />
         public async Task AddCityAsync(City city)
         {
             await _context.CityEntities.AddAsync(city);
@@ -27,43 +31,9 @@ namespace TravelApp.DataAccess.SQLRepositories
 
         #endregion
 
-        #region Read - Continents, Countries, Cities, Stats
+        #region Read - All Cities, Countries & Continents
 
-        public async Task<List<Continent>> GetContinentsAsync()
-        {
-            List<Continent> result = await _context.ContinentEntities
-                .AsNoTracking()
-                .OrderBy(continent => continent.Name)
-                .ToListAsync();
-
-            return result;
-        }
-
-        public async Task<List<Country>> GetCountriesAsync(int? continentId)
-        {
-            IQueryable<Country> countries = _context.CountryEntities
-                .AsNoTracking()
-                .Include(country => country.Continent);
-
-            if (continentId.HasValue)
-            {
-                countries = countries.Where(country => country.Continent!.Id == continentId.Value);
-            }
-
-            List<Country> result = await countries
-                .OrderBy(country => country.Name)
-                .ToListAsync();
-
-            return result;
-        }
-
-        public async Task<Country?> GetCountryByIdAsync(int countryId)
-        {
-            Country? country = await _context.CountryEntities.FindAsync(countryId);
-
-            return country;
-        }
-
+        /// <inheritdoc />
         public async Task<List<City>> GetCitiesAsync(GetCitiesRequest request)
         {
             IQueryable<City> cities = _context.CityEntities
@@ -91,6 +61,41 @@ namespace TravelApp.DataAccess.SQLRepositories
             return result;
         }
 
+        /// <inheritdoc />
+        public async Task<List<Country>> GetCountriesAsync(int? continentId)
+        {
+            IQueryable<Country> countries = _context.CountryEntities
+                .AsNoTracking()
+                .Include(country => country.Continent);
+
+            if (continentId.HasValue)
+            {
+                countries = countries.Where(country => country.Continent!.Id == continentId.Value);
+            }
+
+            List<Country> result = await countries
+                .OrderBy(country => country.Name)
+                .ToListAsync();
+
+            return result;
+        }
+
+        /// <inheritdoc />
+        public async Task<List<Continent>> GetContinentsAsync()
+        {
+            List<Continent> result = await _context.ContinentEntities
+                .AsNoTracking()
+                .OrderBy(continent => continent.Name)
+                .ToListAsync();
+
+            return result;
+        }
+
+        #endregion
+
+        #region Read - By-ID Cities, Stats-for-a-city & Countries
+
+        /// <inheritdoc />
         public async Task<City?> GetCityByIdAsync(int cityId)
         {
             City? matchingCity = await _context.CityEntities
@@ -100,6 +105,7 @@ namespace TravelApp.DataAccess.SQLRepositories
             return matchingCity;
         }
 
+        /// <inheritdoc />
         public async Task<GetCityStatsResponse?> GetStatsAsync(int cityId)
         {
             GetCityStatsResponse? destinationStats = await _context.DestinationStatistics
@@ -109,10 +115,19 @@ namespace TravelApp.DataAccess.SQLRepositories
             return destinationStats;
         }
 
+        /// <inheritdoc />
+        public async Task<Country?> GetCountryByIdAsync(int countryId)
+        {
+            Country? country = await _context.CountryEntities.FindAsync(countryId);
+
+            return country;
+        }
+
         #endregion
 
         #region Update - Cities
 
+        /// <inheritdoc />
         public async Task<bool> UpdateCityAsync(int cityId, UpdateCityRequest request)
         {
             City? cityInDb = await _context.CityEntities
@@ -123,8 +138,14 @@ namespace TravelApp.DataAccess.SQLRepositories
                 return false;
             }
 
+            Country? country = await _context.CountryEntities.FindAsync(request.CountryId);
+            if (country is null)
+            {
+                return false;
+            }
+
             cityInDb.Name = request.Name.Trim();
-            cityInDb.Country.Id = request.CountryId;
+            cityInDb.Country = country;
 
             return true;
         }
@@ -133,6 +154,7 @@ namespace TravelApp.DataAccess.SQLRepositories
 
         #region Delete - Cities
 
+        /// <inheritdoc />
         public async Task<bool> DeleteCityAsync(int cityId)
         {
             if (_context.Database.CurrentTransaction is null)
@@ -153,6 +175,7 @@ namespace TravelApp.DataAccess.SQLRepositories
 
         #region Validation - Countries
 
+        /// <inheritdoc />
         public async Task<bool> CountryExistsAsync(int countryId)
         {
             bool countryExists = await _context.CountryEntities

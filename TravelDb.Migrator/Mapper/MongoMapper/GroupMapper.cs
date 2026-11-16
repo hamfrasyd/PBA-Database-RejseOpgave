@@ -4,8 +4,12 @@ using static TravelDb.Migrator.Mapper.MongoMapper.SqlMapping;
 
 namespace TravelDb.Migrator.Mapper.MongoMapper;
 
+/// <summary>Turns SQL groups into MongoDB documents.</summary>
 public static class GroupMapper
 {
+    /// <summary>Creates one document for each group, including its members.</summary>
+    /// <param name="snapshot">The copied SQL data.</param>
+    /// <returns>The group documents.</returns>
     // Opretter alle grupper som dokumenter til MongoDB.
     public static List<BsonDocument> Map(SqlSnapshot snapshot)
     {

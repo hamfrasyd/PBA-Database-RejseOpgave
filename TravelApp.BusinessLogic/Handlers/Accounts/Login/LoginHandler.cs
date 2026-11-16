@@ -10,12 +10,17 @@ namespace TravelApp.BusinessLogic.Handlers.Accounts.Login
         private readonly IUnitOfWorkFactory _unitOfWorkFactory;
 
         /// <summary>Initializes a new LoginHandler instance.</summary>
+        /// <param name="unitOfWorkFactory">The unit of work factory.</param>
         public LoginHandler(IUnitOfWorkFactory unitOfWorkFactory)
         {
             _unitOfWorkFactory = unitOfWorkFactory;
         }
 
         /// <summary>Signs in the operation.</summary>
+        /// <param name="request">The login request.</param>
+        /// <returns>The signed-in user.</returns>
+        /// <exception cref="TravelAppValidationException">Thrown when the user identifier is missing.</exception>
+        /// <exception cref="TravelAppNotFoundException">Thrown when the user does not exist.</exception>
         public async Task<LoginResponse> LoginAsync(LoginRequest request)
         {
             if (request.UserId <= 0)

@@ -4,11 +4,14 @@ using MongoDB.Driver;
 
 namespace TravelDb.Migrator.Services;
 
+/// <summary>Saves the mapped documents in MongoDB.</summary>
 public class MongoMigrationService
 {
     private readonly IMongoDatabase _database;
     private const int BatchSize = 500;
 
+    /// <summary>Connects to the TravelDb database.</summary>
+    /// <param name="connectionString">The MongoDB connection string.</param>
     public MongoMigrationService(string connectionString)
     {
         // Opretter forbindelse til MongoDB-databasen.
@@ -16,6 +19,10 @@ public class MongoMigrationService
         _database = client.GetDatabase("TravelDb");
     }
 
+    /// <summary>Saves every collection in MongoDB.</summary>
+    /// <param name="collections">The documents grouped by collection name.</param>
+    /// <returns>A task that finishes when every collection has been saved and checked.</returns>
+    /// <exception cref="InvalidOperationException">Thrown when a document has no id, ids are repeated, or a document is missing after the save.</exception>
     // Migrerer alle collections til MongoDB.
     public async Task MigrateAsync(Dictionary<string, List<BsonDocument>> collections)
     {
@@ -35,6 +42,10 @@ public class MongoMigrationService
         }
     }
 
+    /// <summary>Checks that every document has its own id.</summary>
+    /// <param name="documents">The documents to check.</param>
+    /// <param name="collectionName">The collection name, used in the error message.</param>
+    /// <exception cref="InvalidOperationException">Thrown when an id is missing or used more than once.</exception>
     // Kontrollerer at alle dokumenter har et unikt _id.
     private static void ValidateIds(List<BsonDocument> documents, string collectionName)
     {
@@ -51,6 +62,10 @@ public class MongoMigrationService
         }
     }
 
+    /// <summary>Saves the documents in groups of 500.</summary>
+    /// <param name="collection">The MongoDB collection to write to.</param>
+    /// <param name="documents">The documents to save.</param>
+    /// <returns>A task that finishes when the documents are saved.</returns>
     // Gemmer dokumenterne i batches på højst 500 ad gangen.
     private static async Task SaveDocumentsAsync(IMongoCollection<BsonDocument> collection, List<BsonDocument> documents)
     {
@@ -73,6 +88,12 @@ public class MongoMigrationService
         }
     }
 
+    /// <summary>Checks that every saved document can be found again.</summary>
+    /// <param name="collection">The MongoDB collection to check.</param>
+    /// <param name="documents">The documents that should be in the collection.</param>
+    /// <param name="collectionName">The collection name, used in the error message.</param>
+    /// <returns>A task that finishes when the check is done.</returns>
+    /// <exception cref="InvalidOperationException">Thrown when the number of saved documents does not match.</exception>
     // Kontrollerer at alle dokumenter findes efter migreringen.
     private static async Task ValidateMigrationAsync(
         IMongoCollection<BsonDocument> collection,

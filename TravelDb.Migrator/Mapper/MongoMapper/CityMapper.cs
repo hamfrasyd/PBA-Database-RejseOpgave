@@ -5,8 +5,13 @@ using static TravelDb.Migrator.Mapper.MongoMapper.SqlMapping;
 
 namespace TravelDb.Migrator.Mapper.MongoMapper;
 
+/// <summary>Turns SQL cities into MongoDB documents.</summary>
 public static class CityMapper
 {
+    /// <summary>Creates a short city document that can sit inside another document.</summary>
+    /// <param name="snapshot">The copied SQL data.</param>
+    /// <param name="cityId">The city id.</param>
+    /// <returns>The city with its country and continent.</returns>
     // Opretter byoplysninger, der kan bruges inde i andre dokumenter.
     public static BsonDocument MapEmbedded(SqlSnapshot snapshot, string cityId)
     {
@@ -33,6 +38,9 @@ public static class CityMapper
         };
     }
 
+    /// <summary>Creates one document for each city, including its activities.</summary>
+    /// <param name="snapshot">The copied SQL data.</param>
+    /// <returns>The city documents.</returns>
     // Opretter alle byer til deres egen cities-collection.
     public static List<BsonDocument> Map(SqlSnapshot snapshot)
     {

@@ -11,30 +11,33 @@ namespace TravelApp.BusinessLogic.Handlers.Achievements
         private readonly IUnitOfWorkFactory _unitOfWorkFactory;
         private readonly ICurrentUser _currentUser;
 
-        /// <summary>Initializes a new GetEarnedAchievementsHandler instance.</summary>
+        /// <summary>Initializes a new instance of the <see cref="GetEarnedAchievementsHandler"/> class.</summary>
+        /// <param name="unitOfWorkFactory">The unit of work factory.</param>
+        /// <param name="currentUser">The current logged-in user.</param>
         public GetEarnedAchievementsHandler(IUnitOfWorkFactory unitOfWorkFactory, ICurrentUser currentUser)
         {
             _unitOfWorkFactory = unitOfWorkFactory;
             _currentUser = currentUser;
         }
 
-        /// <summary>Retrieves earned achievements.</summary>
+        /// <summary>Retrieves earned achievements for the specified user.</summary>
         public async Task<List<GetEarnedAchievementsResponse>> GetEarnedAchievementsAsync(int userId)
         {
+            AccessRules.RequireOwnerOrAdmin(_currentUser, userId);
+
             await using IUnitOfWork unitOfWork = _unitOfWorkFactory.Create();
 
-            // #TODO brug Cecilias AccessInfo som inspiration til repo kaldet
+            // TODO: Replace with Cecilia's AccessInfo when available.
             GetUserProfileResponse? existingProfile = await unitOfWork.Users.GetProfileAsync(userId);
-            bool profileNotFound = existingProfile is null;
-            if (profileNotFound)
+
+            if (existingProfile is null)
             {
                 throw new TravelAppNotFoundException($"User with ID {userId} not found.");
             }
 
-            AccessRules.RequireOwnerOrAdmin(_currentUser, userId);
+            List<GetEarnedAchievementsResponse> earnedAchievements = await unitOfWork.Achievements.GetEarnedByUserAsync(userId);
 
-            var result = await unitOfWork.Achievements.GetEarnedByUserAsync(userId);
-            return result;
+            return earnedAchievements;
         }
     }
 }

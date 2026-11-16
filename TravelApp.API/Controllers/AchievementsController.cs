@@ -18,15 +18,11 @@ namespace TravelApp.API.Controllers
         [HttpGet]
         [AllowAnonymous]
         [ProducesResponseType(typeof(List<GetAchievementDefinitionsResponse>), StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status500InternalServerError)]
         public async Task<ActionResult<List<GetAchievementDefinitionsResponse>>> GetDefinitions([FromServices] GetAchievementDefinitionsHandler getAchievementDefinitionsHandler)
         {
             List<GetAchievementDefinitionsResponse> result = await getAchievementDefinitionsHandler.GetAchievementDefinitionsAsync();
-            if (result.Count == 0)
-            {
-                return NoContent();
-            }
+
             return Ok(result);
         }
 
@@ -35,17 +31,14 @@ namespace TravelApp.API.Controllers
         [HttpGet("users/{userId:int}")]
         [Authorize]
         [ProducesResponseType(typeof(List<GetEarnedAchievementsResponse>), StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status204NoContent)]
-        [ProducesResponseType(typeof(UnauthorizedResult), StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status404NotFound)]
         [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status500InternalServerError)]
         public async Task<ActionResult<List<GetEarnedAchievementsResponse>>> GetEarned([FromRoute] int userId, [FromServices] GetEarnedAchievementsHandler getEarnedAchievementsHandler)
         {
             List<GetEarnedAchievementsResponse> result = await getEarnedAchievementsHandler.GetEarnedAchievementsAsync(userId);
-            if (result.Count == 0)
-            {
-                return NoContent();
-            }
+
             return Ok(result);
         }
     }

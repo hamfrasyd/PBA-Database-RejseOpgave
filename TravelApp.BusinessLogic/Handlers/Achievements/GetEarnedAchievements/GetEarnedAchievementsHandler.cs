@@ -1,5 +1,5 @@
 using TravelApp.BusinessLogic.Auth;
-using TravelApp.BusinessLogic.DTOs;
+using TravelApp.BusinessLogic.DTOs.Achievements;
 using TravelApp.BusinessLogic.Exceptions.SpecificCustomException;
 using TravelApp.BusinessLogic.Handlers.Users.GetUserProfile;
 using TravelApp.BusinessLogic.Interfaces;

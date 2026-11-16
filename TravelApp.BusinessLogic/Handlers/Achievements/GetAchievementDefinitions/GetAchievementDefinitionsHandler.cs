@@ -1,4 +1,4 @@
-using TravelApp.BusinessLogic.DTOs;
+using TravelApp.BusinessLogic.DTOs.Achievements;
 using TravelApp.BusinessLogic.Interfaces;
 
 namespace TravelApp.BusinessLogic.Handlers.Achievements.GetAchievementDefinitions

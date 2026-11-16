@@ -1,4 +1,4 @@
-﻿namespace TravelApp.BusinessLogic.DTOs
+﻿namespace TravelApp.BusinessLogic.DTOs.Achievements
 {
     /// <summary>Contains the result of get earned achievements from.</summary>
     public class EarnedAchievementDto

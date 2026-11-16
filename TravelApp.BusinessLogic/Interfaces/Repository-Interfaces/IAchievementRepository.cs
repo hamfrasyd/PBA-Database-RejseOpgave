@@ -1,4 +1,4 @@
-using TravelApp.BusinessLogic.DTOs;
+using TravelApp.BusinessLogic.DTOs.Achievements;
 
 namespace TravelApp.BusinessLogic.Interfaces
 {

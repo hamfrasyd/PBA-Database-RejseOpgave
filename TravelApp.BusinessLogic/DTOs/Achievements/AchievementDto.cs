@@ -1,4 +1,4 @@
-﻿namespace TravelApp.BusinessLogic.DTOs
+﻿namespace TravelApp.BusinessLogic.DTOs.Achievements
 {
     public class AchievementDto
     {

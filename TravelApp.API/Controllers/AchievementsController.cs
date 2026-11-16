@@ -30,14 +30,14 @@ namespace TravelApp.API.Controllers
         // GET api/achievements/users/{userId}
         [HttpGet("users/{userId:int}")]
         [Authorize]
-        [ProducesResponseType(typeof(List<GetEarnedAchievementsResponse>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(List<EarnedAchievementResponse>), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status403Forbidden)]
         [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status404NotFound)]
         [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult<List<GetEarnedAchievementsResponse>>> GetEarned([FromRoute] int userId, [FromServices] GetEarnedAchievementsHandler getEarnedAchievementsHandler)
+        public async Task<ActionResult<List<EarnedAchievementResponse>>> GetEarned([FromRoute] int userId, [FromServices] GetEarnedAchievementsHandler getEarnedAchievementsHandler)
         {
-            List<GetEarnedAchievementsResponse> result = await getEarnedAchievementsHandler.GetEarnedAchievementsAsync(userId);
+            List<EarnedAchievementResponse> result = await getEarnedAchievementsHandler.GetEarnedAchievementsAsync(userId);
 
             return Ok(result);
         }

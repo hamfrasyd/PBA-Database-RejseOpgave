@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using TravelApp.BusinessLogic.DTOs;
 using TravelApp.BusinessLogic.Handlers.Achievements;
 using TravelApp.BusinessLogic.Interfaces;
 using TravelApp.BusinessLogic.Models;
@@ -19,14 +20,21 @@ namespace TravelApp.DataAccess.SQLRepositories
         }
 
         /// <inheritdoc />
-        public async Task<List<Achievement>> GetDefinitionsAsync()
+        public async Task<List<AchievementDto>> GetDefinitionsAsync()
         {
-            List<Achievement> result = await _context.AchievementEntities.AsNoTracking().OrderBy(achievement => achievement.Name).ToListAsync();
+            List<Achievement> achievements = await _context.AchievementEntities.AsNoTracking().OrderBy(achievement => achievement.Name).ToListAsync();
+            List<AchievementDto> result = achievements.Select(achievement => new AchievementDto
+            {
+                Id = achievement.Id,
+                Name = achievement.Name,
+                Description = achievement.Description
+            }).ToList();
+
             return result;
         }
 
         /// <inheritdoc />
-        public async Task<List<GetEarnedAchievementsResponse>> GetEarnedByUserAsync(int userId)
+        public async Task<List<EarnedAchievementDto>> GetEarnedByUserAsync(int userId)
         {
             List<EarnedAchievement> earnedAchievementList = await _context.EarnedAchievementEntities.AsNoTracking()
                 .Include(earnedAchievement => earnedAchievement.Achievement)
@@ -34,7 +42,7 @@ namespace TravelApp.DataAccess.SQLRepositories
                 .OrderByDescending(earnedAchievement => earnedAchievement.EarnedAt)
                 .ToListAsync();
 
-            List<GetEarnedAchievementsResponse> responseList = [];
+            List<EarnedAchievementDto> responseList = [];
 
             foreach (EarnedAchievement earnedAchiev in earnedAchievementList)
             {
@@ -44,7 +52,7 @@ namespace TravelApp.DataAccess.SQLRepositories
                     throw new InvalidOperationException($"An earned achievement for user {userId} references a missing achievement definition.");
                 }
 
-                GetEarnedAchievementsResponse response = new GetEarnedAchievementsResponse
+                EarnedAchievementDto response = new EarnedAchievementDto
                 {
                     AchievementId = achiev.Id,
                     Name = achiev.Name,

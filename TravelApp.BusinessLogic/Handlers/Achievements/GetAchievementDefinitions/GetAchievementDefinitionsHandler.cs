@@ -1,5 +1,6 @@
-using TravelApp.BusinessLogic.Models;
+using TravelApp.BusinessLogic.DTOs;
 using TravelApp.BusinessLogic.Interfaces;
+using TravelApp.BusinessLogic.Models;
 
 namespace TravelApp.BusinessLogic.Handlers.Achievements
 {
@@ -19,10 +20,10 @@ namespace TravelApp.BusinessLogic.Handlers.Achievements
         {
             await using IUnitOfWork unitOfWork = _unitOfWorkFactory.Create();
 
-            List<Achievement> achievements = await unitOfWork.Achievements.GetDefinitionsAsync();
+            List<AchievementDto> achievements = await unitOfWork.Achievements.GetDefinitionsAsync();
             List<GetAchievementDefinitionsResponse> response = [];
 
-            foreach (Achievement achiev in achievements)
+            foreach (AchievementDto achiev in achievements)
             {
                 GetAchievementDefinitionsResponse definition = new GetAchievementDefinitionsResponse
                 {

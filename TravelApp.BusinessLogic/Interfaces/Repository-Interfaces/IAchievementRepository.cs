@@ -1,4 +1,4 @@
-using TravelApp.BusinessLogic.Handlers.Achievements;
+using TravelApp.BusinessLogic.DTOs;
 using TravelApp.BusinessLogic.Models;
 
 namespace TravelApp.BusinessLogic.Interfaces
@@ -7,9 +7,9 @@ namespace TravelApp.BusinessLogic.Interfaces
     public interface IAchievementRepository
     {
         /// <summary>Retrieves definitions.</summary>
-        public Task<List<Achievement>> GetDefinitionsAsync();
+        public Task<List<AchievementDto>> GetDefinitionsAsync();
 
         /// <summary>Retrieves earned by user.</summary>
-        public Task<List<GetEarnedAchievementsResponse>> GetEarnedByUserAsync(int userId);
+        public Task<List<EarnedAchievementDto>> GetEarnedByUserAsync(int userId);
     }
 }

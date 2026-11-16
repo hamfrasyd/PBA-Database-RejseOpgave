@@ -1,7 +1,8 @@
-using TravelApp.BusinessLogic.Handlers.Users;
-using TravelApp.BusinessLogic.Exceptions.SpecificCustomException;
-using TravelApp.BusinessLogic.Interfaces;
 using TravelApp.BusinessLogic.Auth;
+using TravelApp.BusinessLogic.DTOs;
+using TravelApp.BusinessLogic.Exceptions.SpecificCustomException;
+using TravelApp.BusinessLogic.Handlers.Users;
+using TravelApp.BusinessLogic.Interfaces;
 
 namespace TravelApp.BusinessLogic.Handlers.Achievements
 {
@@ -21,7 +22,7 @@ namespace TravelApp.BusinessLogic.Handlers.Achievements
         }
 
         /// <summary>Retrieves earned achievements for the specified user.</summary>
-        public async Task<List<GetEarnedAchievementsResponse>> GetEarnedAchievementsAsync(int userId)
+        public async Task<List<EarnedAchievementResponse>> GetEarnedAchievementsAsync(int userId)
         {
             AccessRules.RequireOwnerOrAdmin(_currentUser, userId);
 
@@ -35,9 +36,16 @@ namespace TravelApp.BusinessLogic.Handlers.Achievements
                 throw new TravelAppNotFoundException($"User with ID {userId} not found.");
             }
 
-            List<GetEarnedAchievementsResponse> earnedAchievements = await unitOfWork.Achievements.GetEarnedByUserAsync(userId);
+            List<EarnedAchievementDto> earnedAchievements = await unitOfWork.Achievements.GetEarnedByUserAsync(userId);
+            List<EarnedAchievementResponse> response = earnedAchievements.Select(earnedAchiev => new EarnedAchievementResponse
+            {
+                AchievementId = earnedAchiev.AchievementId,
+                Name = earnedAchiev.Name,
+                Description = earnedAchiev.Description,
+                EarnedAt = earnedAchiev.EarnedAt
+            }).ToList();
 
-            return earnedAchievements;
+            return response;
         }
     }
 }

@@ -8,6 +8,7 @@ using TravelApp.BusinessLogic.Exceptions.Filters;
 using TravelApp.DataAccess.DependencyInjection;
 
 var builder = WebApplication.CreateBuilder(args);
+builder.Services.AddHttpContextAccessor();
 
 // Add services to the container.
 
@@ -15,6 +16,7 @@ builder.Services.AddControllers(options =>
 {
     options.Filters.Add<TravelExceptionFilter>();
 });
+
 // Add Swagger
 builder.Services.AddSwaggerGen(options =>
 {

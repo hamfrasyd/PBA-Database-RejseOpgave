@@ -1,7 +1,6 @@
 ﻿using TravelApp.BusinessLogic.Auth;
 using TravelApp.BusinessLogic.DTOs.Trips;
 using TravelApp.BusinessLogic.Interfaces;
-using TravelApp.BusinessLogic.Models;
 
 namespace TravelApp.BusinessLogic.Handlers.Trips.GetTrip
 {

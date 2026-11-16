@@ -1,5 +1,4 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using TravelApp.BusinessLogic.Handlers.Trips.TripCity;
 
 namespace TravelApp.BusinessLogic.Handlers.Trips.CreateTrip
 {

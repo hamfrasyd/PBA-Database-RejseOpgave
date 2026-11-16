@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using TravelApp.BusinessLogic.Exceptions.Filters;
-using TravelApp.BusinessLogic.Handlers.Destinations;
+using TravelApp.API.ExceptionFilters;
+using TravelApp.BusinessLogic.Handlers.Activities.GetActivity;
 using TravelApp.BusinessLogic.Handlers.Trips;
 using TravelApp.BusinessLogic.Handlers.Trips.CreateTrip;
 using TravelApp.BusinessLogic.Handlers.Trips.GetTrip;
@@ -49,7 +49,7 @@ namespace TravelApp.API.Controllers
         [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status403Forbidden)]
         [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status404NotFound)]
         [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult<List<GetActivityResponse>>> GetTripActivities([FromRoute] int tripId,[FromServices] GetTripActivitiesHandler getTripActivitiesHandler)
+        public async Task<ActionResult<List<GetActivityResponse>>> GetTripActivities([FromRoute] int tripId, [FromServices] GetTripActivitiesHandler getTripActivitiesHandler)
         {
             List<GetActivityResponse> result = await getTripActivitiesHandler.GetTripActivitiesAsync(tripId);
 
@@ -200,7 +200,7 @@ namespace TravelApp.API.Controllers
         [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status404NotFound)]
         [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status409Conflict)]
         [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> RemoveParticipant([FromRoute] int tripId, [FromRoute] int userId,[FromServices] ManageTripRelationsHandler manageTripRelationsHandler)
+        public async Task<IActionResult> RemoveParticipant([FromRoute] int tripId, [FromRoute] int userId, [FromServices] ManageTripRelationsHandler manageTripRelationsHandler)
         {
             await manageTripRelationsHandler.RemoveParticipantAsync(tripId, userId);
             return NoContent();

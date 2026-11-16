@@ -124,7 +124,7 @@ namespace TravelApp.DataAccess.SQLRepositories
             }
 
             cityInDb.Name = request.Name.Trim();
-            cityInDb.Country = request.Country;
+            cityInDb.Country.Id = request.CountryId;
 
             return true;
         }

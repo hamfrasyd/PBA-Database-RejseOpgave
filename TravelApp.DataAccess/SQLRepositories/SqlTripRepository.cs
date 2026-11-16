@@ -1,12 +1,14 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using TravelApp.BusinessLogic.DTOs.Trips;
 using TravelApp.BusinessLogic.Interfaces;
-using TravelApp.BusinessLogic.Models;
+using TravelApp.BusinessLogic.Models.Destinations;
+using TravelApp.BusinessLogic.Models.Trips;
+using TravelApp.BusinessLogic.Models.Users;
 using TravelApp.DataAccess.SQLRepositories.EntityFramework;
 
 namespace TravelApp.DataAccess.SQLRepositories
 {
-    public class SqlTripRepository : ITripRepository    
+    public class SqlTripRepository : ITripRepository
     {
         private readonly TravelAppContext _context;
 
@@ -49,12 +51,12 @@ namespace TravelApp.DataAccess.SQLRepositories
             }
 
             List<TripDestinationDTO> cities = trip.TripStops.Select(stop => new TripDestinationDTO
-                {
-                    Id = stop.City!.Id,
-                    City = stop.City.Name,
-                    Country = stop.City.Country!.Name,
-                    Continent = stop.City.Country.Continent!.Name
-                })
+            {
+                Id = stop.City!.Id,
+                City = stop.City.Name,
+                Country = stop.City.Country!.Name,
+                Continent = stop.City.Country.Continent!.Name
+            })
                 .ToList();
 
             TripDetailsDTO result = new TripDetailsDTO
@@ -86,15 +88,15 @@ namespace TravelApp.DataAccess.SQLRepositories
             }
 
             List<TripSummaryDTO> result = await trips.OrderByDescending(trip => trip.StartDate).Select(trip => new TripSummaryDTO
-                {
-                    Id = trip.Id,
-                    StartDate = trip.StartDate,
-                    EndDate = trip.EndDate,
-                    IsCompleted = trip.IsCompleted,
-                    PlanNotes = trip.PlanNotes,
-                    ExperienceNotes = trip.ExperienceNotes,
+            {
+                Id = trip.Id,
+                StartDate = trip.StartDate,
+                EndDate = trip.EndDate,
+                IsCompleted = trip.IsCompleted,
+                PlanNotes = trip.PlanNotes,
+                ExperienceNotes = trip.ExperienceNotes,
 
-                    Cities = trip.TripStops
+                Cities = trip.TripStops
                         .Select(stop => new TripCitySummaryDTO
                         {
                             Id = stop.City!.Id,
@@ -102,9 +104,9 @@ namespace TravelApp.DataAccess.SQLRepositories
                         })
                         .ToList(),
 
-                    ActivityCount = trip.TripActivities.Count(),
-                    ParticipantCount = trip.TripParticipants.Count()
-                })
+                ActivityCount = trip.TripActivities.Count(),
+                ParticipantCount = trip.TripParticipants.Count()
+            })
                 .AsSplitQuery()
                 .ToListAsync();
 
@@ -135,9 +137,9 @@ namespace TravelApp.DataAccess.SQLRepositories
             IQueryable<Trip> trips = _context.TripEntities.AsNoTracking().Where(trip => trip.Id == tripId);
 
             IQueryable<TripAccessInfoDTO> accessInfo = trips.Select(trip => new TripAccessInfoDTO
-                {
-                    IsParticipant = trip.TripParticipants.Any(participant => participant.User!.Id == userId)
-                });
+            {
+                IsParticipant = trip.TripParticipants.Any(participant => participant.User!.Id == userId)
+            });
 
             TripAccessInfoDTO? result = await accessInfo.FirstOrDefaultAsync();
             return result;
@@ -219,10 +221,10 @@ namespace TravelApp.DataAccess.SQLRepositories
                 {
                     CityIds = trip.TripStops.Select(stop => stop.City!.Id).ToList(),
                     Activities = trip.TripActivities.Select(activity => new TripActivityRelationDTO
-                        {
-                            Id = activity.Activity!.Id,
-                            CityId = activity.Activity.City!.Id
-                        }).ToList(),
+                    {
+                        Id = activity.Activity!.Id,
+                        CityId = activity.Activity.City!.Id
+                    }).ToList(),
                     ParticipantIds = trip.TripParticipants.Select(participant => participant.User!.Id).ToList()
                 })
                 .AsSplitQuery()

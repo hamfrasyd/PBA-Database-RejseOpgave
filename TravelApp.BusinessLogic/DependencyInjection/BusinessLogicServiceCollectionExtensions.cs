@@ -1,13 +1,7 @@
 using Microsoft.Extensions.DependencyInjection;
 using TravelApp.BusinessLogic.DatabaseSelection;
-using TravelApp.BusinessLogic.Handlers.Accounts;
-using TravelApp.BusinessLogic.Handlers.Achievements;
-using TravelApp.BusinessLogic.Handlers.DatabaseSelection;
-using TravelApp.BusinessLogic.Handlers.Destinations;
 using TravelApp.BusinessLogic.Handlers.Trips;
 using TravelApp.BusinessLogic.Handlers.Trips.GetTrip;
-using TravelApp.BusinessLogic.Handlers.Users;
-using TravelApp.BusinessLogic.Interfaces;
 using TravelApp.BusinessLogic.Handlers.Accounts.Login;
 using TravelApp.BusinessLogic.Handlers.Achievements.GetAchievementDefinitions;
 using TravelApp.BusinessLogic.Handlers.Achievements.GetEarnedAchievements;

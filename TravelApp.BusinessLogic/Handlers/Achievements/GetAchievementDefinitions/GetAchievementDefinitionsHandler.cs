@@ -1,7 +1,5 @@
 using TravelApp.BusinessLogic.DTOs;
 using TravelApp.BusinessLogic.Interfaces;
-using TravelApp.BusinessLogic.Models.Achievements;
-using TravelApp.BusinessLogic.Models;
 
 namespace TravelApp.BusinessLogic.Handlers.Achievements.GetAchievementDefinitions
 {

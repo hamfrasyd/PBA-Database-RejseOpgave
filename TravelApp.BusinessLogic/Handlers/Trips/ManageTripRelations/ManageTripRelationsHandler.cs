@@ -3,7 +3,8 @@ using TravelApp.BusinessLogic.Auth;
 using TravelApp.BusinessLogic.DTOs.Trips;
 using TravelApp.BusinessLogic.Exceptions.SpecificCustomException;
 using TravelApp.BusinessLogic.Interfaces;
-using TravelApp.BusinessLogic.Models;
+using TravelApp.BusinessLogic.Models.Destinations;
+using TravelApp.BusinessLogic.Models.Users;
 
 namespace TravelApp.BusinessLogic.Handlers.Trips
 {
@@ -46,7 +47,7 @@ namespace TravelApp.BusinessLogic.Handlers.Trips
 
             TripRelationsDTO trip = await GetTripRelationsAsync(unitOfWork, tripId, _currentUser);
 
-            City? city = await unitOfWork.Destinations.GetCityByIdAsync(cityId);
+            City? city = await unitOfWork.Locations.GetCityByIdAsync(cityId);
             if (city is null)
             {
                 throw new TravelAppNotFoundException($"City {cityId} was not found.");
@@ -89,7 +90,7 @@ namespace TravelApp.BusinessLogic.Handlers.Trips
 
             TripRelationsDTO trip = await GetTripRelationsAsync(unitOfWork, tripId, _currentUser);
 
-            Activity? activity = await unitOfWork.Destinations.GetActivityByIdAsync(activityId);
+            Activity? activity = await unitOfWork.Activities.GetActivityByIdAsync(activityId);
 
             if (activity is null)
             {

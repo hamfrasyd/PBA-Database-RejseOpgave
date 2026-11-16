@@ -2,7 +2,7 @@
 using TravelApp.BusinessLogic.Exceptions.SpecificCustomException;
 using TravelApp.BusinessLogic.Handlers.Trips.TripParticipants;
 using TravelApp.BusinessLogic.Interfaces;
-using TravelApp.BusinessLogic.Models;
+using TravelApp.BusinessLogic.Models.Trips;
 
 namespace TravelApp.BusinessLogic.Handlers.Trips
 {
@@ -36,10 +36,10 @@ namespace TravelApp.BusinessLogic.Handlers.Trips
             }
 
             return trip.TripParticipants.Select(participant => new GetTripParticipantResponse
-                {
-                    Id = participant.User!.Id,
-                    FullName = $"{participant.User.FirstName} {participant.User.LastName}"
-                }).ToList();
+            {
+                Id = participant.User!.Id,
+                FullName = $"{participant.User.FirstName} {participant.User.LastName}"
+            }).ToList();
         }
     }
 }

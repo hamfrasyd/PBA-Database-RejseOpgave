@@ -1,5 +1,6 @@
 using TravelApp.BusinessLogic.Exceptions.SpecificCustomException;
 using TravelApp.BusinessLogic.Interfaces;
+using TravelApp.BusinessLogic.Models.Destinations;
 
 namespace TravelApp.BusinessLogic.Handlers.Locations.UpdateCity
 {
@@ -24,10 +25,10 @@ namespace TravelApp.BusinessLogic.Handlers.Locations.UpdateCity
                 throw new TravelAppValidationException("City name is required.");
             }
 
-            City? cityInDb = await unitOfWork.Destinations.GetCityByIdAsync(request.CityId);
+            City? cityInDb = await unitOfWork.Locations.GetCityByIdAsync(cityId);
             if (cityInDb is null)
             {
-                throw new TravelAppNotFoundException($"City {request.CityId} was not found.");
+                throw new TravelAppNotFoundException($"City {cityId} was not found.");
             }
 
             bool operationSuccessful = await unitOfWork.Locations.UpdateCityAsync(cityId, request);
@@ -37,10 +38,10 @@ namespace TravelApp.BusinessLogic.Handlers.Locations.UpdateCity
                 throw new TravelAppNotFoundException($"City with ID: {cityId} was not found.");
             }
 
-            cityInDb.Country = countryInDb;
+            cityInDb.Country = cityInDb.Country;
             cityInDb.Name = request.Name.Trim();
 
-            await unitOfWork.Destinations.UpdateCityAsync(cityInDb, request);
+            await unitOfWork.Locations.UpdateCityAsync(cityId, request);
 
             await unitOfWork.CommitAsync();
         }

@@ -2,7 +2,8 @@
 using TravelApp.BusinessLogic.Exceptions.SpecificCustomException;
 using TravelApp.BusinessLogic.Handlers.Trips.CreateTrip;
 using TravelApp.BusinessLogic.Interfaces;
-using TravelApp.BusinessLogic.Models;
+using TravelApp.BusinessLogic.Models.Trips;
+using TravelApp.BusinessLogic.Models.Users;
 
 namespace TravelApp.BusinessLogic.Handlers.Trips
 {
@@ -29,7 +30,7 @@ namespace TravelApp.BusinessLogic.Handlers.Trips
             TravelUser? user = await unitOfWork.Users.GetByIdAsync(_currentUser.UserId);
             if (user is null)
             {
-                throw new TravelAppNotFoundException( "The current user was not found.");
+                throw new TravelAppNotFoundException("The current user was not found.");
             }
 
             Trip trip = new Trip

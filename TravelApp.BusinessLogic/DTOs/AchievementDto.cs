@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace TravelApp.BusinessLogic.DTOs
+﻿namespace TravelApp.BusinessLogic.DTOs
 {
     public class AchievementDto
     {

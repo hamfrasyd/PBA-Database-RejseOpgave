@@ -1,5 +1,4 @@
 using System.ComponentModel.DataAnnotations;
-using TravelApp.BusinessLogic.Models.Destinations;
 
 namespace TravelApp.BusinessLogic.Handlers.Locations.UpdateCity
 {

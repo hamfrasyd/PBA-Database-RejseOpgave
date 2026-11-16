@@ -1,6 +1,5 @@
 ﻿using TravelApp.BusinessLogic.DTOs.Trips;
-using TravelApp.BusinessLogic.Handlers.Trips.GetTrip;
-using TravelApp.BusinessLogic.Models;
+using TravelApp.BusinessLogic.Models.Trips;
 
 namespace TravelApp.BusinessLogic.Interfaces
 {
@@ -66,7 +65,7 @@ namespace TravelApp.BusinessLogic.Interfaces
 
 
 
-        
+
         Task<TripRelationsDTO?> GetRelationsAsync(int tripId);
 
         Task AddCityAsync(int tripId, int cityId);

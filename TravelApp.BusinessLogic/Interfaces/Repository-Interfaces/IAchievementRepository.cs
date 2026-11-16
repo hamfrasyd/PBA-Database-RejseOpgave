@@ -1,5 +1,4 @@
 using TravelApp.BusinessLogic.DTOs;
-using TravelApp.BusinessLogic.Models;
 
 namespace TravelApp.BusinessLogic.Interfaces
 {
@@ -12,5 +11,6 @@ namespace TravelApp.BusinessLogic.Interfaces
 
         /// <summary>Retrieves earned by user.</summary>
         public Task<List<EarnedAchievementDto>> GetEarnedByUserAsync(int userId);
+        #endregion
     }
 }

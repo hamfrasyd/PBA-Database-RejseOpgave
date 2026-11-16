@@ -11,6 +11,7 @@ namespace TravelApp.API.Controllers
     [Route("api/achievements")]
     public class AchievementsController : ControllerBase
     {
+
         /// <summary>Lists available achievements.</summary>
         // GET api/achievements
         [HttpGet]

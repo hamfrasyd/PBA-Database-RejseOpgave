@@ -1,5 +1,7 @@
+using TravelApp.BusinessLogic.DTOs;
 using TravelApp.BusinessLogic.Interfaces;
 using TravelApp.BusinessLogic.Models.Achievements;
+using TravelApp.BusinessLogic.Models;
 
 namespace TravelApp.BusinessLogic.Handlers.Achievements.GetAchievementDefinitions
 {
@@ -7,30 +9,34 @@ namespace TravelApp.BusinessLogic.Handlers.Achievements.GetAchievementDefinition
     public class GetAchievementDefinitionsHandler
     {
         private readonly IUnitOfWorkFactory _unitOfWorkFactory;
+
         /// <summary>Initializes a new GetAchievementDefinitionsHandler instance.</summary>
         public GetAchievementDefinitionsHandler(IUnitOfWorkFactory unitOfWorkFactory)
         {
             _unitOfWorkFactory = unitOfWorkFactory;
         }
+
         /// <summary>Retrieves achievement definitions.</summary>
         public async Task<List<GetAchievementDefinitionsResponse>> GetAchievementDefinitionsAsync()
         {
             await using IUnitOfWork unitOfWork = _unitOfWorkFactory.Create();
 
-            List<Achievement> items = await unitOfWork.Achievements.GetDefinitionsAsync();
-            List<GetAchievementDefinitionsResponse> result = [];
+            List<AchievementDto> achievements = await unitOfWork.Achievements.GetDefinitionsAsync();
+            List<GetAchievementDefinitionsResponse> response = [];
 
-            foreach (Achievement item in items)
+            foreach (AchievementDto achiev in achievements)
             {
-                result.Add(new GetAchievementDefinitionsResponse
+                GetAchievementDefinitionsResponse definition = new GetAchievementDefinitionsResponse
                 {
-                    Id = item.Id,
-                    Name = item.Name,
-                    Description = item.Description
-                });
+                    Id = achiev.Id,
+                    Name = achiev.Name,
+                    Description = achiev.Description
+                };
+
+                response.Add(definition);
             }
 
-            return result;
+            return response;
         }
     }
 }

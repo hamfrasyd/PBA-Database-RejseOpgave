@@ -1,5 +1,5 @@
-using TravelApp.BusinessLogic.Handlers.Achievements.GetEarnedAchievements;
-using TravelApp.BusinessLogic.Models.Achievements;
+using TravelApp.BusinessLogic.DTOs;
+using TravelApp.BusinessLogic.Models;
 
 namespace TravelApp.BusinessLogic.Interfaces
 {
@@ -8,10 +8,9 @@ namespace TravelApp.BusinessLogic.Interfaces
     {
         #region Read - Achievements
         /// <summary>Retrieves definitions.</summary>
-        public Task<List<Achievement>> GetDefinitionsAsync();
-        /// <summary>Retrieves earned by user.</summary>
-        public Task<List<GetEarnedAchievementsResponse>> GetEarnedByUserAsync(int userId);
+        public Task<List<AchievementDto>> GetDefinitionsAsync();
 
-        #endregion
+        /// <summary>Retrieves earned by user.</summary>
+        public Task<List<EarnedAchievementDto>> GetEarnedByUserAsync(int userId);
     }
 }

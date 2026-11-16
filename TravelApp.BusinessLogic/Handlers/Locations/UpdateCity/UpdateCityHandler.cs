@@ -24,16 +24,23 @@ namespace TravelApp.BusinessLogic.Handlers.Locations.UpdateCity
                 throw new TravelAppValidationException("City name is required.");
             }
 
-            if (request.Country is null)
+            City? cityInDb = await unitOfWork.Destinations.GetCityByIdAsync(request.CityId);
+            if (cityInDb is null)
             {
-                throw new TravelAppValidationException("Country is required.");
+                throw new TravelAppNotFoundException($"City {request.CityId} was not found.");
             }
 
             bool operationSuccessful = await unitOfWork.Locations.UpdateCityAsync(cityId, request);
             if (operationSuccessful is false)
             {
+                throw new TravelAppNotFoundException($"Country {request.CountryId} was not found.");
                 throw new TravelAppNotFoundException($"City with ID: {cityId} was not found.");
             }
+
+            cityInDb.Country = countryInDb;
+            cityInDb.Name = request.Name.Trim();
+
+            await unitOfWork.Destinations.UpdateCityAsync(cityInDb, request);
 
             await unitOfWork.CommitAsync();
         }

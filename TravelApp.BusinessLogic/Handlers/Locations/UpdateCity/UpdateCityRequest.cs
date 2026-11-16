@@ -11,6 +11,6 @@ namespace TravelApp.BusinessLogic.Handlers.Locations.UpdateCity
         public string Name { get; set; } = string.Empty;
 
         /// <summary>Gets or sets the Country for the city.</summary>
-        public Country Country { get; set; } = new Country();
+        public int CountryId { get; set; }
     }
 }

@@ -1,7 +1,7 @@
-namespace TravelApp.BusinessLogic.Handlers.Achievements.GetEarnedAchievements
+﻿namespace TravelApp.BusinessLogic.DTOs
 {
-    /// <summary>Contains the result of get earned achievements.</summary>
-    public class GetEarnedAchievementsResponse
+    /// <summary>Contains the result of get earned achievements from.</summary>
+    public class EarnedAchievementDto
     {
         /// <summary>Gets or sets the achievement id.</summary>
         public int AchievementId { get; set; }

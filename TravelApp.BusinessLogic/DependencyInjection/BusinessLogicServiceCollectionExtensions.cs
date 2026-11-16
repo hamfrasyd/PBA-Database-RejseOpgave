@@ -1,11 +1,27 @@
 using Microsoft.Extensions.DependencyInjection;
 using TravelApp.BusinessLogic.DatabaseSelection;
-using TravelApp.BusinessLogic.Handlers.Accounts;
-using TravelApp.BusinessLogic.Handlers.Achievements;
-using TravelApp.BusinessLogic.Handlers.DatabaseSelection;
-using TravelApp.BusinessLogic.Handlers.Destinations;
-using TravelApp.BusinessLogic.Handlers.Users;
-using TravelApp.BusinessLogic.Interfaces;
+using TravelApp.BusinessLogic.Handlers.Accounts.Login;
+using TravelApp.BusinessLogic.Handlers.Achievements.GetAchievementDefinitions;
+using TravelApp.BusinessLogic.Handlers.Achievements.GetEarnedAchievements;
+using TravelApp.BusinessLogic.Handlers.Activities.CreateActivity;
+using TravelApp.BusinessLogic.Handlers.Activities.DeleteActivity;
+using TravelApp.BusinessLogic.Handlers.Activities.GetActivitiesByCity;
+using TravelApp.BusinessLogic.Handlers.Activities.GetActivity;
+using TravelApp.BusinessLogic.Handlers.Activities.UpdateActivity;
+using TravelApp.BusinessLogic.Handlers.DatabaseSelection.GetDatabaseProviders;
+using TravelApp.BusinessLogic.Handlers.Locations.CreateCity;
+using TravelApp.BusinessLogic.Handlers.Locations.DeleteCity;
+using TravelApp.BusinessLogic.Handlers.Locations.GetCities;
+using TravelApp.BusinessLogic.Handlers.Locations.GetCity;
+using TravelApp.BusinessLogic.Handlers.Locations.GetContinents;
+using TravelApp.BusinessLogic.Handlers.Locations.GetCountries;
+using TravelApp.BusinessLogic.Handlers.Locations.GetDestinationStats;
+using TravelApp.BusinessLogic.Handlers.Locations.GetVisitedCountries;
+using TravelApp.BusinessLogic.Handlers.Locations.UpdateCity;
+using TravelApp.BusinessLogic.Handlers.Users.DeleteUser;
+using TravelApp.BusinessLogic.Handlers.Users.GetUserProfile;
+using TravelApp.BusinessLogic.Handlers.Users.GetUserProfiles;
+using TravelApp.BusinessLogic.Handlers.Users.UpdateUser;
 
 
 namespace TravelApp.BusinessLogic.DependencyInjection
@@ -19,7 +35,8 @@ namespace TravelApp.BusinessLogic.DependencyInjection
             RegisterDatabaseSelection(services);
             RegisterAccounts(services);
             RegisterAchievements(services);
-            RegisterDestinations(services);
+            RegisterActivities(services);
+            RegisterLocations(services);
             RegisterUsers(services);
 
             return services;
@@ -41,24 +58,26 @@ namespace TravelApp.BusinessLogic.DependencyInjection
             services.AddScoped<GetAchievementDefinitionsHandler>();
             services.AddScoped<GetEarnedAchievementsHandler>();
         }
-
-        private static void RegisterDestinations(IServiceCollection services)
+        private static void RegisterActivities(IServiceCollection services)
         {
             services.AddScoped<CreateActivityHandler>();
-            services.AddScoped<CreateCityHandler>();
             services.AddScoped<DeleteActivityHandler>();
-            services.AddScoped<DeleteCityHandler>();
             services.AddScoped<GetActivityHandler>();
+            services.AddScoped<GetActivitiesByCityHandler>();
+            services.AddScoped<UpdateActivityHandler>();
+        }
+
+        private static void RegisterLocations(IServiceCollection services)
+        {
+            services.AddScoped<CreateCityHandler>();
+            services.AddScoped<DeleteCityHandler>();
             services.AddScoped<GetCitiesHandler>();
-            services.AddScoped<GetCityActivitiesHandler>();
             services.AddScoped<GetCityHandler>();
             services.AddScoped<GetContinentsHandler>();
             services.AddScoped<GetCountriesHandler>();
-            services.AddScoped<GetDestinationStatsHandler>();
+            services.AddScoped<GetCityStatsHandler>();
             services.AddScoped<GetVisitedCountriesHandler>();
-            services.AddScoped<UpdateActivityHandler>();
             services.AddScoped<UpdateCityHandler>();
-
         }
         private static void RegisterUsers(IServiceCollection services)
         {

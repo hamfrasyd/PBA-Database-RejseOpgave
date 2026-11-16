@@ -1,7 +1,7 @@
-using TravelApp.BusinessLogic.Models;
 using TravelApp.BusinessLogic.Interfaces;
+using TravelApp.BusinessLogic.Models.Achievements;
 
-namespace TravelApp.BusinessLogic.Handlers.Achievements
+namespace TravelApp.BusinessLogic.Handlers.Achievements.GetAchievementDefinitions
 {
     /// <summary>Handles the get achievement definitions use case.</summary>
     public class GetAchievementDefinitionsHandler

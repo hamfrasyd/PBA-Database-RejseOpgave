@@ -1,4 +1,6 @@
-namespace TravelApp.BusinessLogic.Models
+using TravelApp.BusinessLogic.Models.Trips;
+
+namespace TravelApp.BusinessLogic.Models.Groups
 {
     public class GroupTrip
     {

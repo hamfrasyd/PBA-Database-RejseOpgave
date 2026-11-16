@@ -16,6 +16,7 @@
 		<PackageReference Include="MongoDB.Driver" Version="3.13.0" />
 		<PackageReference Include="Neo4j.Driver" Version="6.5.1" />
 		<PackageReference Include="System.Security.Cryptography.Pkcs" Version="11.0.0-rc.2.26504.105" />
+		<PackageReference Include="System.Text.Json" Version="11.0.0" />
 	</ItemGroup>
 
 	<ItemGroup>

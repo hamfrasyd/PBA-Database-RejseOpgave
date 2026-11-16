@@ -1,7 +1,15 @@
 using Microsoft.EntityFrameworkCore;
-using TravelApp.BusinessLogic.Models;
-using TravelApp.BusinessLogic.Handlers.Destinations;
-using TravelApp.BusinessLogic.Handlers.Users;
+using TravelApp.BusinessLogic.Models.Posts;
+using TravelApp.BusinessLogic.Models.Groups;
+using TravelApp.BusinessLogic.Models.Destinations;
+using TravelApp.BusinessLogic.Models.Reviews;
+using TravelApp.BusinessLogic.Models.Friendships;
+using TravelApp.BusinessLogic.Models.Achievements;
+using TravelApp.BusinessLogic.Models.Trips;
+using TravelApp.BusinessLogic.Models.Invitations;
+using TravelApp.BusinessLogic.Handlers.Users.GetUserProfile;
+using TravelApp.BusinessLogic.Models.Users;
+using TravelApp.BusinessLogic.Handlers.Locations.GetDestinationStats;
 
 namespace TravelApp.DataAccess.SQLRepositories.EntityFramework
 {
@@ -33,7 +41,7 @@ namespace TravelApp.DataAccess.SQLRepositories.EntityFramework
         public DbSet<GroupMembership> GroupMembershipEntities => Set<GroupMembership>();
         public DbSet<GroupTrip> GroupTripEntities => Set<GroupTrip>();
         public DbSet<GetUserProfileResponse> UserProfiles => Set<GetUserProfileResponse>();
-        public DbSet<GetDestinationStatsResponse> DestinationStatistics => Set<GetDestinationStatsResponse>();
+        public DbSet<GetCityStatsResponse> DestinationStatistics => Set<GetCityStatsResponse>();
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -373,7 +381,7 @@ namespace TravelApp.DataAccess.SQLRepositories.EntityFramework
                 .OnDelete(DeleteBehavior.Cascade);
 
             modelBuilder.Entity<GetUserProfileResponse>(entity => entity.HasNoKey().ToView("vw_UserProfile", "dbo"));
-            modelBuilder.Entity<GetDestinationStatsResponse>(entity => entity.HasNoKey().ToView("vw_DestinationStats", "dbo"));
+            modelBuilder.Entity<GetCityStatsResponse>(entity => entity.HasNoKey().ToView("vw_DestinationStats", "dbo"));
         }
     }
 }

@@ -1,4 +1,4 @@
-namespace TravelApp.BusinessLogic.Handlers.Achievements
+namespace TravelApp.BusinessLogic.Handlers.Achievements.GetEarnedAchievements
 {
     /// <summary>Contains the result of get earned achievements.</summary>
     public class GetEarnedAchievementsResponse

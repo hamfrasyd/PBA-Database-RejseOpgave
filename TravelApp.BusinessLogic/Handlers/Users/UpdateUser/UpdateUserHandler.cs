@@ -1,9 +1,10 @@
-using TravelApp.BusinessLogic.Models;
 using TravelApp.BusinessLogic.Exceptions.SpecificCustomException;
 using TravelApp.BusinessLogic.Interfaces;
 using TravelApp.BusinessLogic.Auth;
+using TravelApp.BusinessLogic.Models.Destinations;
+using TravelApp.BusinessLogic.Models.Users;
 
-namespace TravelApp.BusinessLogic.Handlers.Users
+namespace TravelApp.BusinessLogic.Handlers.Users.UpdateUser
 {
     /// <summary>Handles the update user use case.</summary>
     public class UpdateUserHandler
@@ -30,7 +31,7 @@ namespace TravelApp.BusinessLogic.Handlers.Users
                 throw new TravelAppNotFoundException($"User {request.UserId} was not found.");
             }
 
-            City? city = await unitOfWork.Destinations.GetCityByIdAsync(request.CityId);
+            City? city = await unitOfWork.Locations.GetCityByIdAsync(request.CityId);
             if (city is null)
             {
                 throw new TravelAppValidationException($"City {request.CityId} does not exist.");

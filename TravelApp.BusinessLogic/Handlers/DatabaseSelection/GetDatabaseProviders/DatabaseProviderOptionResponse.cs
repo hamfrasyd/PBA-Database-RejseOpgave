@@ -1,4 +1,4 @@
-namespace TravelApp.BusinessLogic.Handlers.DatabaseSelection
+namespace TravelApp.BusinessLogic.Handlers.DatabaseSelection.GetDatabaseProviders
 {
     public class DatabaseProviderOptionResponse
     {

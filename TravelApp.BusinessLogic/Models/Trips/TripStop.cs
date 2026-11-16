@@ -1,4 +1,6 @@
-namespace TravelApp.BusinessLogic.Models
+using TravelApp.BusinessLogic.Models.Destinations;
+
+namespace TravelApp.BusinessLogic.Models.Trips
 {
     public class TripStop
     {

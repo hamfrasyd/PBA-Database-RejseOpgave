@@ -1,7 +1,7 @@
 using Microsoft.EntityFrameworkCore;
-using TravelApp.BusinessLogic.Handlers.Achievements;
+using TravelApp.BusinessLogic.Handlers.Achievements.GetEarnedAchievements;
 using TravelApp.BusinessLogic.Interfaces;
-using TravelApp.BusinessLogic.Models;
+using TravelApp.BusinessLogic.Models.Achievements;
 using TravelApp.DataAccess.SQLRepositories.EntityFramework;
 
 namespace TravelApp.DataAccess.SQLRepositories

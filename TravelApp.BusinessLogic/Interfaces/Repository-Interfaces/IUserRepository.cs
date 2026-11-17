@@ -53,8 +53,8 @@ namespace TravelApp.BusinessLogic.Interfaces
 
         /// <summary>Updates a user's basic info: first name, last name, home city, and privacy.</summary>
         /// <param name="userToUpdate">The basic user fields to persist.</param>
-        /// <returns>The saved basic user, or <see langword="null"/> when the user does not exist.</returns>
-        Task<UserBasicInfoDto?> UpdateUserAsync(UserBasicInfoDto userToUpdate);
+        /// <returns><see langword="true"/> when the user exists and is marked for update; otherwise, <see langword="false"/>.</returns>
+        Task<bool> UpdateUserAsync(UserBasicInfoDto userToUpdate);
 
         #endregion
 

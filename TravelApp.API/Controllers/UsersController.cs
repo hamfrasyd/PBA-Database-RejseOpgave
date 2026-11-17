@@ -5,7 +5,7 @@ using TravelApp.BusinessLogic.Exceptions.SpecificCustomException;
 using TravelApp.BusinessLogic.Handlers.Locations.GetVisitedCountries;
 using TravelApp.BusinessLogic.Handlers.Users.DeleteUser;
 using TravelApp.BusinessLogic.Handlers.Users.GetUserProfile;
-using TravelApp.BusinessLogic.Handlers.Users.GetUserProfiles;
+using TravelApp.BusinessLogic.Handlers.Users.GetAllUserProfiles;
 using TravelApp.BusinessLogic.Handlers.Users.UpdateUser;
 
 namespace TravelApp.API.Controllers
@@ -20,17 +20,16 @@ namespace TravelApp.API.Controllers
 
         /// <summary>Lists visible user profiles with optional search and sorting.</summary>
         /// <param name="request">The filter and sort options.</param>
-        /// <param name="getUserProfilesHandler">The handler that loads the profiles.</param>
+        /// <param name="getAllUserProfilesHandler">The handler that loads the profiles.</param>
         /// <returns>The matching profiles. An empty list is returned when none match.</returns>
         // GET api/users
         [HttpGet]
         [ProducesResponseType(typeof(List<UserProfileResponse>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(UnauthorizedResult), StatusCodes.Status401Unauthorized)]
-        [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status403Forbidden)]
         [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult<List<UserProfileResponse>>> GetUsers([FromQuery] GetUserProfilesRequest request, [FromServices] GetUserProfilesHandler getUserProfilesHandler)
+        public async Task<ActionResult<List<UserProfileResponse>>> GetUsers([FromQuery] GetAllUserProfilesRequest request, [FromServices] GetAllUserProfilesHandler getAllUserProfilesHandler)
         {
-            List<UserProfileResponse> result = await getUserProfilesHandler.GetUserProfilesAsync(request);
+            List<UserProfileResponse> result = await getAllUserProfilesHandler.GetAllUserProfilesAsync(request);
 
             return Ok(result);
         }
@@ -43,7 +42,8 @@ namespace TravelApp.API.Controllers
         /// <param name="userId">The user identifier.</param>
         /// <param name="getUserProfileHandler">The handler that loads the profile.</param>
         /// <returns>The user profile.</returns>
-        /// <exception cref="TravelAppNotFoundException">Thrown when the user does not exist or the profile is private.</exception>
+        /// <exception cref="TravelAppNotFoundException">Thrown when the user does not exist.</exception>
+        /// <exception cref="TravelAppForbiddenException">Thrown when the profile is private and the current user is neither the owner nor an administrator.</exception>
         // GET api/users/{userId}
         [HttpGet("{userId:int}")]
         [ProducesResponseType(typeof(UserProfileResponse), StatusCodes.Status200OK)]
@@ -66,7 +66,8 @@ namespace TravelApp.API.Controllers
         /// <param name="userId">The user identifier.</param>
         /// <param name="getVisitedCountriesHandler">The handler that loads the visited countries.</param>
         /// <returns>The visited countries, or no content when the user has none.</returns>
-        /// <exception cref="TravelAppNotFoundException">Thrown when the user does not exist or the profile is private.</exception>
+        /// <exception cref="TravelAppNotFoundException">Thrown when the user does not exist.</exception>
+        /// <exception cref="TravelAppForbiddenException">Thrown when the profile is private and the current user is neither the owner nor an administrator.</exception>
         // GET api/users/{userId}/visited-countries
         [HttpGet("{userId:int}/visited-countries")]
         [ProducesResponseType(typeof(List<GetVisitedCountriesResponse>), StatusCodes.Status200OK)]

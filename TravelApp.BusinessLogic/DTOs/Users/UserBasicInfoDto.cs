@@ -1,6 +1,6 @@
 namespace TravelApp.BusinessLogic.DTOs.Users
 {
-    /// <summary>Contains the basic saved user: identifier, first name, last name, home city, and privacy. Profile statistics are not included.</summary>
+    /// <summary>Contains the basic user fields written by an update: identifier, first name, last name, home city, and privacy.</summary>
     public class UserBasicInfoDto
     {
         /// <summary>Gets or sets the user identifier.</summary>

@@ -1,7 +1,6 @@
 using TravelApp.BusinessLogic.Auth;
 using TravelApp.BusinessLogic.DTOs.Users;
 using TravelApp.BusinessLogic.Exceptions.SpecificCustomException;
-using TravelApp.BusinessLogic.Handlers.Locations.Data;
 using TravelApp.BusinessLogic.Interfaces;
 
 namespace TravelApp.BusinessLogic.Handlers.Users.UpdateUser
@@ -27,64 +26,43 @@ namespace TravelApp.BusinessLogic.Handlers.Users.UpdateUser
         /// <returns>The updated user.</returns>
         /// <exception cref="TravelAppForbiddenException">Thrown when the current user cannot update the user.</exception>
         /// <exception cref="TravelAppNotFoundException">Thrown when the user does not exist.</exception>
-        /// <exception cref="TravelAppValidationException">Thrown when a name is missing or the home city does not exist.</exception>
+        /// <exception cref="TravelAppValidationException">Thrown when the home city does not exist.</exception>
         public async Task<UpdateUserResponse> UpdateUserAsync(int userId, UpdateUserRequest request)
         {
             AccessRules.RequireOwnerOrAdmin(_currentUser, userId);
 
-            bool firstNameIsMissing = string.IsNullOrWhiteSpace(request.FirstName);
-            bool lastNameIsMissing = string.IsNullOrWhiteSpace(request.LastName);
-
-            if (firstNameIsMissing || lastNameIsMissing)
-            {
-                throw new TravelAppValidationException("First name and last name are required.");
-            }
-
-            string normalizedFirstName = request.FirstName.Trim();
-            string normalizedLastName = request.LastName.Trim();
-
             await using IUnitOfWork unitOfWork = _unitOfWorkFactory.Create();
 
-            bool userExists = await unitOfWork.Users.UserExistsAsync(userId);
-            if (userExists is false)
+            bool cityExists = await unitOfWork.Locations.CityExistsAsync(request.CityId);
+            if (cityExists is false)
             {
-                throw new TravelAppNotFoundException($"User {userId} was not found.");
-            }
-
-            CityDto? existingCity = await unitOfWork.Locations.GetCityAsync(request.CityId);
-            bool cityNotFound = existingCity is null;
-            if (cityNotFound)
-            {
-                throw new TravelAppValidationException($"City {request.CityId} does not exist.");
+                throw new TravelAppValidationException($"City with ID {request.CityId} does not exist.");
             }
 
             UserBasicInfoDto userToUpdate = new UserBasicInfoDto
             {
                 Id = userId,
-                FirstName = normalizedFirstName,
-                LastName = normalizedLastName,
+                FirstName = request.FirstName.Trim(),
+                LastName = request.LastName.Trim(),
                 CityId = request.CityId,
                 IsPrivate = request.IsPrivate
             };
 
-            UserBasicInfoDto? updatedUser = await unitOfWork.Users.UpdateUserAsync(userToUpdate);
-            bool userNotFound = updatedUser is null;
-            if (userNotFound)
+            bool userWasFound = await unitOfWork.Users.UpdateUserAsync(userToUpdate);
+            if (userWasFound is false)
             {
-                throw new TravelAppNotFoundException($"User {userId} was not found.");
+                throw new TravelAppNotFoundException($"User with ID {userId} was not found.");
             }
 
             await unitOfWork.CommitAsync();
 
-            UserBasicInfoDto persistedUser = updatedUser ?? throw new TravelAppNotFoundException($"User {userId} was not found.");
-
             UpdateUserResponse response = new UpdateUserResponse
             {
-                Id = persistedUser.Id,
-                FirstName = persistedUser.FirstName,
-                LastName = persistedUser.LastName,
-                CityId = persistedUser.CityId,
-                IsPrivate = persistedUser.IsPrivate
+                Id = userToUpdate.Id,
+                FirstName = userToUpdate.FirstName,
+                LastName = userToUpdate.LastName,
+                CityId = userToUpdate.CityId,
+                IsPrivate = userToUpdate.IsPrivate
             };
 
             return response;

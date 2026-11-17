@@ -56,7 +56,12 @@ namespace TravelApp.BusinessLogic.Interfaces
 
         #endregion
 
-        #region Validation - Countries
+        #region Validation - Cities & Countries
+
+        /// <summary>Checks whether a city exists.</summary>
+        /// <param name="cityId">The city identifier.</param>
+        /// <returns><see langword="true"/> when the city exists; otherwise, <see langword="false"/>.</returns>
+        Task<bool> CityExistsAsync(int cityId);
 
         /// <summary>Checks whether a country exists.</summary>
         /// <param name="countryId">The country identifier.</param>

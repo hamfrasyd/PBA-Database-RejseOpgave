@@ -3,27 +3,27 @@ using TravelApp.BusinessLogic.DTOs.Users;
 using TravelApp.BusinessLogic.Handlers.Users.GetUserProfile;
 using TravelApp.BusinessLogic.Interfaces;
 
-namespace TravelApp.BusinessLogic.Handlers.Users.GetUserProfiles
+namespace TravelApp.BusinessLogic.Handlers.Users.GetAllUserProfiles
 {
-    /// <summary>Handles the get user profiles use case.</summary>
-    public class GetUserProfilesHandler
+    /// <summary>Handles the get all user profiles use case.</summary>
+    public class GetAllUserProfilesHandler
     {
         private readonly IUnitOfWorkFactory _unitOfWorkFactory;
         private readonly ICurrentUser _currentUser;
 
-        /// <summary>Initializes a new GetUserProfilesHandler instance.</summary>
+        /// <summary>Initializes a new GetAllUserProfilesHandler instance.</summary>
         /// <param name="unitOfWorkFactory">The unit of work factory.</param>
         /// <param name="currentUser">The current logged-in user.</param>
-        public GetUserProfilesHandler(IUnitOfWorkFactory unitOfWorkFactory, ICurrentUser currentUser)
+        public GetAllUserProfilesHandler(IUnitOfWorkFactory unitOfWorkFactory, ICurrentUser currentUser)
         {
             _unitOfWorkFactory = unitOfWorkFactory;
             _currentUser = currentUser;
         }
 
-        /// <summary>Retrieves user profiles.</summary>
+        /// <summary>Retrieves all user profiles that match the filter.</summary>
         /// <param name="request">The filter and sort options.</param>
         /// <returns>The matching user profiles.</returns>
-        public async Task<List<UserProfileResponse>> GetUserProfilesAsync(GetUserProfilesRequest request)
+        public async Task<List<UserProfileResponse>> GetAllUserProfilesAsync(GetAllUserProfilesRequest request)
         {
             await using IUnitOfWork unitOfWork = _unitOfWorkFactory.Create();
 
@@ -37,7 +37,7 @@ namespace TravelApp.BusinessLogic.Handlers.Users.GetUserProfiles
 
             List<UserProfileDetailsDTO> userProfiles = await unitOfWork.Users.GetProfilesAsync(userSearchProfileDTO);
 
-            List<UserProfileResponse> profileDetailsResponeList = userProfiles.Select(profile => new UserProfileResponse
+            List<UserProfileResponse> profiles = userProfiles.Select(profile => new UserProfileResponse
             {
                 UserId = profile.UserId,
                 FullName = profile.FullName,
@@ -53,7 +53,7 @@ namespace TravelApp.BusinessLogic.Handlers.Users.GetUserProfiles
                 AchievementCount = profile.AchievementCount
             }).ToList();
 
-            return profileDetailsResponeList;
+            return profiles;
         }
     }
 }

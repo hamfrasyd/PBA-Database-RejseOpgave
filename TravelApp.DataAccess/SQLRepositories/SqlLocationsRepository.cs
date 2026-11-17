@@ -190,7 +190,15 @@ namespace TravelApp.DataAccess.SQLRepositories
 
         #endregion
 
-        #region Validation - Countries
+        #region Validation - Cities & Countries
+
+        /// <inheritdoc />
+        public async Task<bool> CityExistsAsync(int cityId)
+        {
+            bool cityExists = await _context.CityEntities.AnyAsync(city => city.Id == cityId);
+
+            return cityExists;
+        }
 
         /// <inheritdoc />
         public async Task<bool> CountryExistsAsync(int countryId)

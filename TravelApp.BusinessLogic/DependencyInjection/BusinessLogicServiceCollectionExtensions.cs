@@ -20,7 +20,7 @@ using TravelApp.BusinessLogic.Handlers.Locations.GetCityStats;
 using TravelApp.BusinessLogic.Handlers.Locations.GetVisitedCountries;
 using TravelApp.BusinessLogic.Handlers.Users.DeleteUser;
 using TravelApp.BusinessLogic.Handlers.Users.GetUserProfile;
-using TravelApp.BusinessLogic.Handlers.Users.GetUserProfiles;
+using TravelApp.BusinessLogic.Handlers.Users.GetAllUserProfiles;
 using TravelApp.BusinessLogic.Handlers.Users.UpdateUser;
 using TravelApp.BusinessLogic.Handlers.Trips.TripCity;
 using TravelApp.BusinessLogic.Handlers.Posts;
@@ -86,7 +86,7 @@ namespace TravelApp.BusinessLogic.DependencyInjection
         {
             services.AddScoped<DeleteUserHandler>();
             services.AddScoped<GetUserProfileHandler>();
-            services.AddScoped<GetUserProfilesHandler>();
+            services.AddScoped<GetAllUserProfilesHandler>();
             services.AddScoped<UpdateUserHandler>();
         }
 

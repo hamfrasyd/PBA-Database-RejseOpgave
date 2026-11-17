@@ -1,49 +1,31 @@
-using TravelApp.BusinessLogic.Exceptions.SpecificCustomException;
-using TravelApp.BusinessLogic.Interfaces;
-using TravelApp.BusinessLogic.Models.Users;
+using TravelApp.BusinessLogic.Auth;
 
 namespace TravelApp.BusinessLogic.Handlers.Accounts.Login
 {
-    /// <summary>Finds an existing user for local demo sign-in; does not authenticate identity.</summary>
+    /// <summary>Handles login for local accounts.</summary>
     public class LoginHandler
     {
-        private readonly IUnitOfWorkFactory _unitOfWorkFactory;
+        private readonly ILoginAccountVerifier _accountVerifier;
+        private readonly IAccessTokenIssuer _tokenIssuer;
 
         /// <summary>Initializes a new LoginHandler instance.</summary>
-        /// <param name="unitOfWorkFactory">The unit of work factory.</param>
-        public LoginHandler(IUnitOfWorkFactory unitOfWorkFactory)
+        public LoginHandler(ILoginAccountVerifier accountVerifier, IAccessTokenIssuer tokenIssuer)
         {
-            _unitOfWorkFactory = unitOfWorkFactory;
+            _accountVerifier = accountVerifier;
+            _tokenIssuer = tokenIssuer;
         }
 
-        /// <summary>Signs in the operation.</summary>
-        /// <param name="request">The login request.</param>
-        /// <returns>The signed-in user.</returns>
-        /// <exception cref="TravelAppValidationException">Thrown when the user identifier is missing.</exception>
-        /// <exception cref="TravelAppNotFoundException">Thrown when the user does not exist.</exception>
-        public async Task<LoginResponse> LoginAsync(LoginRequest request)
+        /// <summary>Verifies the credentials and issues an access token.</summary>
+        public async Task<LoginResponse?> LoginAsync(LoginRequest request)
         {
-            if (request.UserId <= 0)
+            VerifiedLoginAccount? account = await _accountVerifier.VerifyAsync(request.UserName, request.Password);
+
+            if (account is null)
             {
-                throw new TravelAppValidationException("A valid user ID is required.");
+                return null;
             }
 
-            await using IUnitOfWork unitOfWork = _unitOfWorkFactory.Create();
-
-            TravelUser? user = await unitOfWork.Users.GetByIdAsync(request.UserId);
-
-            if (user is null)
-            {
-                throw new TravelAppNotFoundException($"User {request.UserId} was not found.");
-            }
-
-            LoginResponse result = new LoginResponse
-            {
-                UserId = user.Id,
-                FullName = $"{user.FirstName} {user.LastName}"
-            };
-
-            return result;
+            return _tokenIssuer.Issue(account);
         }
     }
 }

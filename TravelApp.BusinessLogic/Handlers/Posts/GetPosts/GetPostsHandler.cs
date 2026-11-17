@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using TravelApp.BusinessLogic.Exceptions.SpecificCustomException;
+﻿using TravelApp.BusinessLogic.Exceptions.SpecificCustomException;
 using TravelApp.BusinessLogic.Interfaces;
 using TravelApp.BusinessLogic.Models;
 using TravelApp.BusinessLogic.Models.Posts;

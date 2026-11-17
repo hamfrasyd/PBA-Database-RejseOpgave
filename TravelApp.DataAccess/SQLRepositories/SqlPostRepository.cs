@@ -1,6 +1,9 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using TravelApp.BusinessLogic.Exceptions.BaseCustomException;
+using TravelApp.BusinessLogic.Exceptions.SpecificCustomException;
 using TravelApp.BusinessLogic.Interfaces;
 using TravelApp.BusinessLogic.Models.Posts;
+using TravelApp.BusinessLogic.Models.Trips;
 using TravelApp.DataAccess.SQLRepositories.EntityFramework;
 
 namespace TravelApp.DataAccess.SQLRepositories
@@ -45,18 +48,16 @@ namespace TravelApp.DataAccess.SQLRepositories
         }
 
         /// <inheritdoc/>
-        public async Task<bool> DeletePostAsync(int postId)
+        public async Task DeletePostAsync(int postId)
         {
-            if (_context.Database.CurrentTransaction is null)
+            Post toBeDeletedPost = await _context.PostEntities.FirstOrDefaultAsync(post => post.Id == postId);
+
+            if (toBeDeletedPost is null)
             {
-                await _context.Database.BeginTransactionAsync();
+                throw new TravelAppNotFoundException($"Post {postId} was not found.");
             }
 
-            int deletedRows = await _context.PostEntities.Where(post => post.Id == postId).ExecuteDeleteAsync();
-
-            bool wasDeleted = deletedRows > 0;
-
-            return wasDeleted;
+            _context.PostEntities.Remove(toBeDeletedPost);
         }
     }
 }

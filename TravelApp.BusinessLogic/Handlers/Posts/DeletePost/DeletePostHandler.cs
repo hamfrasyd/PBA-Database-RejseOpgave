@@ -1,11 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using TravelApp.BusinessLogic.Exceptions.SpecificCustomException;
+﻿using TravelApp.BusinessLogic.Exceptions.SpecificCustomException;
 using TravelApp.BusinessLogic.Interfaces;
 
 namespace TravelApp.BusinessLogic.Handlers.Posts
 {
+    ///<summary>Handles the delete post operation.</summary>
     public class DeletePostHandler
     {
         private readonly IUnitOfWorkFactory _unitOfWorkFactory;
@@ -16,16 +14,12 @@ namespace TravelApp.BusinessLogic.Handlers.Posts
             _unitOfWorkFactory = unitOfWorkFactory;
         }
 
+        ///<summary>Deletes a post.</summary>
         public async Task DeletePostAsync(int postId)
         {
             await using IUnitOfWork unitOfWork = _unitOfWorkFactory.Create();
 
-            bool wasDeleted = await unitOfWork.Posts.DeletePostAsync(postId);
-
-            if (wasDeleted is false)
-            {
-                throw new TravelAppNotFoundException($"Activity {postId} was not found.");
-            }
+            await unitOfWork.Posts.DeletePostAsync(postId);
 
             await unitOfWork.CommitAsync();
         }

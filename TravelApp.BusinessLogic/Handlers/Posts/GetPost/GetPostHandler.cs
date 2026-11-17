@@ -22,7 +22,7 @@ namespace TravelApp.BusinessLogic.Handlers.Posts
             await using IUnitOfWork unitOfWork = _unitOfWorkFactory.Create();
 
             Post? postFromDb = await unitOfWork.Posts.GetPostByIdAsync(id);
-            
+
             if (postFromDb is null)
             {
                 throw new TravelAppNotFoundException($"Post {id} was not found.");
@@ -38,11 +38,9 @@ namespace TravelApp.BusinessLogic.Handlers.Posts
                 Id = postFromDb.Id,
                 UserId = postFromDb.User.Id,
                 Content = postFromDb.Content
-            };  
+            };
 
             return response;
         }
-
-
     }
 }

@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using TravelApp.API.ExceptionFilters;
-using TravelApp.BusinessLogic.Handlers;
 using TravelApp.BusinessLogic.Handlers.Posts;
 
 namespace TravelApp.API.Controllers
@@ -9,9 +8,9 @@ namespace TravelApp.API.Controllers
     /// <summary>Exposes HTTP endpoints for posts.</summary>
     [ApiController]
     [Route("api/posts")]
-    public class PostsControllers : ControllerBase
+    public class PostsController : ControllerBase
     {
-        /// <summary>Lists posts by user ID.</summary>
+        /// <summary>Lists posts by user id.</summary>
         // GET api/posts/users/{userId}
         [HttpGet("users/{userId:int}")]
         [AllowAnonymous]
@@ -44,12 +43,11 @@ namespace TravelApp.API.Controllers
             return Ok(result);
         }
 
-        /// <summary>Creates a post and returns its ID.</summary>
+        /// <summary>Creates a post and returns its id.</summary>
         // POST api/posts
         [HttpPost]
         [ProducesResponseType(typeof(int), StatusCodes.Status201Created)]
         [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status400BadRequest)] // May be thrown from CreatePostHandler.
-        [ProducesResponseType(typeof(UnauthorizedResult), StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status409Conflict)] // May be thrown from CreatePostHandler.
         [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status500InternalServerError)]
         [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status404NotFound)]
@@ -59,17 +57,17 @@ namespace TravelApp.API.Controllers
             return Created($"/api/posts/{response.Id}", response);
         }
 
-        /// <summary>Deletes a post and returns its ID.</summary>
+        /// <summary>Deletes a post.</summary>
         // DELETE api/posts/{userId}
         [HttpDelete("{postId:int}")]
-        [ProducesResponseType(typeof(int), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(int), StatusCodes.Status204NoContent)]
         [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status404NotFound)] // Thrown from DeletePostHandler for missing resources.
         [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status409Conflict)] // May be thrown from DeletePostHandler.
         [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status500InternalServerError)]
         public async Task<ActionResult<int>> DeletePost([FromRoute] int postId, [FromServices] DeletePostHandler deletePostHandler)
         {
             await deletePostHandler.DeletePostAsync(postId);
-            return Ok(postId);
+            return NoContent();
         }
 
         /// <summary>Updates a post and returns its ID.</summary>

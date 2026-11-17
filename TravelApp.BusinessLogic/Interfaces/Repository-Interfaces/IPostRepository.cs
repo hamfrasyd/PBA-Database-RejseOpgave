@@ -19,6 +19,6 @@ namespace TravelApp.BusinessLogic.Interfaces
         public Task UpdatePostAsync(Post post);
 
         /// <summary>Delete a specific post.</summary>
-        public Task<bool> DeletePostAsync(int postId);
+        public Task DeletePostAsync(int postId);
     }
 }

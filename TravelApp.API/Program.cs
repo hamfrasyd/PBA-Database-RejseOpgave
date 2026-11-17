@@ -33,7 +33,6 @@ if (allowedOrigins.Length > 0)
 // --- Add AUTH services
 builder.AddTravelAppAuthentication();
 
-
 // -- Add Business Logic Services
 builder.Services.AddBusinessLogic();
 
@@ -44,7 +43,6 @@ var app = builder.Build();
 
 // Use Swagger
 app.UseTravelAppSwagger();
-
 
 app.UseHttpsRedirection();
 

@@ -11,6 +11,8 @@ namespace TravelApp.BusinessLogic.Handlers.Users.DeleteUser
         private readonly ICurrentUser _currentUser;
 
         /// <summary>Initializes a new DeleteUserHandler instance.</summary>
+        /// <param name="unitOfWorkFactory">The unit of work factory.</param>
+        /// <param name="currentUser">The current logged-in user.</param>
         public DeleteUserHandler(IUnitOfWorkFactory unitOfWorkFactory, ICurrentUser currentUser)
         {
             _unitOfWorkFactory = unitOfWorkFactory;
@@ -18,6 +20,9 @@ namespace TravelApp.BusinessLogic.Handlers.Users.DeleteUser
         }
 
         /// <summary>Deletes user.</summary>
+        /// <param name="userId">The user identifier.</param>
+        /// <exception cref="TravelAppForbiddenException">Thrown when the current user cannot delete the user.</exception>
+        /// <exception cref="TravelAppNotFoundException">Thrown when the user does not exist.</exception>
         public async Task DeleteUserAsync(int userId)
         {
             AccessRules.RequireOwnerOrAdmin(_currentUser, userId);

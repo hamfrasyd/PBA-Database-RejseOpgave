@@ -9,12 +9,17 @@ namespace TravelApp.BusinessLogic.Handlers.Locations.GetCity
     {
         private readonly IUnitOfWorkFactory _unitOfWorkFactory;
         /// <summary>Initializes a new GetCityHandler instance.</summary>
+        /// <param name="unitOfWorkFactory">The unit of work factory.</param>
         public GetCityHandler(IUnitOfWorkFactory unitOfWorkFactory)
         {
             _unitOfWorkFactory = unitOfWorkFactory;
         }
 
         /// <summary>Retrieves city.</summary>
+        /// <param name="id">The city identifier.</param>
+        /// <returns>The city.</returns>
+        /// <exception cref="TravelAppNotFoundException">Thrown when the city does not exist.</exception>
+        /// <exception cref="InvalidOperationException">Thrown when the city's country was not loaded.</exception>
         public async Task<GetCityResponse> GetCityAsync(int id)
         {
             await using IUnitOfWork unitOfWork = _unitOfWorkFactory.Create();

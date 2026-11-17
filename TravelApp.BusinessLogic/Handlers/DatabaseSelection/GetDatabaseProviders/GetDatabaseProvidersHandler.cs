@@ -7,11 +7,15 @@ namespace TravelApp.BusinessLogic.Handlers.DatabaseSelection.GetDatabaseProvider
     {
         private readonly SelectedDatabaseProvider _databaseProviderSelection;
 
+        /// <summary>Initializes a new instance of the <see cref="GetDatabaseProvidersHandler"/> class.</summary>
+        /// <param name="databaseProviderSelection">The currently selected database provider.</param>
         public GetDatabaseProvidersHandler(SelectedDatabaseProvider databaseProviderSelection)
         {
             _databaseProviderSelection = databaseProviderSelection;
         }
 
+        /// <summary>Returns the active provider and the available choices.</summary>
+        /// <returns>The active provider and the selectable choices.</returns>
         public GetDatabaseProvidersResponse GetDatabaseProviders()
         {
             GetDatabaseProvidersResponse currentProviders = new GetDatabaseProvidersResponse

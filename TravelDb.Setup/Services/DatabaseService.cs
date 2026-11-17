@@ -3,8 +3,12 @@
 namespace TravelDb.Setup.Services;
 
 //DatabaseService er ansvarlig for at håndtere database-relaterede operationer, såsom at vente på, at SQL Server er klar, og oprette databasen, hvis den mangler.
+/// <summary>Waits for SQL Server, creates the database, and backs it up.</summary>
 public class DatabaseService
 {
+    /// <summary>Tries to connect to SQL Server until it answers, or 60 seconds have passed.</summary>
+    /// <param name="connectionString">The SQL Server connection string.</param>
+    /// <exception cref="TimeoutException">Thrown when SQL Server is not ready within 60 seconds.</exception>
     //WaitUntilReady tester forbindelsen til SQL Server ved at forsøge at åbne en forbindelse. 
     //Hvis forbindelsen ikke can åbnes, venter den i 2 sekunder og prøver igen, indtil timeout-perioden på 60 sekunder er nået.
     public async Task WaitUntilReadyAsync(string connectionString)
@@ -30,6 +34,9 @@ public class DatabaseService
         throw new TimeoutException("SQL Server blev ikke klar inden for 60 sekunder.");
     }
 
+    /// <summary>Creates the database when it does not already exist.</summary>
+    /// <param name="masterConnectionString">A connection string for the master database.</param>
+    /// <param name="databaseName">The database to create.</param>
     //CreateDatabaseIfMissingAsync laver en ny database, hvis den ikke allerede findes. 
     //Den bruger master-databasen til at kontrollere, om databasen eksisterer, og opretter den, hvis den ikke gør.
     public async Task CreateDatabaseIfMissingAsync(string masterConnectionString, string databaseName)
@@ -60,10 +67,10 @@ public class DatabaseService
         await command.ExecuteNonQueryAsync();
     }
 
-    /// <summary>
-    /// BackupDatabaseAsync laver en fuld backup af databasen.
-    /// Backup-filen bliver skrevet på SQL Server-siden, dvs. inde i Docker-containeren.
-    /// </summary>
+    /// <summary>Makes a full backup of the database. The file is written inside the SQL Server container.</summary>
+    /// <param name="masterConnectionString">A connection string for the master database.</param>
+    /// <param name="databaseName">The database to back up.</param>
+    /// <param name="backupFilePath">The backup file path inside the SQL Server container.</param>
     public async Task BackupDatabaseAsync(string masterConnectionString, string databaseName, string backupFilePath)
     {
         // Opretter en forbindelse til master-databasen

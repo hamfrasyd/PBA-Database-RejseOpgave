@@ -10,12 +10,17 @@ namespace TravelApp.BusinessLogic.Handlers.Activities.UpdateActivity
         private readonly IUnitOfWorkFactory _unitOfWorkFactory;
 
         /// <summary>Initializes a new UpdateActivityHandler instance.</summary>
+        /// <param name="unitOfWorkFactory">The unit of work factory.</param>
         public UpdateActivityHandler(IUnitOfWorkFactory unitOfWorkFactory)
         {
             _unitOfWorkFactory = unitOfWorkFactory;
         }
 
         /// <summary>Updates activity.</summary>
+        /// <param name="activityId">The activity identifier.</param>
+        /// <param name="request">The updated activity details.</param>
+        /// <exception cref="TravelAppNotFoundException">Thrown when the activity does not exist.</exception>
+        /// <exception cref="TravelAppValidationException">Thrown when the name is missing or the city does not exist.</exception>
         public async Task UpdateActivityAsync(int activityId, UpdateActivityRequest request)
         {
             await using IUnitOfWork unitOfWork = _unitOfWorkFactory.Create();

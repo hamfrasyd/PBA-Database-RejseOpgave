@@ -10,12 +10,16 @@ namespace TravelApp.BusinessLogic.Handlers.Activities.CreateActivity
         private readonly IUnitOfWorkFactory _unitOfWorkFactory;
 
         /// <summary>Initializes a new CreateActivityHandler instance.</summary>
+        /// <param name="unitOfWorkFactory">The unit of work factory.</param>
         public CreateActivityHandler(IUnitOfWorkFactory unitOfWorkFactory)
         {
             _unitOfWorkFactory = unitOfWorkFactory;
         }
 
         /// <summary>Creates activity.</summary>
+        /// <param name="request">The activity to create.</param>
+        /// <returns>The identifier of the created activity.</returns>
+        /// <exception cref="TravelAppValidationException">Thrown when the name is missing or the city does not exist.</exception>
         public async Task<int> CreateActivityAsync(CreateActivityRequest request)
         {
             if (string.IsNullOrWhiteSpace(request.Name))

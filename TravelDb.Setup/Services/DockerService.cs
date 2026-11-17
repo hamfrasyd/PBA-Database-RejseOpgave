@@ -3,8 +3,11 @@
 namespace TravelDb.Setup.Services;
 
 //Denne klasse har ansvaret for at starte en SQL Server Docker-container ved hjælp af Docker Compose.
+/// <summary>Starts the SQL Server container with Docker Compose.</summary>
 public class DockerService
 {
+    /// <summary>Finds compose.yaml and starts the SQL Server container.</summary>
+    /// <exception cref="Exception">Thrown when Docker cannot start or the container fails to start.</exception>
     //Finder compose.yaml og starter Docker-containeren.
     public async Task StartAsync()
     {
@@ -28,11 +31,14 @@ public class DockerService
     }
 
 
+    /// <summary>Finds compose.yaml by walking up from the program folder.</summary>
+    /// <returns>The full path to compose.yaml.</returns>
+    /// <exception cref="FileNotFoundException">Thrown when compose.yaml cannot be found.</exception>
     //Finder compose.yaml ved at gå op gennem mappestrukturen.
     private static string FindComposeFile()
     {
         //DirectoryInfo er en klasse der repræsenterer en mappe på filsystemet, her finder den den mappe hvor programmet kører fra
-        DirectoryInfo directory = new DirectoryInfo(AppContext.BaseDirectory);
+        DirectoryInfo? directory = new DirectoryInfo(AppContext.BaseDirectory);
 
         while (directory is not null)
         {
@@ -49,10 +55,10 @@ public class DockerService
         throw new FileNotFoundException("Kunne ikke finde compose.yaml.");
     }
 
-    /// <summary>
-    /// CreateFolderIfMissingAsync opretter en mappe inde i containeren, hvis den ikke allerede findes.
-    /// mkdir -p fejler ikke, hvis mappen allerede findes, så metoden kan køres hver gang.
-    /// </summary>
+    /// <summary>Creates a folder inside the container. It does nothing if the folder already exists.</summary>
+    /// <param name="containerName">The Docker container to run the command in.</param>
+    /// <param name="folderPath">The folder to create inside the container.</param>
+    /// <exception cref="Exception">Thrown when Docker cannot start or the folder cannot be created.</exception>
     public async Task CreateFolderIfMissingAsync(string containerName, string folderPath)
     {
         // -u mssql sikrer, at mappen bliver ejet af samme bruger, som SQL Server kører som.

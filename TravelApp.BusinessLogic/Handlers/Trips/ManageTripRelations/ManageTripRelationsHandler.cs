@@ -8,11 +8,15 @@ using TravelApp.BusinessLogic.Models.Users;
 
 namespace TravelApp.BusinessLogic.Handlers.Trips
 {
+    /// <summary>Adds and removes cities, activities, and participants on a trip.</summary>
     public class ManageTripRelationsHandler
     {
         private readonly IUnitOfWorkFactory _unitOfWorkFactory;
         private readonly ICurrentUser _currentUser;
 
+        /// <summary>Initializes a new instance of the <see cref="ManageTripRelationsHandler"/> class.</summary>
+        /// <param name="unitOfWorkFactory">The unit of work factory.</param>
+        /// <param name="currentUser">The current logged-in user.</param>
         public ManageTripRelationsHandler(
             IUnitOfWorkFactory unitOfWorkFactory,
             ICurrentUser currentUser)
@@ -41,6 +45,12 @@ namespace TravelApp.BusinessLogic.Handlers.Trips
             return relations;
         }
 
+        /// <summary>Adds a city to the trip.</summary>
+        /// <param name="tripId">The trip identifier.</param>
+        /// <param name="cityId">The city identifier.</param>
+        /// <exception cref="TravelAppNotFoundException">Thrown when the trip or city does not exist.</exception>
+        /// <exception cref="TravelAppForbiddenException">Thrown when the current user cannot modify the trip.</exception>
+        /// <exception cref="TravelAppConflictException">Thrown when the city is already part of the trip.</exception>
         public async Task AddCityAsync(int tripId, int cityId)
         {
             await using IUnitOfWork unitOfWork = _unitOfWorkFactory.Create();
@@ -61,6 +71,12 @@ namespace TravelApp.BusinessLogic.Handlers.Trips
             await unitOfWork.CommitAsync();
         }
 
+        /// <summary>Removes a city from the trip.</summary>
+        /// <param name="tripId">The trip identifier.</param>
+        /// <param name="cityId">The city identifier.</param>
+        /// <exception cref="TravelAppNotFoundException">Thrown when the trip does not exist or the city is not on the trip.</exception>
+        /// <exception cref="TravelAppForbiddenException">Thrown when the current user cannot modify the trip.</exception>
+        /// <exception cref="TravelAppConflictException">Thrown when the city still has activities on the trip.</exception>
         public async Task RemoveCityAsync(int tripId, int cityId)
         {
             await using IUnitOfWork unitOfWork = _unitOfWorkFactory.Create();
@@ -84,6 +100,13 @@ namespace TravelApp.BusinessLogic.Handlers.Trips
             await unitOfWork.CommitAsync();
         }
 
+        /// <summary>Adds an activity to the trip.</summary>
+        /// <param name="tripId">The trip identifier.</param>
+        /// <param name="activityId">The activity identifier.</param>
+        /// <exception cref="TravelAppNotFoundException">Thrown when the trip or activity does not exist.</exception>
+        /// <exception cref="TravelAppForbiddenException">Thrown when the current user cannot modify the trip.</exception>
+        /// <exception cref="TravelAppValidationException">Thrown when the activity's city is not on the trip.</exception>
+        /// <exception cref="TravelAppConflictException">Thrown when the activity is already part of the trip.</exception>
         public async Task AddActivityAsync(int tripId, int activityId)
         {
             await using IUnitOfWork unitOfWork = _unitOfWorkFactory.Create();
@@ -115,6 +138,11 @@ namespace TravelApp.BusinessLogic.Handlers.Trips
             await unitOfWork.CommitAsync();
         }
 
+        /// <summary>Removes an activity from the trip.</summary>
+        /// <param name="tripId">The trip identifier.</param>
+        /// <param name="activityId">The activity identifier.</param>
+        /// <exception cref="TravelAppNotFoundException">Thrown when the trip does not exist or the activity is not on the trip.</exception>
+        /// <exception cref="TravelAppForbiddenException">Thrown when the current user cannot modify the trip.</exception>
         public async Task RemoveActivityAsync(int tripId, int activityId)
         {
             await using IUnitOfWork unitOfWork = _unitOfWorkFactory.Create();
@@ -132,6 +160,12 @@ namespace TravelApp.BusinessLogic.Handlers.Trips
             await unitOfWork.CommitAsync();
         }
 
+        /// <summary>Adds a participant to the trip.</summary>
+        /// <param name="tripId">The trip identifier.</param>
+        /// <param name="userId">The user identifier.</param>
+        /// <exception cref="TravelAppNotFoundException">Thrown when the trip or user does not exist.</exception>
+        /// <exception cref="TravelAppForbiddenException">Thrown when the current user cannot modify the trip.</exception>
+        /// <exception cref="TravelAppConflictException">Thrown when the user is already participating.</exception>
         public async Task AddParticipantAsync(int tripId, int userId)
         {
             await using IUnitOfWork unitOfWork = _unitOfWorkFactory.Create();
@@ -155,6 +189,12 @@ namespace TravelApp.BusinessLogic.Handlers.Trips
             await unitOfWork.CommitAsync();
         }
 
+        /// <summary>Removes a participant from the trip.</summary>
+        /// <param name="tripId">The trip identifier.</param>
+        /// <param name="userId">The user identifier.</param>
+        /// <exception cref="TravelAppNotFoundException">Thrown when the trip does not exist or the user is not participating.</exception>
+        /// <exception cref="TravelAppForbiddenException">Thrown when the current user cannot modify the trip.</exception>
+        /// <exception cref="TravelAppConflictException">Thrown when the user is the last participant.</exception>
         public async Task RemoveParticipantAsync(int tripId, int userId)
         {
             await using IUnitOfWork unitOfWork = _unitOfWorkFactory.Create();

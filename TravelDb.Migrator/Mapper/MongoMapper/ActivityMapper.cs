@@ -4,8 +4,13 @@ using static TravelDb.Migrator.Mapper.MongoMapper.SqlMapping;
 
 namespace TravelDb.Migrator.Mapper.MongoMapper;
 
+/// <summary>Turns SQL activities into MongoDB documents.</summary>
 public static class ActivityMapper
 {
+    /// <summary>Creates a short activity document that can sit inside another document.</summary>
+    /// <param name="snapshot">The copied SQL data.</param>
+    /// <param name="activityId">The activity id.</param>
+    /// <returns>The activity with its name, description, and city.</returns>
     //MapEmbedded Bruges når en aktivitet ligger inde i en trip.
     public static BsonDocument MapEmbedded(SqlSnapshot snapshot, string activityId)
     {
@@ -23,6 +28,9 @@ public static class ActivityMapper
         };
     }
 
+    /// <summary>Creates one document for each activity.</summary>
+    /// <param name="snapshot">The copied SQL data.</param>
+    /// <returns>The activity documents.</returns>
     // Aktiviteter til deres egen collection
     public static List<BsonDocument> Map(SqlSnapshot snapshot)
     {

@@ -15,6 +15,13 @@ namespace TravelApp.BusinessLogic.Interfaces
         /// <returns>A task that completes when the user is added.</returns>
         Task AddAsync(TravelUser user);
 
+        /// <summary>Stages a profile and its login account for the next commit.</summary>
+        /// <param name="user">The profile to create.</param>
+        /// <param name="userName">The user name for the new account.</param>
+        /// <param name="password">The password to hash for the new account.</param>
+        /// <returns>A task that completes when both entities are staged.</returns>
+        Task AddWithAccountAsync(TravelUser user, string userName, string password);
+
         #endregion
 
         #region Read - All Profiles & VisitedCountries

@@ -424,6 +424,7 @@ namespace TravelApp.DataAccess.SQLRepositories.EntityFramework
                 entity.Property(account => account.PasswordHash).HasMaxLength(512);
                 entity.Property(account => account.Role).HasMaxLength(16);
                 entity.HasIndex(account => account.NormalizedUserName).IsUnique();
+                entity.HasOne(account => account.Profile).WithOne().HasForeignKey<UserAccount>(account => account.TravelUserId).OnDelete(DeleteBehavior.NoAction);
             });
             modelBuilder.Entity<GetCityStatsResponse>(entity => entity.HasNoKey().ToView("vw_DestinationStats", "dbo"));
         }

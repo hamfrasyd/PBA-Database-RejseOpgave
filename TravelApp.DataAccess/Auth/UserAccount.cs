@@ -1,10 +1,15 @@
-﻿namespace TravelApp.DataAccess.Auth
+﻿using TravelApp.BusinessLogic.Models.Users;
+
+namespace TravelApp.DataAccess.Auth
 {
     /// <summary>Represents a local login account linked to a TravelDB profile.</summary>
     public sealed class UserAccount
     {
         /// <summary>Gets or sets the ID of the associated TravelDB profile.</summary>
         public int TravelUserId { get; set; }
+
+        /// <summary>Gets or sets the profile associated with the account.</summary>
+        public TravelUser? Profile { get; set; }
 
         /// <summary>Gets or sets the user name used to sign in.</summary>
         public string UserName { get; set; } = string.Empty;

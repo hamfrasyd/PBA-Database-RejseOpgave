@@ -5,6 +5,7 @@ using TravelApp.API.ExceptionFilters;
 using TravelApp.BusinessLogic.Exceptions.SpecificCustomException;
 using TravelApp.BusinessLogic.Auth;
 using TravelApp.BusinessLogic.Handlers.Accounts.Login;
+using TravelApp.BusinessLogic.Handlers.Accounts.Register;
 using TravelApp.BusinessLogic.Handlers.Users.GetUserProfile;
 
 namespace TravelApp.API.Controllers
@@ -41,6 +42,20 @@ namespace TravelApp.API.Controllers
             }
 
             return Ok(response);
+        }
+
+        /// <summary>Creates a profile and a local login account.</summary>
+        // POST api/auth/register
+        [HttpPost("register")]
+        [AllowAnonymous]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status409Conflict)]
+        public async Task<IActionResult> Register([FromBody] RegisterRequest request, [FromServices] RegisterHandler registerHandler)
+        {
+            int userId = await registerHandler.RegisterAsync(request);
+
+            return Created($"/api/users/{userId}", new { UserId = userId });
         }
 
         /// <summary>Returns the profile of the currently authenticated user.</summary>

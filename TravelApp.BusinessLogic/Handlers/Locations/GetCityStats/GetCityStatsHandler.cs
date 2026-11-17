@@ -27,7 +27,7 @@ namespace TravelApp.BusinessLogic.Handlers.Locations.GetCityStats
             CityStatsDTO? statistics = await unitOfWork.Locations.GetCityStatsAsync(cityId);
             if (statistics is null)
             {
-                throw new TravelAppNotFoundException($"City {cityId} was not found.");
+                throw new TravelAppNotFoundException($"City with ID {cityId} was not found.");
             }
 
             GetCityStatsResponse response = new GetCityStatsResponse

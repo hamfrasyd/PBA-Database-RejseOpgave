@@ -27,7 +27,7 @@ namespace TravelApp.BusinessLogic.Handlers.Locations.CreateCity
             bool countryExists = await unitOfWork.Locations.CountryExistsAsync(request.CountryId);
             if (countryExists is false)
             {
-                throw new TravelAppNotFoundException($"Country {request.CountryId} was not found.");
+                throw new TravelAppNotFoundException($"Country with ID {request.CountryId} was not found.");
             }
 
             City city = new City

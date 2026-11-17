@@ -34,7 +34,7 @@ namespace TravelApp.BusinessLogic.Handlers.Locations.GetVisitedCountries
 
             if (profileFromDb is null)
             {
-                throw new TravelAppNotFoundException($"User {userId} was not found.");
+                throw new TravelAppNotFoundException($"User with ID {userId} was not found.");
             }
 
             AccessRules.RequirePublicOrOwnerOrAdmin(_currentUser, userId, profileFromDb.IsPrivate);

@@ -26,11 +26,11 @@ namespace TravelApp.BusinessLogic.Handlers.Activities.UpdateActivity
         public async Task<UpdateActivityResponse> UpdateActivityAsync(int activityId, UpdateActivityRequest request)
         {
             await using IUnitOfWork unitOfWork = _unitOfWorkFactory.Create();
-
-            CityDTO? existingCity = await unitOfWork.Locations.GetCityAsync(request.CityId);
-            if (existingCity is null)
+            
+            bool cityExists = await unitOfWork.Locations.CityExistsAsync(request.CityId);
+            if (cityExists is false)
             {
-                throw new TravelAppValidationException("The City for the activity does not exist.");
+                throw new TravelAppValidationException($"City with ID {request.CityId} does not exist.");
             }
 
             ActivityDTO activityToUpdate = new ActivityDTO
@@ -41,8 +41,8 @@ namespace TravelApp.BusinessLogic.Handlers.Activities.UpdateActivity
                 Description = request.Description
             };
 
-            ActivityDTO? updatedActivity = await unitOfWork.Activities.UpdateActivityAsync(activityToUpdate);
-            if (updatedActivity is null)
+            bool activityWasFound = await unitOfWork.Activities.UpdateActivityAsync(activityToUpdate);
+            if (activityWasFound is false)
             {
                 throw new TravelAppNotFoundException($"Activity with ID {activityId} was not found.");
             }
@@ -51,10 +51,10 @@ namespace TravelApp.BusinessLogic.Handlers.Activities.UpdateActivity
 
             UpdateActivityResponse response = new UpdateActivityResponse
             {
-                Id = updatedActivity.Id,
-                CityId = updatedActivity.CityId,
-                Name = updatedActivity.Name,
-                Description = updatedActivity.Description
+                Id = activityToUpdate.Id,
+                CityId = activityToUpdate.CityId,
+                Name = activityToUpdate.Name,
+                Description = activityToUpdate.Description
             };
 
             return response;

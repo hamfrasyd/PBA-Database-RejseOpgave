@@ -85,28 +85,20 @@ namespace TravelApp.DataAccess.SQLRepositories
         #region Update - Activities
 
         /// <inheritdoc />
-        public async Task<ActivityDTO?> UpdateActivityAsync(ActivityDTO activityToUpdate)
+        public async Task<bool> UpdateActivityAsync(ActivityDTO activityToUpdate)
         {
             Activity? activityInDb = await _context.ActivityEntities.FirstOrDefaultAsync(activity => activity.Id == activityToUpdate.Id);
 
             if (activityInDb is null)
             {
-                return null;
+                return false;
             }
 
             activityInDb.Name = activityToUpdate.Name;
             activityInDb.Description = activityToUpdate.Description;
             _context.Entry(activityInDb).Property("CityId").CurrentValue = activityToUpdate.CityId;
 
-            ActivityDTO updatedActivity = new ActivityDTO
-            {
-                Id = activityInDb.Id,
-                CityId = activityToUpdate.CityId,
-                Name = activityInDb.Name,
-                Description = activityInDb.Description
-            };
-
-            return updatedActivity;
+            return true;
         }
 
         #endregion

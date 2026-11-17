@@ -27,7 +27,7 @@ namespace TravelApp.BusinessLogic.Handlers.Activities.DeleteActivity
 
             if (activity is null)
             {
-                throw new TravelAppNotFoundException($"Activity {activityId} was not found.");
+                throw new TravelAppNotFoundException($"Activity with ID {activityId} was not found.");
             }
 
             await unitOfWork.Activities.DeleteAsync(activityId);

@@ -1,4 +1,5 @@
 ﻿using TravelApp.BusinessLogic.Auth;
+using TravelApp.BusinessLogic.DTOs.Accounts;
 using TravelApp.BusinessLogic.Exceptions.SpecificCustomException;
 using TravelApp.BusinessLogic.Interfaces;
 using TravelApp.BusinessLogic.Models.Destinations;
@@ -44,7 +45,12 @@ namespace TravelApp.BusinessLogic.Handlers.Accounts.Register
                 City = city
             };
 
-            await unitOfWork.Users.AddWithAccountAsync(profile, request.UserName.Trim(), request.Password);
+            await unitOfWork.Users.AddAsync(profile);
+            await unitOfWork.UserAccounts.AddAsync(profile, new CreateUserAccountDto
+            {
+                UserName = request.UserName,
+                Password = request.Password
+            });
             await unitOfWork.CommitAsync();
 
             return profile.Id;

@@ -7,7 +7,6 @@ using System.Security.Cryptography;
 using TravelApp.API.Auth;
 using TravelApp.BusinessLogic.Auth;
 using TravelApp.DataAccess.Auth;
-using TravelApp.DataAccess.SQLRepositories.EntityFramework;
 
 namespace TravelApp.API.DependencyInjection
 {
@@ -23,7 +22,7 @@ namespace TravelApp.API.DependencyInjection
 
             string connectionString = builder.Configuration["ConnectionStrings:TravelDb"] ?? throw new InvalidOperationException("ConnectionStrings:TravelDb mangler.");
 
-            builder.Services.AddDbContext<TravelAppContext>(options => options.UseSqlServer(connectionString));
+            builder.Services.AddDbContext<AccountsDbContext>(options => options.UseSqlServer(connectionString));
 
             builder.Services.AddScoped<IPasswordHasher<UserAccount>, PasswordHasher<UserAccount>>();
             builder.Services.AddScoped<ILoginAccountVerifier, SqlLoginAccountVerifier>();

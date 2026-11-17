@@ -49,7 +49,7 @@ namespace TravelApp.BusinessLogic.Interfaces
         /// <summary>Retrieves statistics for a city.</summary>
         /// <param name="cityId">The city identifier.</param>
         /// <returns>The statistics, or <see langword="null"/> when the city does not exist.</returns>
-        Task<CityStatsDTO?> GetCityStatsAsync(int cityId);
+        Task<DestinationStatsView?> GetCityStatsAsync(int cityId);
 
         #endregion
 

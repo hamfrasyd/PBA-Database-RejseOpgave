@@ -1,7 +1,7 @@
 using TravelApp.BusinessLogic.Auth;
-using TravelApp.BusinessLogic.DTOs.Users;
 using TravelApp.BusinessLogic.Exceptions.SpecificCustomException;
 using TravelApp.BusinessLogic.Interfaces;
+using TravelApp.BusinessLogic.Models.Users;
 
 namespace TravelApp.BusinessLogic.Handlers.Users.GetUserProfile
 {
@@ -29,7 +29,7 @@ namespace TravelApp.BusinessLogic.Handlers.Users.GetUserProfile
         {
             await using IUnitOfWork unitOfWork = _unitOfWorkFactory.Create();
 
-            UserProfileDetailsDTO? existingProfile = await unitOfWork.Users.GetProfileAsync(userId);
+            UserProfileView? existingProfile = await unitOfWork.Users.GetProfileAsync(userId);
 
             if (existingProfile is null)
             {

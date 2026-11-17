@@ -5,8 +5,8 @@ using TravelApp.API.ExceptionFilters;
 using TravelApp.BusinessLogic.Exceptions.SpecificCustomException;
 using TravelApp.BusinessLogic.Handlers.Activities.CreateActivity;
 using TravelApp.BusinessLogic.Handlers.Activities.DeleteActivity;
-using TravelApp.BusinessLogic.Handlers.Activities.GetActivitiesByCity;
 using TravelApp.BusinessLogic.Handlers.Activities.GetActivity;
+using TravelApp.BusinessLogic.Handlers.Activities.GetAllActivitiesByCity;
 using TravelApp.BusinessLogic.Handlers.Activities.UpdateActivity;
 
 namespace TravelApp.API.Controllers

@@ -1,8 +1,8 @@
 using TravelApp.BusinessLogic.Auth;
 using TravelApp.BusinessLogic.DTOs.Locations;
-using TravelApp.BusinessLogic.DTOs.Users;
 using TravelApp.BusinessLogic.Exceptions.SpecificCustomException;
 using TravelApp.BusinessLogic.Interfaces;
+using TravelApp.BusinessLogic.Models.Users;
 
 namespace TravelApp.BusinessLogic.Handlers.Locations.GetVisitedCountries
 {
@@ -30,7 +30,7 @@ namespace TravelApp.BusinessLogic.Handlers.Locations.GetVisitedCountries
         {
             await using IUnitOfWork unitOfWork = _unitOfWorkFactory.Create();
 
-            UserProfileDetailsDTO? profileFromDb = await unitOfWork.Users.GetProfileAsync(userId);
+            UserProfileView? profileFromDb = await unitOfWork.Users.GetProfileAsync(userId);
 
             if (profileFromDb is null)
             {

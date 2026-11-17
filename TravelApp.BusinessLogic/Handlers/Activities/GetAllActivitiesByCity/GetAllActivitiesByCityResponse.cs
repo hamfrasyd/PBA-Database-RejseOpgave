@@ -1,4 +1,4 @@
-namespace TravelApp.BusinessLogic.Handlers.Activities.GetActivitiesByCity
+namespace TravelApp.BusinessLogic.Handlers.Activities.GetAllActivitiesByCity
 {
     /// <summary>Contains the result of get city activities.</summary>
     public class GetAllActivitiesByCityResponse

@@ -6,7 +6,6 @@ using TravelApp.BusinessLogic.Handlers.Achievements.GetAchievementDefinitions;
 using TravelApp.BusinessLogic.Handlers.Achievements.GetEarnedAchievements;
 using TravelApp.BusinessLogic.Handlers.Activities.CreateActivity;
 using TravelApp.BusinessLogic.Handlers.Activities.DeleteActivity;
-using TravelApp.BusinessLogic.Handlers.Activities.GetActivitiesByCity;
 using TravelApp.BusinessLogic.Handlers.Activities.GetActivity;
 using TravelApp.BusinessLogic.Handlers.Activities.UpdateActivity;
 using TravelApp.BusinessLogic.Handlers.DatabaseSelection.GetDatabaseProviders;
@@ -32,6 +31,7 @@ using TravelApp.BusinessLogic.Handlers.Posts.CreatePost;
 using TravelApp.BusinessLogic.Handlers.Posts.GetPosts;
 using TravelApp.BusinessLogic.Handlers.Posts.GetPost;
 using TravelApp.BusinessLogic.Handlers.Posts.DeletePost;
+using TravelApp.BusinessLogic.Handlers.Activities.GetAllActivitiesByCity;
 
 namespace TravelApp.BusinessLogic.DependencyInjection
 {

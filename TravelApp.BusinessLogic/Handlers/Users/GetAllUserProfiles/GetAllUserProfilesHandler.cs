@@ -2,6 +2,7 @@ using TravelApp.BusinessLogic.Auth;
 using TravelApp.BusinessLogic.DTOs.Users;
 using TravelApp.BusinessLogic.Handlers.Users.GetUserProfile;
 using TravelApp.BusinessLogic.Interfaces;
+using TravelApp.BusinessLogic.Models.Users;
 
 namespace TravelApp.BusinessLogic.Handlers.Users.GetAllUserProfiles
 {
@@ -35,7 +36,7 @@ namespace TravelApp.BusinessLogic.Handlers.Users.GetAllUserProfiles
                 IncludePrivateProfiles = _currentUser.IsAdmin
             };
 
-            List<UserProfileDetailsDTO> userProfiles = await unitOfWork.Users.GetProfilesAsync(userSearchProfileDTO);
+            List<UserProfileView> userProfiles = await unitOfWork.Users.GetProfilesAsync(userSearchProfileDTO);
 
             List<UserProfileResponse> profiles = userProfiles.Select(profile => new UserProfileResponse
             {

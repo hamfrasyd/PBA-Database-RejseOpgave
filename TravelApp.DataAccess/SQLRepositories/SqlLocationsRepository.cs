@@ -31,7 +31,8 @@ namespace TravelApp.DataAccess.SQLRepositories
 
             await _context.CityEntities.AddAsync(_addedCity);
             _context.Entry(_addedCity).Property("CountryId").CurrentValue = cityToCreate.CountryId;
-            
+
+            // cowboy, skal bruge cecilias måde at Create på
             int countryId = _context.Entry(_addedCity).Property<int>("CountryId").CurrentValue;
 
             if (_addedCity.Id <= 0)

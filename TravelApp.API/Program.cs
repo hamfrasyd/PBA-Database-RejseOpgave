@@ -1,11 +1,9 @@
-using Microsoft.AspNetCore.Authentication.Cookies;
-using TravelApp.API.Auth;
 using TravelApp.API.DatabaseSelection;
-using TravelApp.API.ExceptionFilters;
-using TravelApp.BusinessLogic.Auth;
+using TravelApp.API.DependencyInjection;
 using TravelApp.BusinessLogic.DatabaseSelection;
 using TravelApp.BusinessLogic.DependencyInjection;
 using TravelApp.DataAccess.DependencyInjection;
+using TravelApp.API.ExceptionFilters;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddHttpContextAccessor();
@@ -18,13 +16,7 @@ builder.Services.AddControllers(options =>
 });
 
 // Add Swagger
-builder.Services.AddSwaggerGen(options =>
-{
-    string xmlFileName = $"{typeof(Program).Assembly.GetName().Name}.xml";
-    string xmlFilePath = Path.Combine(AppContext.BaseDirectory, xmlFileName);
-
-    options.IncludeXmlComments(xmlFilePath);
-});
+builder.Services.AddTravelAppSwagger();
 
 // Add CORS policy
 // Taken from Configuration via fx. appsettings.json
@@ -33,39 +25,13 @@ string[] allowedOrigins = builder.Configuration.GetSection("Cors:AllowedOrigins"
 if (allowedOrigins.Length > 0)
 {
     builder.Services.AddCors(options => options.AddPolicy("TravelAppFrontend", policy =>
-        policy.WithOrigins(allowedOrigins)
-              .WithHeaders("Content-Type", HeaderName_For_DatabaseProvider.Key)
-              .WithMethods("GET", "POST", "PUT", "PATCH", "DELETE")
-              .AllowCredentials()));
+        policy.WithOrigins(allowedOrigins).WithHeaders("Content-Type", "Authorization", HeaderName_For_DatabaseProvider.Key).WithMethods("GET", "POST", "PUT", "PATCH", "DELETE")));
 }
 
 // Register Application Services
 // -- Add API Services
 // --- Add AUTH services
-builder.Services.AddHttpContextAccessor();
-builder.Services.AddScoped<ICurrentUser, CurrentUser>();
-// Cookie session for the local demonstration login (no user passwords exist in dbo.User).
-builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
-    .AddCookie(options =>
-    {
-        options.Cookie.Name = "TravelApp.Session";
-        options.Cookie.HttpOnly = true;
-        options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
-        options.Cookie.SameSite = SameSiteMode.Strict;
-        options.ExpireTimeSpan = TimeSpan.FromHours(8);
-        options.Events.OnRedirectToLogin = context =>
-        {
-            context.Response.StatusCode = StatusCodes.Status401Unauthorized;
-            return Task.CompletedTask;
-        };
-        options.Events.OnRedirectToAccessDenied = context =>
-        {
-            context.Response.StatusCode = StatusCodes.Status403Forbidden;
-            return Task.CompletedTask;
-        };
-    });
-builder.Services.AddAuthorization();
-
+builder.AddTravelAppAuthentication();
 
 // -- Add Business Logic Services
 builder.Services.AddBusinessLogic();
@@ -76,9 +42,7 @@ builder.Services.AddDataAccess(builder.Configuration);
 var app = builder.Build();
 
 // Use Swagger
-app.UseSwagger();
-app.UseSwaggerUI();
-
+app.UseTravelAppSwagger();
 
 app.UseHttpsRedirection();
 

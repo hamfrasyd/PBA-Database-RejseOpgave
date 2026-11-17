@@ -7,17 +7,26 @@ using TravelApp.BusinessLogic.Interfaces;
 
 namespace TravelApp.BusinessLogic.Handlers.Trips
 {
+    /// <summary>Returns the details of a single trip.</summary>
     public class GetTripHandler
     {
         private readonly IUnitOfWorkFactory _unitOfWorkFactory;
         private readonly ICurrentUser _currentUser;
 
+        /// <summary>Initializes a new instance of the <see cref="GetTripHandler"/> class.</summary>
+        /// <param name="unitOfWorkFactory">The unit of work factory.</param>
+        /// <param name="currentUser">The current logged-in user.</param>
         public GetTripHandler(IUnitOfWorkFactory unitOfWorkFactory, ICurrentUser currentUser)
         {
             _unitOfWorkFactory = unitOfWorkFactory;
             _currentUser = currentUser;
         }
 
+        /// <summary>Returns the trip with the specified identifier.</summary>
+        /// <param name="tripId">The trip identifier.</param>
+        /// <returns>The trip details.</returns>
+        /// <exception cref="TravelAppNotFoundException">Thrown when the trip does not exist.</exception>
+        /// <exception cref="TravelAppForbiddenException">Thrown when the current user cannot view the trip.</exception>
         public async Task<GetTripResponse> GetTripAsync(int tripId)
         {
             await using IUnitOfWork unitOfWork = _unitOfWorkFactory.Create();

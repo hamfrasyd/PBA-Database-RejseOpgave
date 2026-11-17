@@ -15,6 +15,8 @@ namespace TravelApp.API.ExceptionFilters
     {
         private readonly ILogger<TravelExceptionFilter> _logger;
 
+        /// <summary>Initializes a new instance of the <see cref="TravelExceptionFilter"/> class.</summary>
+        /// <param name="logger">The logger used for database and unexpected failures.</param>
         public TravelExceptionFilter(ILogger<TravelExceptionFilter> logger)
         {
             _logger = logger;

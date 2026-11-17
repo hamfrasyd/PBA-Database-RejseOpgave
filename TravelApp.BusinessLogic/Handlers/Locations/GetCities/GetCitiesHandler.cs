@@ -9,12 +9,16 @@ namespace TravelApp.BusinessLogic.Handlers.Locations.GetCities
         private readonly IUnitOfWorkFactory _unitOfWorkFactory;
 
         /// <summary>Initializes a new GetCitiesHandler instance.</summary>
+        /// <param name="unitOfWorkFactory">The unit of work factory.</param>
         public GetCitiesHandler(IUnitOfWorkFactory unitOfWorkFactory)
         {
             _unitOfWorkFactory = unitOfWorkFactory;
         }
 
         /// <summary>Retrieves cities.</summary>
+        /// <param name="request">The filter and sort options.</param>
+        /// <returns>The matching cities.</returns>
+        /// <exception cref="InvalidOperationException">Thrown when a city's country was not loaded.</exception>
         public async Task<List<GetCitiesResponse>> GetCitiesAsync(GetCitiesRequest request)
         {
             await using IUnitOfWork unitOfWork = _unitOfWorkFactory.Create();

@@ -1,4 +1,4 @@
-using TravelApp.BusinessLogic.DTOs;
+using TravelApp.BusinessLogic.DTOs.Achievements;
 using TravelApp.BusinessLogic.Interfaces;
 
 namespace TravelApp.BusinessLogic.Handlers.Achievements.GetAchievementDefinitions
@@ -9,12 +9,14 @@ namespace TravelApp.BusinessLogic.Handlers.Achievements.GetAchievementDefinition
         private readonly IUnitOfWorkFactory _unitOfWorkFactory;
 
         /// <summary>Initializes a new GetAchievementDefinitionsHandler instance.</summary>
+        /// <param name="unitOfWorkFactory">The unit of work factory.</param>
         public GetAchievementDefinitionsHandler(IUnitOfWorkFactory unitOfWorkFactory)
         {
             _unitOfWorkFactory = unitOfWorkFactory;
         }
 
         /// <summary>Retrieves achievement definitions.</summary>
+        /// <returns>The achievement definitions.</returns>
         public async Task<List<GetAchievementDefinitionsResponse>> GetAchievementDefinitionsAsync()
         {
             await using IUnitOfWork unitOfWork = _unitOfWorkFactory.Create();

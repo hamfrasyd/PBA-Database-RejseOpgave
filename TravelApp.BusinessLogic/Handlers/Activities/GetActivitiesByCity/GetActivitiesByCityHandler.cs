@@ -9,12 +9,16 @@ namespace TravelApp.BusinessLogic.Handlers.Activities.GetActivitiesByCity
         private readonly IUnitOfWorkFactory _unitOfWorkFactory;
 
         /// <summary>Initializes a new GetCityActivitiesHandler instance.</summary>
+        /// <param name="unitOfWorkFactory">The unit of work factory.</param>
         public GetActivitiesByCityHandler(IUnitOfWorkFactory unitOfWorkFactory)
         {
             _unitOfWorkFactory = unitOfWorkFactory;
         }
 
         /// <summary>Retrieves city activities.</summary>
+        /// <param name="cityId">The city identifier.</param>
+        /// <returns>The activities in the city.</returns>
+        /// <exception cref="InvalidOperationException">Thrown when an activity's city was not loaded.</exception>
         public async Task<List<GetActivitiesByCityResponse>> GetActivitiesByCityIdAsync(int cityId)
         {
             await using IUnitOfWork unitOfWork = _unitOfWorkFactory.Create();

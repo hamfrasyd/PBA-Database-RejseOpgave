@@ -1,5 +1,5 @@
 using TravelApp.BusinessLogic.Auth;
-using TravelApp.BusinessLogic.DTOs;
+using TravelApp.BusinessLogic.DTOs.Achievements;
 using TravelApp.BusinessLogic.Exceptions.SpecificCustomException;
 using TravelApp.BusinessLogic.Handlers.Users.GetUserProfile;
 using TravelApp.BusinessLogic.Interfaces;
@@ -22,6 +22,10 @@ namespace TravelApp.BusinessLogic.Handlers.Achievements.GetEarnedAchievements
         }
 
         /// <summary>Retrieves earned achievements for the specified user.</summary>
+        /// <param name="userId">The user identifier.</param>
+        /// <returns>The achievements earned by the user.</returns>
+        /// <exception cref="TravelAppForbiddenException">Thrown when the current user cannot view the achievements.</exception>
+        /// <exception cref="TravelAppNotFoundException">Thrown when the user does not exist.</exception>
         public async Task<List<EarnedAchievementResponse>> GetEarnedAchievementsAsync(int userId)
         {
             AccessRules.RequireOwnerOrAdmin(_currentUser, userId);

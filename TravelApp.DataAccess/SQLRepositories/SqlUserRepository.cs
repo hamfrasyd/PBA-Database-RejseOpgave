@@ -1,3 +1,4 @@
+
 using Microsoft.EntityFrameworkCore;
 using TravelApp.BusinessLogic.Handlers.Locations.GetCountries;
 using TravelApp.BusinessLogic.Handlers.Users.GetUserProfile;
@@ -8,27 +9,31 @@ using TravelApp.DataAccess.SQLRepositories.EntityFramework;
 
 namespace TravelApp.DataAccess.SQLRepositories
 {
+    /// <summary>Implements database operations for Users using Entity Framework Core.</summary>
     public class SqlUserRepository : IUserRepository
     {
         private readonly TravelAppContext _context;
 
+        /// <summary>Initializes a new instance of the <see cref="SqlUserRepository"/> class.</summary>
+        /// <param name="context">The Entity Framework Core context connected to SQL Server.</param>
         public SqlUserRepository(TravelAppContext context)
         {
             _context = context;
         }
 
-        public async Task<TravelUser?> GetByIdAsync(int userId)
+        #region Create - Users
+
+        /// <inheritdoc />
+        public async Task AddAsync(TravelUser user)
         {
-            TravelUser? entity = await _context.TravelUserEntities.FirstOrDefaultAsync(user => user.Id == userId);
-            return entity;
+            await _context.TravelUserEntities.AddAsync(user);
         }
 
-        public async Task<GetUserProfileResponse?> GetProfileAsync(int userId)
-        {
-            GetUserProfileResponse? matchingProfile = await _context.UserProfiles.AsNoTracking().FirstOrDefaultAsync(profile => profile.UserId == userId);
-            return matchingProfile;
-        }
+        #endregion
 
+        #region Read - All Profiles & VisitedCountries
+
+        /// <inheritdoc />
         public async Task<List<GetUserProfilesResponse>> GetProfilesAsync(GetUserProfilesRequest request, int viewerUserId, bool includePrivate)
         {
             IQueryable<GetUserProfileResponse> profiles = _context.UserProfiles.AsNoTracking();
@@ -70,9 +75,11 @@ namespace TravelApp.DataAccess.SQLRepositories
             });
 
             List<GetUserProfilesResponse> result = await userProfiles.ToListAsync();
+
             return result;
         }
 
+        /// <inheritdoc />
         public async Task<List<GetCountriesResponse>> GetVisitedCountriesAsync(int userId)
         {
             IQueryable<GetCountriesResponse> visitedCountries =
@@ -95,18 +102,45 @@ namespace TravelApp.DataAccess.SQLRepositories
             return result;
         }
 
-        public async Task AddAsync(TravelUser user)
+        #endregion
+
+        #region Read - By ID
+
+        /// <inheritdoc />
+        public async Task<TravelUser?> GetByIdAsync(int userId)
         {
-            await _context.TravelUserEntities.AddAsync(user);
+            TravelUser? entity = await _context.TravelUserEntities
+                .FirstOrDefaultAsync(user => user.Id == userId);
+
+            return entity;
         }
 
+        /// <inheritdoc />
+        public async Task<GetUserProfileResponse?> GetProfileAsync(int userId)
+        {
+            GetUserProfileResponse? matchingProfile = await _context.UserProfiles
+                .AsNoTracking()
+                .FirstOrDefaultAsync(profile => profile.UserId == userId);
 
-        public Task<bool> UpdateAsync(TravelUser user)
+            return matchingProfile;
+        }
+
+        #endregion
+
+        #region Update - Users
+
+        /// <inheritdoc />
+        public Task UpdateAsync(TravelUser user)
         {
             // The handler updated an entity already tracked by this Unit of Work.
             return Task.FromResult(true);
         }
 
+        #endregion
+
+        #region Delete - Users
+
+        /// <inheritdoc />
         public async Task<bool> DeleteAsync(int userId)
         {
             if (_context.Database.CurrentTransaction is null)
@@ -119,7 +153,10 @@ namespace TravelApp.DataAccess.SQLRepositories
                 .ExecuteDeleteAsync();
 
             bool wasDeleted = deletedRows > 0;
+
             return wasDeleted;
         }
+
+        #endregion
     }
 }

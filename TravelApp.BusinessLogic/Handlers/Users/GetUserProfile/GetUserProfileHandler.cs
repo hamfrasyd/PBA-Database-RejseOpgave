@@ -11,6 +11,8 @@ namespace TravelApp.BusinessLogic.Handlers.Users.GetUserProfile
         private readonly ICurrentUser _currentUser;
 
         /// <summary>Initializes a new GetUserProfileHandler instance.</summary>
+        /// <param name="unitOfWorkFactory">The unit of work factory.</param>
+        /// <param name="currentUser">The current logged-in user.</param>
         public GetUserProfileHandler(IUnitOfWorkFactory unitOfWorkFactory, ICurrentUser currentUser)
         {
             _unitOfWorkFactory = unitOfWorkFactory;
@@ -18,6 +20,9 @@ namespace TravelApp.BusinessLogic.Handlers.Users.GetUserProfile
         }
 
         /// <summary>Retrieves user profile.</summary>
+        /// <param name="userId">The user identifier.</param>
+        /// <returns>The user profile.</returns>
+        /// <exception cref="TravelAppNotFoundException">Thrown when the user does not exist or the profile is private.</exception>
         public async Task<GetUserProfileResponse> GetUserProfileAsync(int userId)
         {
             await using IUnitOfWork unitOfWork = _unitOfWorkFactory.Create();

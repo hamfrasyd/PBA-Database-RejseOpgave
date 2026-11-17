@@ -10,6 +10,8 @@ namespace TravelApp.BusinessLogic.Handlers.Users.GetUserProfiles
         private readonly ICurrentUser _currentUser;
 
         /// <summary>Initializes a new GetUserProfilesHandler instance.</summary>
+        /// <param name="unitOfWorkFactory">The unit of work factory.</param>
+        /// <param name="currentUser">The current logged-in user.</param>
         public GetUserProfilesHandler(IUnitOfWorkFactory unitOfWorkFactory, ICurrentUser currentUser)
         {
             _unitOfWorkFactory = unitOfWorkFactory;
@@ -17,6 +19,8 @@ namespace TravelApp.BusinessLogic.Handlers.Users.GetUserProfiles
         }
 
         /// <summary>Retrieves user profiles.</summary>
+        /// <param name="request">The filter and sort options.</param>
+        /// <returns>The matching user profiles.</returns>
         public async Task<List<GetUserProfilesResponse>> GetUserProfilesAsync(GetUserProfilesRequest request)
         {
             await using IUnitOfWork unitOfWork = _unitOfWorkFactory.Create();

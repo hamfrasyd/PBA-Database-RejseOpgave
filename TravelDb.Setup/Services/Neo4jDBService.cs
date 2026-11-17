@@ -3,12 +3,12 @@ using Neo4j.Driver;
 
 namespace TravelDb.Setup.Services;
 
-/// <summary>
-/// Kontrollerer Neo4j-forbindelsen og
-/// opretter uniqueness constraints.
-/// </summary>
+/// <summary>Checks the Neo4j connection and creates unique id rules.</summary>
 public class Neo4jDBService
 {
+    /// <summary>Checks the Neo4j connection and creates a unique id rule for each node type.</summary>
+    /// <param name="uri">The Neo4j address, for example bolt://localhost:7687.</param>
+    /// <param name="password">The password for the neo4j user.</param>
     public async Task InitializeAsync(string uri, string password)
     {
         //Opret forbindelse til Neo4j

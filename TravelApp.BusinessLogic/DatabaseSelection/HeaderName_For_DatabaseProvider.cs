@@ -3,7 +3,7 @@
 	/// <summary>
 	/// Provides the database provider header name.
 	/// </summary>
-	/// <remarks>The default header name is "X-Database-Provider". Setting <see cref="Value"/> to null, empty, or
+	/// <remarks>The default header name is "X-Database-Provider". Setting <see cref="Key"/> to null, empty, or
 	/// whitespace throws an <see cref="ArgumentException"/>.</remarks>
     public static class HeaderName_For_DatabaseProvider
     {

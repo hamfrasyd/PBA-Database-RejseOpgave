@@ -31,7 +31,9 @@ namespace TravelApp.BusinessLogic.DependencyInjection
     /// <summary>Registers application handlers grouped by feature.</summary>
     public static class BusinessLogicServiceCollectionExtensions
     {
-        /// <summary>Adds business logic.</summary>
+        /// <summary>Adds business logic services to the service collection.</summary>
+        /// <param name="services">The service collection to register handlers in.</param>
+        /// <returns>The same service collection, so registration can be chained in Program.cs.</returns>
         public static IServiceCollection AddBusinessLogic(this IServiceCollection services)
         {
             RegisterDatabaseSelection(services);

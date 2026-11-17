@@ -1,18 +1,18 @@
 using Microsoft.EntityFrameworkCore;
-using TravelApp.BusinessLogic.DTOs;
+using TravelApp.BusinessLogic.DTOs.Achievements;
 using TravelApp.BusinessLogic.Interfaces;
 using TravelApp.BusinessLogic.Models.Achievements;
 using TravelApp.DataAccess.SQLRepositories.EntityFramework;
 
 namespace TravelApp.DataAccess.SQLRepositories
 {
-    /// <inheritdoc />
+    /// <summary>Implements database operations for achievements using Entity Framework Core.</summary>
     public class SqlAchievementRepository : IAchievementRepository
     {
         private readonly TravelAppContext _context;
 
         /// <summary>Initializes a new instance of the <see cref="SqlAchievementRepository"/> class.</summary>
-        /// <param name="context">The database context.</param>
+        /// <param name="context">The Entity Framework Core context connected to SQL Server.</param>
         public SqlAchievementRepository(TravelAppContext context)
         {
             _context = context;

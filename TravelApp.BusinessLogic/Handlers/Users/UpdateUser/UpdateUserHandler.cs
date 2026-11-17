@@ -13,6 +13,8 @@ namespace TravelApp.BusinessLogic.Handlers.Users.UpdateUser
         private readonly ICurrentUser _currentUser;
 
         /// <summary>Initializes a new UpdateUserHandler instance.</summary>
+        /// <param name="unitOfWorkFactory">The unit of work factory.</param>
+        /// <param name="currentUser">The current logged-in user.</param>
         public UpdateUserHandler(IUnitOfWorkFactory unitOfWorkFactory, ICurrentUser currentUser)
         {
             _unitOfWorkFactory = unitOfWorkFactory;
@@ -20,6 +22,10 @@ namespace TravelApp.BusinessLogic.Handlers.Users.UpdateUser
         }
 
         /// <summary>Updates user.</summary>
+        /// <param name="request">The updated user details.</param>
+        /// <exception cref="TravelAppForbiddenException">Thrown when the current user cannot update the user.</exception>
+        /// <exception cref="TravelAppNotFoundException">Thrown when the user does not exist.</exception>
+        /// <exception cref="TravelAppValidationException">Thrown when the home city does not exist.</exception>
         public async Task UpdateUserAsync(UpdateUserRequest request)
         {
             AccessRules.RequireOwnerOrAdmin(_currentUser, request.UserId);

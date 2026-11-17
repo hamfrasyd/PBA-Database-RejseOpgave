@@ -9,12 +9,16 @@ namespace TravelApp.BusinessLogic.Handlers.Locations.GetDestinationStats
         private readonly IUnitOfWorkFactory _unitOfWorkFactory;
 
         /// <summary>Initializes a new GetCityStatsHandler instance.</summary>
+        /// <param name="unitOfWorkFactory">The unit of work factory.</param>
         public GetCityStatsHandler(IUnitOfWorkFactory unitOfWorkFactory)
         {
             _unitOfWorkFactory = unitOfWorkFactory;
         }
 
         /// <summary>Retrieves city stats.</summary>
+        /// <param name="cityId">The city identifier.</param>
+        /// <returns>The statistics for the city.</returns>
+        /// <exception cref="TravelAppNotFoundException">Thrown when the city does not exist.</exception>
         public async Task<GetCityStatsResponse> GetCityStatsAsync(int cityId)
         {
             await using IUnitOfWork unitOfWork = _unitOfWorkFactory.Create();

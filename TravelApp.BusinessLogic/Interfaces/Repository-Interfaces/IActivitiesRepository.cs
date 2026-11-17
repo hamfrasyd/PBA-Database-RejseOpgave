@@ -1,4 +1,5 @@
 using TravelApp.BusinessLogic.DTOs.Activities;
+using TravelApp.BusinessLogic.Models.Activities;
 
 namespace TravelApp.BusinessLogic.Interfaces
 {
@@ -7,14 +8,11 @@ namespace TravelApp.BusinessLogic.Interfaces
     {
         #region Create - Activities
 
-        /// <summary>Stages an activity for insertion. Returns the activity when the provider already has an id; otherwise <see langword="null"/>.</summary>
-        /// <param name="activityToCreate">The activity values to persist.</param>
-        /// <returns>The created activity when known immediately; otherwise <see langword="null"/>.</returns>
-        Task<ActivityDTO?> CreateActivityAsync(CreateActivityDTO activityToCreate);
-
-        /// <summary>Returns the activity staged by <see cref="CreateActivityAsync"/> after the unit of work has committed.</summary>
-        /// <returns>The created activity, including its generated identifier when assigned at commit.</returns>
-        ActivityDTO GetCreatedActivity();
+        /// <summary>Stages an activity for insertion in the given city.</summary>
+        /// <param name="activity">The activity to add.</param>
+        /// <param name="cityId">The city identifier.</param>
+        /// <returns>A task that completes when the activity is staged. The generated identifier is available on <paramref name="activity"/> after the unit of work commits.</returns>
+        Task CreateActivityAsync(Activity activity, int cityId);
 
         #endregion
 

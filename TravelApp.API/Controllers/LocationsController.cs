@@ -23,7 +23,6 @@ namespace TravelApp.API.Controllers
         /// <param name="request">The city to create.</param>
         /// <param name="createCityHandler">The handler that creates the city.</param>
         /// <returns>A created response for the new city.</returns>
-        /// <exception cref="TravelAppValidationException">Thrown when the name is missing or longer than 64 characters.</exception>
         /// <exception cref="TravelAppNotFoundException">Thrown when the country does not exist.</exception>
         // POST api/locations/cities
         [HttpPost("cities")]

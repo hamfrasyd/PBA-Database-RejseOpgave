@@ -1,7 +1,7 @@
-using TravelApp.BusinessLogic.DTOs.Activities;
 using TravelApp.BusinessLogic.DTOs.Locations;
 using TravelApp.BusinessLogic.Exceptions.SpecificCustomException;
 using TravelApp.BusinessLogic.Interfaces;
+using TravelApp.BusinessLogic.Models.Activities;
 
 namespace TravelApp.BusinessLogic.Handlers.Activities.CreateActivity
 {
@@ -20,7 +20,7 @@ namespace TravelApp.BusinessLogic.Handlers.Activities.CreateActivity
         /// <summary>Creates an activity and returns the persisted result.</summary>
         /// <param name="request">The activity to create.</param>
         /// <returns>The created activity.</returns>
-        /// <exception cref="TravelAppValidationException">Thrown when the name is missing or the city does not exist.</exception>
+        /// <exception cref="TravelAppValidationException">Thrown when the city does not exist.</exception>
         public async Task<CreateActivityResponse> CreateActivityAsync(CreateActivityRequest request)
         {
             await using IUnitOfWork unitOfWork = _unitOfWorkFactory.Create();
@@ -31,29 +31,22 @@ namespace TravelApp.BusinessLogic.Handlers.Activities.CreateActivity
                 throw new TravelAppValidationException("The City for the activity does not exist.");
             }
 
-            CreateActivityDTO activityToCreate = new CreateActivityDTO
+            Activity activity = new Activity
             {
-                CityId = request.CityId,
                 Name = request.Name.Trim(),
                 Description = request.Description
             };
 
-            ActivityDTO? createdActivity = await unitOfWork.Activities.CreateActivityAsync(activityToCreate);
+            await unitOfWork.Activities.CreateActivityAsync(activity, request.CityId);
 
             await unitOfWork.CommitAsync();
 
-            // cowboy, skal bruge cecilias måde at Create på
-            if (createdActivity is null)
-            {
-                createdActivity = unitOfWork.Activities.GetCreatedActivity();
-            }
-
             CreateActivityResponse response = new CreateActivityResponse
             {
-                Id = createdActivity.Id,
-                CityId = createdActivity.CityId,
-                Name = createdActivity.Name,
-                Description = createdActivity.Description
+                Id = activity.Id,
+                CityId = request.CityId,
+                Name = activity.Name,
+                Description = activity.Description
             };
 
             return response;

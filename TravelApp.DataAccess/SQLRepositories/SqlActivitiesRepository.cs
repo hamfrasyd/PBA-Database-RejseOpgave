@@ -11,7 +11,6 @@ namespace TravelApp.DataAccess.SQLRepositories
     public class SqlActivitiesRepository : IActivitiesRepository
     {
         private readonly TravelAppContext _context;
-        private Activity? _addedActivity;
 
         /// <summary>Initializes a new instance of the <see cref="SqlActivitiesRepository"/> class.</summary>
         /// <param name="context">The Entity Framework Core context connected to SQL Server.</param>
@@ -23,55 +22,10 @@ namespace TravelApp.DataAccess.SQLRepositories
         #region Create - Activities
 
         /// <inheritdoc />
-        public async Task<ActivityDTO?> CreateActivityAsync(CreateActivityDTO activityToCreate)
+        public async Task CreateActivityAsync(Activity activity, int cityId)
         {
-            _addedActivity = new Activity
-            {
-                Name = activityToCreate.Name,
-                Description = activityToCreate.Description
-            };
-
-            await _context.ActivityEntities.AddAsync(_addedActivity);
-            _context.Entry(_addedActivity).Property("CityId").CurrentValue = activityToCreate.CityId;
-
-            // cowboy, skal bruge cecilias måde at Create på
-            int cityId = _context.Entry(_addedActivity).Property<int>("CityId").CurrentValue;
-
-            if (_addedActivity.Id <= 0)
-            {
-                return null;
-            }
-
-            ActivityDTO createdActivity = new ActivityDTO
-            {
-                Id = _addedActivity.Id,
-                CityId = cityId,
-                Name = _addedActivity.Name,
-                Description = _addedActivity.Description
-            };
-
-            return createdActivity;
-        }
-
-        /// <inheritdoc />
-        public ActivityDTO GetCreatedActivity()
-        {
-            if (_addedActivity is null)
-            {
-                throw new InvalidOperationException("CreateActivityAsync must be called before GetCreatedActivity.");
-            }
-
-            int cityId = _context.Entry(_addedActivity).Property<int>("CityId").CurrentValue;
-
-            ActivityDTO createdActivity = new ActivityDTO
-            {
-                Id = _addedActivity.Id,
-                CityId = cityId,
-                Name = _addedActivity.Name,
-                Description = _addedActivity.Description
-            };
-
-            return createdActivity;
+            await _context.ActivityEntities.AddAsync(activity);
+            _context.Entry(activity).Property("CityId").CurrentValue = cityId;
         }
 
         #endregion

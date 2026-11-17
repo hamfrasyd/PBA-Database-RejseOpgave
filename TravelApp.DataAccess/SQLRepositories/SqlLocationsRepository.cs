@@ -10,7 +10,6 @@ namespace TravelApp.DataAccess.SQLRepositories
     public class SqlLocationsRepository : ILocationsRepository
     {
         private readonly TravelAppContext _context;
-        private City? _addedCity;
 
         /// <summary>Initializes a new instance of the <see cref="SqlLocationsRepository"/> class.</summary>
         /// <param name="context">The Entity Framework Core context connected to SQL Server.</param>
@@ -22,52 +21,10 @@ namespace TravelApp.DataAccess.SQLRepositories
         #region Create - Cities
 
         /// <inheritdoc />
-        public async Task<CityDTO?> CreateCityAsync(CreateCityDTO cityToCreate)
+        public async Task CreateCityAsync(City city, int countryId)
         {
-            _addedCity = new City
-            {
-                Name = cityToCreate.Name
-            };
-
-            await _context.CityEntities.AddAsync(_addedCity);
-            _context.Entry(_addedCity).Property("CountryId").CurrentValue = cityToCreate.CountryId;
-
-            // cowboy, skal bruge cecilias måde at Create på
-            int countryId = _context.Entry(_addedCity).Property<int>("CountryId").CurrentValue;
-
-            if (_addedCity.Id <= 0)
-            {
-                return null;
-            }
-
-            CityDTO createdCity = new CityDTO
-            {
-                Id = _addedCity.Id,
-                Name = _addedCity.Name,
-                CountryId = countryId
-            };
-
-            return createdCity;
-        }
-
-        /// <inheritdoc />
-        public CityDTO GetCreatedCity()
-        {
-            if (_addedCity is null)
-            {
-                throw new InvalidOperationException("CreateCityAsync must be called before GetCreatedCity.");
-            }
-
-            int countryId = _context.Entry(_addedCity).Property<int>("CountryId").CurrentValue;
-
-            CityDTO createdCity = new CityDTO
-            {
-                Id = _addedCity.Id,
-                Name = _addedCity.Name,
-                CountryId = countryId
-            };
-
-            return createdCity;
+            await _context.CityEntities.AddAsync(city);
+            _context.Entry(city).Property("CountryId").CurrentValue = countryId;
         }
 
         #endregion

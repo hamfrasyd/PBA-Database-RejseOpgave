@@ -8,7 +8,7 @@ namespace TravelApp.BusinessLogic.Handlers.Activities.GetActivitiesByCity
     {
         private readonly IUnitOfWorkFactory _unitOfWorkFactory;
 
-        /// <summary>Initializes a new GetCityActivitiesHandler instance.</summary>
+        /// <summary>Initializes a new GetAllActivitiesByCityHandler instance.</summary>
         /// <param name="unitOfWorkFactory">The unit of work factory.</param>
         public GetAllActivitiesByCityHandler(IUnitOfWorkFactory unitOfWorkFactory)
         {

@@ -22,7 +22,7 @@ namespace TravelApp.BusinessLogic.Handlers.Activities.UpdateActivity
         /// <param name="request">The updated activity details.</param>
         /// <returns>The updated activity.</returns>
         /// <exception cref="TravelAppNotFoundException">Thrown when the activity does not exist.</exception>
-        /// <exception cref="TravelAppValidationException">Thrown when the name is missing or the city does not exist.</exception>
+        /// <exception cref="TravelAppValidationException">Thrown when the city does not exist.</exception>
         public async Task<UpdateActivityResponse> UpdateActivityAsync(int activityId, UpdateActivityRequest request)
         {
             await using IUnitOfWork unitOfWork = _unitOfWorkFactory.Create();

@@ -1,4 +1,3 @@
-using TravelApp.BusinessLogic.DTOs.Locations;
 using TravelApp.BusinessLogic.Exceptions.SpecificCustomException;
 using TravelApp.BusinessLogic.Interfaces;
 using TravelApp.BusinessLogic.Models.Activities;
@@ -25,10 +24,10 @@ namespace TravelApp.BusinessLogic.Handlers.Activities.CreateActivity
         {
             await using IUnitOfWork unitOfWork = _unitOfWorkFactory.Create();
 
-            CityDTO? existingCity = await unitOfWork.Locations.GetCityAsync(request.CityId);
-            if (existingCity is null)
+            bool cityExists = await unitOfWork.Locations.CityExistsAsync(request.CityId);
+            if (cityExists is false)
             {
-                throw new TravelAppValidationException("The City for the activity does not exist.");
+                throw new TravelAppValidationException($"City with ID {request.CityId} does not exist.");
             }
 
             Activity activity = new Activity

@@ -41,7 +41,7 @@ namespace TravelApp.BusinessLogic.Interfaces
         /// <returns>The city, or <see langword="null"/> when it does not exist.</returns>
         Task<CityDTO?> GetCityAsync(int cityId);
 
-        /// <summary>Retrieves a city by ID.</summary>
+        /// <summary>Retrieves a city by ID, including its country.</summary>
         /// <param name="cityId">The city identifier.</param>
         /// <returns>The city, or <see langword="null"/> when it does not exist.</returns>
         Task<City?> GetCityByIdAsync(int cityId);

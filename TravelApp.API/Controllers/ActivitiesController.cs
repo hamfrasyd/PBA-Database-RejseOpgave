@@ -22,7 +22,7 @@ namespace TravelApp.API.Controllers
         /// <param name="request">The activity to create.</param>
         /// <param name="createActivityHandler">The handler that creates the activity.</param>
         /// <returns>The created activity.</returns>
-        /// <exception cref="TravelAppValidationException">Thrown when the name is missing or the city does not exist.</exception>
+        /// <exception cref="TravelAppValidationException">Thrown when the city does not exist.</exception>
         // POST api/activities
         [HttpPost]
         [Authorize(Roles = "Admin")]
@@ -90,7 +90,7 @@ namespace TravelApp.API.Controllers
         /// <param name="updateActivityHandler">The handler that updates the activity.</param>
         /// <returns>The updated activity.</returns>
         /// <exception cref="TravelAppNotFoundException">Thrown when the activity does not exist.</exception>
-        /// <exception cref="TravelAppValidationException">Thrown when the name is missing or the city does not exist.</exception>
+        /// <exception cref="TravelAppValidationException">Thrown when the city does not exist.</exception>
         // PUT api/activities/{activityId}
         [HttpPut("{activityId:int}")]
         [Authorize(Roles = "Admin")]
@@ -123,7 +123,6 @@ namespace TravelApp.API.Controllers
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status403Forbidden)]
         [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status404NotFound)]
-        [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status409Conflict)]
         [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> DeleteActivity([FromRoute] int activityId, [FromServices] DeleteActivityHandler deleteActivityHandler)
         {

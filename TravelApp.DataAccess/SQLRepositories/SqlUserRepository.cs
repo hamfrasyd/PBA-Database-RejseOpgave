@@ -48,7 +48,7 @@ namespace TravelApp.DataAccess.SQLRepositories
                 profiles = profiles.Where(profile => profile.FullName.Contains(search));
             }
 
-            if (profileSearch.Descending) 
+            if (profileSearch.Descending)
             {
                 profiles = profiles.OrderByDescending(profile => profile.UserId);
             }
@@ -65,22 +65,18 @@ namespace TravelApp.DataAccess.SQLRepositories
         /// <inheritdoc />
         public async Task<List<VisitedCountryDto>> GetVisitedCountriesAsync(int userId)
         {
-            IQueryable<VisitedCountryDto> visitedCountries =
-                from participant in _context.TripParticipantEntities.AsNoTracking()
-                join stop in _context.TripStopEntities.AsNoTracking()
-                    on participant.Trip!.Id equals stop.Trip!.Id
-                where participant.User!.Id == userId && participant.Trip!.IsCompleted
-                select new VisitedCountryDto
+            // The ! only reassures the compiler. These links are always stored, and a missing one is skipped instead of crashing.
+            IQueryable<VisitedCountryDto> visitedCountries = _context.TripParticipantEntities.AsNoTracking()
+                .Where(participant => participant.User!.Id == userId && participant.Trip!.IsCompleted)
+                .SelectMany(participant => participant.Trip!.TripStops)
+                .Select(stop => new VisitedCountryDto
                 {
                     Id = stop.City!.Country!.Id,
                     ContinentId = stop.City.Country.Continent!.Id,
                     Name = stop.City.Country.Name
-                };
+                });
 
-            List<VisitedCountryDto> result = await visitedCountries
-                .Distinct()
-                .OrderBy(country => country.Name)
-                .ToListAsync();
+            List<VisitedCountryDto> result = await visitedCountries.Distinct().OrderBy(country => country.Name).ToListAsync();
 
             return result;
         }
@@ -92,9 +88,7 @@ namespace TravelApp.DataAccess.SQLRepositories
         /// <inheritdoc />
         public async Task<bool> UserExistsAsync(int userId)
         {
-            bool userExists = await _context.TravelUserEntities
-                .AsNoTracking()
-                .AnyAsync(user => user.Id == userId);
+            bool userExists = await _context.TravelUserEntities.AsNoTracking().AnyAsync(user => user.Id == userId);
 
             return userExists;
         }
@@ -102,8 +96,7 @@ namespace TravelApp.DataAccess.SQLRepositories
         /// <inheritdoc />
         public async Task<TravelUser?> GetByIdAsync(int userId)
         {
-            TravelUser? entity = await _context.TravelUserEntities
-                .FirstOrDefaultAsync(user => user.Id == userId);
+            TravelUser? entity = await _context.TravelUserEntities.FirstOrDefaultAsync(user => user.Id == userId);
 
             return entity;
         }
@@ -111,9 +104,7 @@ namespace TravelApp.DataAccess.SQLRepositories
         /// <inheritdoc />
         public async Task<UserProfileDetailsDTO?> GetProfileAsync(int userId)
         {
-            UserProfileDetailsDTO? matchingProfile = await _context.UserProfiles
-                .AsNoTracking()
-                .FirstOrDefaultAsync(profile => profile.UserId == userId);
+            UserProfileDetailsDTO? matchingProfile = await _context.UserProfiles.AsNoTracking().FirstOrDefaultAsync(profile => profile.UserId == userId);
 
             return matchingProfile;
         }
@@ -125,8 +116,7 @@ namespace TravelApp.DataAccess.SQLRepositories
         /// <inheritdoc />
         public async Task<UserBasicInfoDto?> UpdateUserAsync(UpdateUserBasicInfoDto userToUpdate)
         {
-            TravelUser? userInDb = await _context.TravelUserEntities
-                .FirstOrDefaultAsync(user => user.Id == userToUpdate.Id);
+            TravelUser? userInDb = await _context.TravelUserEntities.FirstOrDefaultAsync(user => user.Id == userToUpdate.Id);
 
             if (userInDb is null)
             {

@@ -19,9 +19,11 @@ namespace TravelApp.BusinessLogic.Handlers.Accounts.Register
 
             DateTime now = DateTime.UtcNow;
             DateOnly today = DateOnly.FromDateTime(now);
-            if (request.Birthday is not { } birthday || birthday > today)
+            DateOnly birthday = request.Birthday ?? throw new TravelAppValidationException("Angiv en fødselsdato.");
+
+            if (birthday > today)
             {
-                throw new TravelAppValidationException("Angiv en gyldig fødselsdato, der ikke ligger i fremtiden.");
+                throw new TravelAppValidationException("Fødselsdatoen må ikke ligge i fremtiden.");
             }
 
             await using IUnitOfWork unitOfWork = unitOfWorkFactory.Create();

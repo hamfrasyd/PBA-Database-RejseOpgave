@@ -1,4 +1,4 @@
-namespace TravelApp.BusinessLogic.Handlers.Locations.GetDestinationStats
+namespace TravelApp.BusinessLogic.Handlers.Locations.GetCityStats
 {
     /// <summary>Contains the result of get destination stats.</summary>
     public class GetCityStatsResponse

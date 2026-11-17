@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using TravelApp.BusinessLogic.Interfaces;
+using TravelApp.BusinessLogic.Interfaces.Repository_Interfaces;
 using TravelApp.DataAccess.SQLRepositories;
 using TravelApp.DataAccess.SQLRepositories.EntityFramework;
 
@@ -24,6 +25,8 @@ namespace TravelApp.DataAccess.UnitOfWork
         public IUserRepository Users { get; }
         /// <inheritdoc/>
         public IPostRepository Posts { get; }
+        /// <inheritdoc/>
+        public IReviewRepository Reviews { get; }
 
         /// <summary>
         /// Initializes a new instance of the SQL unit of work with the specified database connection and logger.
@@ -43,6 +46,7 @@ namespace TravelApp.DataAccess.UnitOfWork
             Trips = new SqlTripRepository(_context);
             Users = new SqlUserRepository(_context);
             Posts = new SqlPostRepository(_context);
+            Reviews = new SqlReviewRepository(_context);
         }
 
         /// <summary>Persists all pending EF Core changes as one atomic database save.</summary>

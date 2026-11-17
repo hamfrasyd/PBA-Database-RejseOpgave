@@ -1,7 +1,5 @@
 using Microsoft.Extensions.DependencyInjection;
 using TravelApp.BusinessLogic.DatabaseSelection;
-using TravelApp.BusinessLogic.Handlers.Trips;
-using TravelApp.BusinessLogic.Handlers.Trips.GetTrip;
 using TravelApp.BusinessLogic.Handlers.Accounts.Login;
 using TravelApp.BusinessLogic.Handlers.Achievements.GetAchievementDefinitions;
 using TravelApp.BusinessLogic.Handlers.Achievements.GetEarnedAchievements;
@@ -14,16 +12,21 @@ using TravelApp.BusinessLogic.Handlers.DatabaseSelection.GetDatabaseProviders;
 using TravelApp.BusinessLogic.Handlers.Locations.CreateCity;
 using TravelApp.BusinessLogic.Handlers.Locations.GetCities;
 using TravelApp.BusinessLogic.Handlers.Locations.GetCity;
+using TravelApp.BusinessLogic.Handlers.Locations.GetCityStats;
 using TravelApp.BusinessLogic.Handlers.Locations.GetContinents;
 using TravelApp.BusinessLogic.Handlers.Locations.GetCountries;
-using TravelApp.BusinessLogic.Handlers.Locations.GetCityStats;
 using TravelApp.BusinessLogic.Handlers.Locations.GetVisitedCountries;
+using TravelApp.BusinessLogic.Handlers.Posts;
+using TravelApp.BusinessLogic.Handlers.Reviews;
+using TravelApp.BusinessLogic.Handlers.Reviews.CreateReview;
+using TravelApp.BusinessLogic.Handlers.Reviews.GetReview;
+using TravelApp.BusinessLogic.Handlers.Trips;
+using TravelApp.BusinessLogic.Handlers.Trips.GetTrip;
+using TravelApp.BusinessLogic.Handlers.Trips.TripCity;
 using TravelApp.BusinessLogic.Handlers.Users.DeleteUser;
 using TravelApp.BusinessLogic.Handlers.Users.GetUserProfile;
 using TravelApp.BusinessLogic.Handlers.Users.GetUserProfiles;
 using TravelApp.BusinessLogic.Handlers.Users.UpdateUser;
-using TravelApp.BusinessLogic.Handlers.Trips.TripCity;
-using TravelApp.BusinessLogic.Handlers.Posts;
 
 namespace TravelApp.BusinessLogic.DependencyInjection
 {
@@ -43,6 +46,7 @@ namespace TravelApp.BusinessLogic.DependencyInjection
             RegisterUsers(services);
             RegisterTrips(services);
             RegisterPosts(services);
+            RegisterReviews(services);
 
             return services;
         }
@@ -109,6 +113,13 @@ namespace TravelApp.BusinessLogic.DependencyInjection
             services.AddScoped<CreatePostHandler>();
             services.AddScoped<DeletePostHandler>();
             services.AddScoped<UpdatePostHandler>();
+        }
+
+        private static void RegisterReviews(IServiceCollection services)
+        {
+            services.AddScoped<GetReviewHandler>();
+            services.AddScoped<GetReviewsHandler>();
+            services.AddScoped<CreateReviewHandler>();
         }
     }
 }

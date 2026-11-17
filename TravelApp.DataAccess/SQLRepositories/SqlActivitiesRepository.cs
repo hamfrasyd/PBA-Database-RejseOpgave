@@ -22,7 +22,7 @@ namespace TravelApp.DataAccess.SQLRepositories
         #region Create - Activities
 
         /// <inheritdoc />
-        public async Task AddActivityAsync(Activity activity)
+        public async Task CreateActivityAsync(Activity activity)
         {
             await _context.ActivityEntities.AddAsync(activity);
         }

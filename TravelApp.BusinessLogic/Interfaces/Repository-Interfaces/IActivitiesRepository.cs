@@ -8,10 +8,10 @@ namespace TravelApp.BusinessLogic.Interfaces
     {
         #region Create - Activities
 
-        /// <summary>Adds an activity.</summary>
-        /// <param name="activity">The activity to add.</param>
-        /// <returns>A task that completes when the activity is added.</returns>
-        Task AddActivityAsync(Activity activity);
+        /// <summary>Creates an activity.</summary>
+        /// <param name="activity">The activity to create.</param>
+        /// <returns>A task that completes when the activity is created.</returns>
+        Task CreateActivityAsync(Activity activity);
 
         #endregion
 

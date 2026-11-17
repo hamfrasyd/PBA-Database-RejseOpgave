@@ -10,7 +10,7 @@ using TravelApp.BusinessLogic.Models.Trips;
 using TravelApp.BusinessLogic.Models.Invitations;
 using TravelApp.BusinessLogic.Handlers.Users.GetUserProfile;
 using TravelApp.BusinessLogic.Models.Users;
-using TravelApp.BusinessLogic.Handlers.Locations.GetDestinationStats;
+using TravelApp.BusinessLogic.Handlers.Locations.Data;
 
 namespace TravelApp.DataAccess.SQLRepositories.EntityFramework
 {
@@ -64,7 +64,7 @@ namespace TravelApp.DataAccess.SQLRepositories.EntityFramework
         /// <summary>Gets the user profile view rows.</summary>
         public DbSet<GetUserProfileResponse> UserProfiles => Set<GetUserProfileResponse>();
         /// <summary>Gets the destination statistics view rows.</summary>
-        public DbSet<GetCityStatsResponse> DestinationStatistics => Set<GetCityStatsResponse>();
+        public DbSet<CityStatsDto> DestinationStatistics => Set<CityStatsDto>();
 
         /// <summary>Configures the SQL schema mappings.</summary>
         /// <param name="modelBuilder">The model builder used to configure the entities.</param>
@@ -413,6 +413,7 @@ namespace TravelApp.DataAccess.SQLRepositories.EntityFramework
                 .OnDelete(DeleteBehavior.Cascade);
 
             modelBuilder.Entity<GetUserProfileResponse>(entity => entity.HasNoKey().ToView("vw_UserProfile", "dbo"));
+            modelBuilder.Entity<CityStatsDto>(entity => entity.HasNoKey().ToView("vw_DestinationStats", "dbo"));
 
             modelBuilder.Entity<UserAccount>(entity =>
             {
@@ -425,7 +426,6 @@ namespace TravelApp.DataAccess.SQLRepositories.EntityFramework
                 entity.Property(account => account.Role).HasMaxLength(16);
                 entity.HasIndex(account => account.NormalizedUserName).IsUnique();
             });
-            modelBuilder.Entity<GetCityStatsResponse>(entity => entity.HasNoKey().ToView("vw_DestinationStats", "dbo"));
         }
     }
 }

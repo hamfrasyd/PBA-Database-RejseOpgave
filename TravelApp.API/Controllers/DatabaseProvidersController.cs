@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
-using TravelApp.BusinessLogic.Exceptions.Filters;
-using TravelApp.BusinessLogic.Handlers.DatabaseSelection;
+using TravelApp.API.ExceptionFilters;
+using TravelApp.BusinessLogic.Handlers.DatabaseSelection.GetDatabaseProviders;
 
 namespace TravelApp.API.Controllers
 {

@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace TravelApp.BusinessLogic.Handlers.Accounts
+namespace TravelApp.BusinessLogic.Handlers.Accounts.Login
 {
     /// <summary>Selects an existing user for a local demonstration session.</summary>
     public class LoginRequest

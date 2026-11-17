@@ -1,13 +1,14 @@
 using Microsoft.AspNetCore.Authentication.Cookies;
 using TravelApp.API.Auth;
 using TravelApp.API.DatabaseSelection;
+using TravelApp.API.ExceptionFilters;
 using TravelApp.BusinessLogic.Auth;
 using TravelApp.BusinessLogic.DatabaseSelection;
 using TravelApp.BusinessLogic.DependencyInjection;
-using TravelApp.BusinessLogic.Exceptions.Filters;
 using TravelApp.DataAccess.DependencyInjection;
 
 var builder = WebApplication.CreateBuilder(args);
+builder.Services.AddHttpContextAccessor();
 
 // Add services to the container.
 
@@ -15,6 +16,7 @@ builder.Services.AddControllers(options =>
 {
     options.Filters.Add<TravelExceptionFilter>();
 });
+
 // Add Swagger
 builder.Services.AddSwaggerGen(options =>
 {

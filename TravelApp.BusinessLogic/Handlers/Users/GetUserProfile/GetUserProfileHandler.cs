@@ -2,7 +2,7 @@ using TravelApp.BusinessLogic.Auth;
 using TravelApp.BusinessLogic.Exceptions.SpecificCustomException;
 using TravelApp.BusinessLogic.Interfaces;
 
-namespace TravelApp.BusinessLogic.Handlers.Users
+namespace TravelApp.BusinessLogic.Handlers.Users.GetUserProfile
 {
     /// <summary>Handles the get user profile use case.</summary>
     public class GetUserProfileHandler

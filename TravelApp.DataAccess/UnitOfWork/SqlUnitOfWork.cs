@@ -1,9 +1,10 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using TravelApp.BusinessLogic.Interfaces;
+using TravelApp.DataAccess.SQLRepositories;
 using TravelApp.DataAccess.SQLRepositories.EntityFramework;
 
-namespace TravelApp.DataAccess.SQLRepositories.UnitOfWork
+namespace TravelApp.DataAccess.UnitOfWork
 {
     /// <summary>Coordinates EF Core repositories over one DbContext and commit boundary.</summary>
     public class SqlUnitOfWork : IUnitOfWork
@@ -11,9 +12,11 @@ namespace TravelApp.DataAccess.SQLRepositories.UnitOfWork
         private readonly TravelAppContext _context;
         private readonly ILogger<SqlUnitOfWork> _logger;
 
-        public IDestinationRepository Destinations { get; }
+        public IActivitiesRepository Activities { get; }
+        public ILocationsRepository Locations { get; }
         public IAchievementRepository Achievements { get; }
         public IUserRepository Users { get; }
+        public ITripRepository Trips { get; }
         public IPostRepository Posts { get; }
 
         public SqlUnitOfWork(string connectionString, ILogger<SqlUnitOfWork> logger)
@@ -23,9 +26,11 @@ namespace TravelApp.DataAccess.SQLRepositories.UnitOfWork
             DbContextOptions<TravelAppContext> options = new DbContextOptionsBuilder<TravelAppContext>().UseSqlServer(connectionString).Options;
             _context = new TravelAppContext(options);
 
-            Destinations = new SqlDestinationRepository(_context);
+            Activities = new SqlActivitiesRepository(_context);
+            Locations = new SqlLocationsRepository(_context);
             Achievements = new SqlAchievementRepository(_context);
             Users = new SqlUserRepository(_context);
+            Trips = new SqlTripRepository(_context);
             Posts = new SqlPostRepository(_context);
         }
 

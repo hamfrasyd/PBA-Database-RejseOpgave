@@ -1,4 +1,12 @@
-namespace TravelApp.BusinessLogic.Models
+using TravelApp.BusinessLogic.Models.Achievements;
+using TravelApp.BusinessLogic.Models.Destinations;
+using TravelApp.BusinessLogic.Models.Groups;
+using TravelApp.BusinessLogic.Models.Invitations;
+using TravelApp.BusinessLogic.Models.Posts;
+using TravelApp.BusinessLogic.Models.Reviews;
+using TravelApp.BusinessLogic.Models.Trips;
+
+namespace TravelApp.BusinessLogic.Models.Users
 {
     public class TravelUser
     {

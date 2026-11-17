@@ -82,7 +82,6 @@
         "_id": "string",
         "firstName": "string",
         "lastName": "string",
-        "email": "string",
         "birthday": "date",
         "isPrivate": "boolean",
         "createdAt": "date",

@@ -1,9 +1,8 @@
-using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using TravelApp.BusinessLogic.DatabaseSelection;
 using TravelApp.BusinessLogic.Interfaces;
-using TravelApp.DataAccess.SQLRepositories.UnitOfWork;
+using TravelApp.DataAccess.UnitOfWork;
 
 namespace TravelApp.DataAccess.DependencyInjection
 {

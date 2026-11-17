@@ -1,6 +1,3 @@
-using System.Security.Claims;
-using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using TravelApp.BusinessLogic.Auth;
@@ -9,7 +6,7 @@ using TravelApp.BusinessLogic.Handlers.Users;
 
 namespace TravelApp.API.Controllers
 {
-    /// <summary>Local demonstration sessions using users already stored in dbo.User.</summary>
+    /// <summary>Authenticates local accounts and exposes the current user's profile.</summary>
     [ApiController]
     [Route("api/auth")]
     public class AuthController : ControllerBase
@@ -22,48 +19,27 @@ namespace TravelApp.API.Controllers
             _currentUser = currentUser;
         }
 
-        /// <summary>Selects an existing user for a local demonstration session.</summary>
+        /// <summary>Verifies local credentials and returns a JWT access token.</summary>
         // POST api/auth/login
         [HttpPost("login")]
         [AllowAnonymous]
         [ProducesResponseType(typeof(LoginResponse), StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)] // Thrown from LoginHandler for an invalid ID.
-        [ProducesResponseType(StatusCodes.Status404NotFound)] // Thrown from LoginHandler when the user does not exist.
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<ActionResult<LoginResponse>> Login([FromBody] LoginRequest request, [FromServices] LoginHandler loginHandler)
         {
-            LoginResponse result = await loginHandler.LoginAsync(request);
+            LoginResponse? response = await loginHandler.LoginAsync(request);
 
-            List<Claim> claims = new List<Claim>
+            if (response is null)
             {
-                new Claim(ClaimTypes.NameIdentifier, result.UserId.ToString()),
-                new Claim(ClaimTypes.Name, result.FullName)
-            };
+                return Unauthorized(new { Message = "Ugyldigt brugernavn eller adgangskode." });
+            }
 
-            ClaimsIdentity identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
-            ClaimsPrincipal principal = new ClaimsPrincipal(identity);
-
-            await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal);
-
-            return Ok(result);
+            return Ok(response);
         }
 
-        /// <summary>Signs out of the current demonstration session.</summary>
-        // POST api/auth/logout
-        [HttpPost("logout")]
-        [Authorize]
-        [ProducesResponseType(typeof(string), StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult<string>> Logout()
-        {
-            await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
-
-            string result = "Logged out.";
-            return Ok(result);
-        }
-
-        /// <summary>Returns the profile of the currently selected user.</summary>
+        /// <summary>Returns the profile of the currently authenticated user.</summary>
         // GET api/auth/me
         [HttpGet("me")]
         [Authorize]

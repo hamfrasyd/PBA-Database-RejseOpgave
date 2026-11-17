@@ -1,5 +1,4 @@
 using TravelApp.BusinessLogic.DatabaseSelection;
-using TravelApp.BusinessLogic.Interfaces;
 
 namespace TravelApp.API.DatabaseSelection
 {

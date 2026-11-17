@@ -1,8 +1,10 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
+using TravelApp.API.ExceptionFilters;
 using TravelApp.BusinessLogic.Auth;
-using TravelApp.BusinessLogic.Handlers.Accounts;
-using TravelApp.BusinessLogic.Handlers.Users;
+using TravelApp.BusinessLogic.Handlers.Accounts.Login;
+using TravelApp.BusinessLogic.Handlers.Users.GetUserProfile;
 
 namespace TravelApp.API.Controllers
 {
@@ -44,9 +46,9 @@ namespace TravelApp.API.Controllers
         [HttpGet("me")]
         [Authorize]
         [ProducesResponseType(typeof(GetUserProfileResponse), StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)] // Thrown from GetUserProfileHandler.
-        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        [ProducesResponseType(typeof(UnauthorizedResult), StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status404NotFound)] // Thrown from GetUserProfileHandler.
+        [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status500InternalServerError)]
         public async Task<ActionResult<GetUserProfileResponse>> Me([FromServices] GetUserProfileHandler getUserProfileHandler)
         {
             GetUserProfileResponse result = await getUserProfileHandler.GetUserProfileAsync(_currentUser.UserId);

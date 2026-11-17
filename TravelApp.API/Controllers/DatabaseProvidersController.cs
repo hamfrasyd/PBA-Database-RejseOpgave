@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
-using TravelApp.BusinessLogic.Handlers.DatabaseSelection;
+using TravelApp.API.ExceptionFilters;
+using TravelApp.BusinessLogic.Handlers.DatabaseSelection.GetDatabaseProviders;
 
 namespace TravelApp.API.Controllers
 {
@@ -13,7 +14,7 @@ namespace TravelApp.API.Controllers
         // GET api/database-providers
         [HttpGet]
         [ProducesResponseType(typeof(GetDatabaseProvidersResponse), StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status500InternalServerError)]
         public ActionResult<GetDatabaseProvidersResponse> Get([FromServices] GetDatabaseProvidersHandler getDatabaseProvidersHandler)
         {
             GetDatabaseProvidersResponse result = getDatabaseProvidersHandler.GetDatabaseProviders();

@@ -1,4 +1,4 @@
-namespace TravelApp.BusinessLogic.Handlers.Users
+namespace TravelApp.BusinessLogic.Handlers.Users.GetUserProfiles
 {
     /// <summary>Contains the information needed to get user profiles.</summary>
     public class GetUserProfilesRequest

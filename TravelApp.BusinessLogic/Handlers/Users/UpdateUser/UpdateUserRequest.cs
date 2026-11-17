@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace TravelApp.BusinessLogic.Handlers.Users
+namespace TravelApp.BusinessLogic.Handlers.Users.UpdateUser
 {
     /// <summary>Contains the information needed to update user.</summary>
     public class UpdateUserRequest

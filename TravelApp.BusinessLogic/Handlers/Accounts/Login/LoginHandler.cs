@@ -1,6 +1,6 @@
 using TravelApp.BusinessLogic.Auth;
 
-namespace TravelApp.BusinessLogic.Handlers.Accounts
+namespace TravelApp.BusinessLogic.Handlers.Accounts.Login
 {
     /// <summary>Handles login for local accounts.</summary>
     public class LoginHandler

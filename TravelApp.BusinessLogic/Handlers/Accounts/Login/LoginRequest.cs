@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace TravelApp.BusinessLogic.Handlers.Accounts
+namespace TravelApp.BusinessLogic.Handlers.Accounts.Login
 {
     /// <summary>Contains the credentials for a local account.</summary>
     public class LoginRequest

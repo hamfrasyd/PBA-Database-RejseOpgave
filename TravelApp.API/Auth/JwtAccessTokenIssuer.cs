@@ -3,7 +3,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using Microsoft.IdentityModel.Tokens;
 using TravelApp.BusinessLogic.Auth;
-using TravelApp.BusinessLogic.Handlers.Accounts;
+using TravelApp.BusinessLogic.Handlers.Accounts.Login;
 
 namespace TravelApp.API.Auth
 {

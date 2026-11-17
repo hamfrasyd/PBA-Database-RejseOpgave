@@ -2,7 +2,7 @@ using Microsoft.Extensions.Logging;
 using TravelApp.BusinessLogic.DatabaseSelection;
 using TravelApp.BusinessLogic.Interfaces;
 
-namespace TravelApp.DataAccess.SQLRepositories.UnitOfWork
+namespace TravelApp.DataAccess.UnitOfWork
 {
 
     /// <summary>Creates the selected provider's Unit of Work without exposing SQL types to business logic.</summary>

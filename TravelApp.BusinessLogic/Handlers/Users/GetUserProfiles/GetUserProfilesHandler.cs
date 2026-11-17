@@ -1,7 +1,7 @@
 using TravelApp.BusinessLogic.Auth;
 using TravelApp.BusinessLogic.Interfaces;
 
-namespace TravelApp.BusinessLogic.Handlers.Users
+namespace TravelApp.BusinessLogic.Handlers.Users.GetUserProfiles
 {
     /// <summary>Handles the get user profiles use case.</summary>
     public class GetUserProfilesHandler

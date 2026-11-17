@@ -1,4 +1,4 @@
-namespace TravelApp.BusinessLogic.Handlers.Accounts
+namespace TravelApp.BusinessLogic.Handlers.Accounts.Login
 {
     /// <summary>Contains the result of login.</summary>
     public class LoginResponse

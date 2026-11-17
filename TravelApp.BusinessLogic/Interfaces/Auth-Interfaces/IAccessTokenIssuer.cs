@@ -1,4 +1,4 @@
-﻿using TravelApp.BusinessLogic.Handlers.Accounts;
+﻿using TravelApp.BusinessLogic.Handlers.Accounts.Login;
 
 namespace TravelApp.BusinessLogic.Auth
 {

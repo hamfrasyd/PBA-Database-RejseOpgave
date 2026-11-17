@@ -1,9 +1,8 @@
-using TravelApp.BusinessLogic.Models;
 using TravelApp.BusinessLogic.Exceptions.SpecificCustomException;
 using TravelApp.BusinessLogic.Interfaces;
 using TravelApp.BusinessLogic.Auth;
 
-namespace TravelApp.BusinessLogic.Handlers.Users
+namespace TravelApp.BusinessLogic.Handlers.Users.DeleteUser
 {
     /// <summary>Handles the delete user use case.</summary>
     public class DeleteUserHandler

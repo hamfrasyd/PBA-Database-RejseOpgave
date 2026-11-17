@@ -1,6 +1,4 @@
-using TravelApp.BusinessLogic.DatabaseSelection;
-
-namespace TravelApp.BusinessLogic.Handlers.DatabaseSelection
+namespace TravelApp.BusinessLogic.Handlers.DatabaseSelection.GetDatabaseProviders
 {
     /// <summary>Describes the database providers supported by this API.</summary>
     public class GetDatabaseProvidersResponse

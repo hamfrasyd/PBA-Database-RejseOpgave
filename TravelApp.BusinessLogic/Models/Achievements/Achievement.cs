@@ -1,4 +1,4 @@
-namespace TravelApp.BusinessLogic.Models
+namespace TravelApp.BusinessLogic.Models.Achievements
 {
     public class Achievement
     {

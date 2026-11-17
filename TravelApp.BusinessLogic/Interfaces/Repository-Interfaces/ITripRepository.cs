@@ -6,75 +6,67 @@ namespace TravelApp.BusinessLogic.Interfaces
     /// <summary>Defines database operations for trips.</summary>
     public interface ITripRepository
     {
-        /// <summary>Retrieves trip by id.</summary>
-        Task<Trip?> GetByIdAsync(int tripId);
+        #region Create
+        /// <summary>Adds trip for user.</summary>
+        Task CreateTripForUserAsync(Trip trip, int userId);
+        #endregion
 
-        /// <summary>Retrieves trips for user.</summary>
-        Task<List<Trip>> GetByUserAsync(int userId);
-
-        /// <summary>Retrieves trip details by id.</summary>
-        Task<TripDetailsDTO?> GetDetailsAsync(int tripId);
-
+        #region Read all
         /// <summary>Retrieves trip summaries for user with optional filtering by country and continent.</summary>
         Task<List<TripSummaryDTO>> GetSummariesByUserAsync(int userId, int? countryId, int? continentId);
+        #endregion
 
-        /// <summary>Adds trip for user.</summary>
-        Task AddForUserAsync(Trip trip, int userId);
+        #region Read By Id
+        /// <summary>Retrieves trip details by id.</summary>
+        Task<TripDetailsDTO?> GetDetailsAsync(int tripId);
+        #endregion
 
+        #region Update
         /// <summary>Updates trip.</summary>
-        void Update(Trip trip);
+        Task UpdateAsync(int tripId, UpdateTripDTO update);
+        #endregion
 
-        Task<TripAccessInfoDTO?> GetAccessInfoAsync(int tripId, int userId);
-
+        #region Delete
         /// <summary>Deletes trip.</summary>
         Task DeleteAsync(int tripId);
+        #endregion
 
-        /// <summary>Checks if city exists.</summary>
-        Task<bool> CityExistsAsync(int cityId);
+        #region Stops in trip
+        /// <summary>Adds city to a trip.</summary>
+        Task AddCityToTripAsync(int tripId, int cityId);
 
-        /// <summary>Retrieves stop for trip and city.</summary>
-        Task<TripStop?> GetStopAsync(int tripId, int cityId);
+        /// <summary>Removes City from trip</summary>
+        Task RemoveCityFromTripAsync(int tripId, int cityId);
+        #endregion
 
-        /// <summary>Retrieves activity for trip.</summary>
-        Task<TripActivity?> GetTripActivityAsync(
-            int tripId, int activityId);
+        #region Activities in trip
+        /// <summary>Retrieves the activities associated with a specific trip.</summary>
+        Task<List<TripActivityDTO>> GetActivitiesnTripAsync(int tripId);
 
-        /// <summary>Retrieves participant for trip.</summary>
-        Task<TripParticipant?> GetParticipantAsync(
-            int tripId, int userId);
+        /// <summary>Adds activity to a trip.</summary>
+        Task AddActivityToTripAsync(int tripId, int activityId);
 
-        /// <summary>Adds stop to trip.</summary>
-        void AddStop(TripStop stop);
+        /// <summary>Removes activity from a trip.</summary>
+        Task RemoveActivityFromTripAsync(int tripId, int activityId);
+        #endregion
 
-        /// <summary>Adds activity to trip.</summary>
-        void AddTripActivity(TripActivity activity);
+        #region Participants in trip
+        /// <summary>Retrieves participants for a trip.</summary>
+        Task<List<TripParticipantDTO>> GetParticipantsInTripAsync(int tripId);
 
-        /// <summary>Adds participant to trip.</summary>
-        void AddParticipant(TripParticipant participant);
+        /// <summary>adds user as a participant to a trip.</summary>
+        Task AddParticipantToTripAsync(int tripId, int userId);
 
-        /// <summary>Removes stop from trip.</summary>
-        void RemoveStop(TripStop stop);
+        /// <summary>Removes user as a participant from a trip.</summary>
+        Task RemoveParticipantFromTripAsync(int tripId, int userId);
+        #endregion
 
-        /// <summary>Removes activity from trip.</summary>
-        void RemoveTripActivity(TripActivity activity);
+        #region Access and relations
+        /// <summary>Retrieves access information for a trip and user.</summary>
+        Task<TripAccessInfoDTO?> GetAccessInfoAsync(int tripId, int userId);
 
-        /// <summary>Removes participant from trip.</summary>
-        void RemoveParticipant(TripParticipant participant);
-
-
-
-
-
-
+        /// <summary>Retrieves trip relations for trip.</summary>
         Task<TripRelationsDTO?> GetRelationsAsync(int tripId);
-
-        Task AddCityAsync(int tripId, int cityId);
-        Task RemoveCityAsync(int tripId, int cityId);
-
-        Task AddActivityAsync(int tripId, int activityId);
-        Task RemoveActivityAsync(int tripId, int activityId);
-
-        Task AddParticipantAsync(int tripId, int userId);
-        Task RemoveParticipantAsync(int tripId, int userId);
+        #endregion
     }
 }

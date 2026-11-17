@@ -5,6 +5,7 @@ using TravelApp.BusinessLogic.Handlers.Activities.GetActivity;
 using TravelApp.BusinessLogic.Handlers.Trips;
 using TravelApp.BusinessLogic.Handlers.Trips.CreateTrip;
 using TravelApp.BusinessLogic.Handlers.Trips.GetTrip;
+using TravelApp.BusinessLogic.Handlers.Trips.TripCity;
 using TravelApp.BusinessLogic.Handlers.Trips.TripParticipants;
 
 namespace TravelApp.API.Controllers
@@ -49,7 +50,7 @@ namespace TravelApp.API.Controllers
         [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status403Forbidden)]
         [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status404NotFound)]
         [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult<List<GetActivityResponse>>> GetTripActivities([FromRoute] int tripId, [FromServices] GetTripActivitiesHandler getTripActivitiesHandler)
+        public async Task<ActionResult<List<GetActivityResponse>>> GetTripActivities([FromRoute] int tripId, [FromServices] TripActivitiesHandler getTripActivitiesHandler)
         {
             List<GetActivityResponse> result = await getTripActivitiesHandler.GetTripActivitiesAsync(tripId);
 
@@ -64,7 +65,7 @@ namespace TravelApp.API.Controllers
         [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status403Forbidden)]
         [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status404NotFound)]
         [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult<List<GetTripParticipantResponse>>> GetTripParticipants([FromRoute] int tripId, [FromServices] GetTripParticipantsHandler getTripParticipantsHandler)
+        public async Task<ActionResult<List<GetTripParticipantResponse>>> GetTripParticipants([FromRoute] int tripId, [FromServices] TripParticipantsHandler getTripParticipantsHandler)
         {
             List<GetTripParticipantResponse> result = await getTripParticipantsHandler.GetTripParticipantsAsync(tripId);
 
@@ -125,9 +126,9 @@ namespace TravelApp.API.Controllers
         [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status404NotFound)]
         [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status409Conflict)]
         [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> AddCity([FromRoute] int tripId, [FromRoute] int cityId, [FromServices] ManageTripRelationsHandler manageTripRelationsHandler)
+        public async Task<IActionResult> AddCity([FromRoute] int tripId, [FromRoute] int cityId, [FromServices] TripCityHandler handler)
         {
-            await manageTripRelationsHandler.AddCityAsync(tripId, cityId);
+            await handler.AddCityAsync(tripId, cityId);
             return NoContent();
         }
 
@@ -140,9 +141,9 @@ namespace TravelApp.API.Controllers
         [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status404NotFound)]
         [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status409Conflict)]
         [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> RemoveCity([FromRoute] int tripId, [FromRoute] int cityId, [FromServices] ManageTripRelationsHandler manageTripRelationsHandler)
+        public async Task<IActionResult> RemoveCity([FromRoute] int tripId, [FromRoute] int cityId, [FromServices] TripCityHandler handler)
         {
-            await manageTripRelationsHandler.RemoveCityAsync(tripId, cityId);
+            await handler.RemoveCityAsync(tripId, cityId);
             return NoContent();
         }
 
@@ -156,9 +157,9 @@ namespace TravelApp.API.Controllers
         [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status404NotFound)]
         [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status409Conflict)]
         [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> AddActivity([FromRoute] int tripId, [FromRoute] int activityId, [FromServices] ManageTripRelationsHandler manageTripRelationsHandler)
+        public async Task<IActionResult> AddActivity([FromRoute] int tripId, [FromRoute] int activityId, [FromServices] TripActivitiesHandler handler)
         {
-            await manageTripRelationsHandler.AddActivityAsync(tripId, activityId);
+            await handler.AddActivityAsync(tripId, activityId);
             return NoContent();
         }
 
@@ -170,9 +171,9 @@ namespace TravelApp.API.Controllers
         [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status403Forbidden)]
         [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status404NotFound)]
         [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> RemoveActivity([FromRoute] int tripId, [FromRoute] int activityId, [FromServices] ManageTripRelationsHandler manageTripRelationsHandler)
+        public async Task<IActionResult> RemoveActivity([FromRoute] int tripId, [FromRoute] int activityId, [FromServices] TripActivitiesHandler handler)
         {
-            await manageTripRelationsHandler.RemoveActivityAsync(tripId, activityId);
+            await handler.RemoveActivityAsync(tripId, activityId);
             return NoContent();
         }
 
@@ -185,9 +186,9 @@ namespace TravelApp.API.Controllers
         [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status404NotFound)]
         [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status409Conflict)]
         [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> AddParticipant([FromRoute] int tripId, [FromRoute] int userId, [FromServices] ManageTripRelationsHandler manageTripRelationsHandler)
+        public async Task<IActionResult> AddParticipant([FromRoute] int tripId, [FromRoute] int userId, [FromServices] TripParticipantsHandler handler)
         {
-            await manageTripRelationsHandler.AddParticipantAsync(tripId, userId);
+            await handler.AddParticipantAsync(tripId, userId);
             return NoContent();
         }
 
@@ -200,9 +201,9 @@ namespace TravelApp.API.Controllers
         [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status404NotFound)]
         [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status409Conflict)]
         [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> RemoveParticipant([FromRoute] int tripId, [FromRoute] int userId, [FromServices] ManageTripRelationsHandler manageTripRelationsHandler)
+        public async Task<IActionResult> RemoveParticipant([FromRoute] int tripId, [FromRoute] int userId, [FromServices] TripParticipantsHandler handler)
         {
-            await manageTripRelationsHandler.RemoveParticipantAsync(tripId, userId);
+            await handler.RemoveParticipantAsync(tripId, userId);
             return NoContent();
         }
     }

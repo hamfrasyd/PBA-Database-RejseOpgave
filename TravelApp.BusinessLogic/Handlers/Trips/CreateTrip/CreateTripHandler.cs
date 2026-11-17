@@ -7,17 +7,20 @@ using TravelApp.BusinessLogic.Models.Users;
 
 namespace TravelApp.BusinessLogic.Handlers.Trips
 {
+    /// <summary>Handler for creating new trips.</summary>
     public class CreateTripHandler
     {
         private readonly IUnitOfWorkFactory _unitOfWorkFactory;
         private readonly ICurrentUser _currentUser;
 
+        /// <summary>Initializes a new instance of the <see cref="CreateTripHandler"/> class.</summary>
         public CreateTripHandler(IUnitOfWorkFactory unitOfWorkFactory, ICurrentUser currentUser)
         {
             _unitOfWorkFactory = unitOfWorkFactory;
             _currentUser = currentUser;
         }
 
+        /// <summary>Creates a new trip for the current user.</summary>
         public async Task<CreateTripResponse> CreateTripAsync(CreateTripRequest request)
         {
             if (request.StartDate > request.EndDate)
@@ -41,7 +44,7 @@ namespace TravelApp.BusinessLogic.Handlers.Trips
                 IsCompleted = false
             };
 
-            await unitOfWork.Trips.AddForUserAsync(trip, user.Id);
+            await unitOfWork.Trips.CreateTripForUserAsync(trip, user.Id);
 
             await unitOfWork.CommitAsync();
 

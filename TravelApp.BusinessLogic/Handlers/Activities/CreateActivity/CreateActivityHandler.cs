@@ -20,7 +20,7 @@ namespace TravelApp.BusinessLogic.Handlers.Activities.CreateActivity
         /// <param name="request">The activity to create.</param>
         /// <returns>The identifier of the created activity.</returns>
         /// <exception cref="TravelAppValidationException">Thrown when the name is missing or the city does not exist.</exception>
-        public async Task<int> CreateActivityAsync(CreateActivityRequest request)
+        public async Task<int> CreateNewActivityAsync(CreateActivityRequest request)
         {
             if (string.IsNullOrWhiteSpace(request.Name))
             {
@@ -43,7 +43,7 @@ namespace TravelApp.BusinessLogic.Handlers.Activities.CreateActivity
                 Description = request.Description
             };
 
-            await unitOfWork.Activities.AddActivityAsync(createdActivity);
+            await unitOfWork.Activities.CreateActivityAsync(createdActivity);
 
             await unitOfWork.CommitAsync();
 

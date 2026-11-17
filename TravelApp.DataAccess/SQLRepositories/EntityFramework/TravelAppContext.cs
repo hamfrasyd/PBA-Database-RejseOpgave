@@ -63,7 +63,7 @@ namespace TravelApp.DataAccess.SQLRepositories.EntityFramework
         /// <summary>Gets the user profile view rows.</summary>
         public DbSet<GetUserProfileResponse> UserProfiles => Set<GetUserProfileResponse>();
         /// <summary>Gets the destination statistics view rows.</summary>
-        public DbSet<CityStatsData> DestinationStatistics => Set<CityStatsData>();
+        public DbSet<CityStatsDto> DestinationStatistics => Set<CityStatsDto>();
 
         /// <summary>Configures the SQL schema mappings.</summary>
         /// <param name="modelBuilder">The model builder used to configure the entities.</param>
@@ -412,7 +412,7 @@ namespace TravelApp.DataAccess.SQLRepositories.EntityFramework
                 .OnDelete(DeleteBehavior.Cascade);
 
             modelBuilder.Entity<GetUserProfileResponse>(entity => entity.HasNoKey().ToView("vw_UserProfile", "dbo"));
-            modelBuilder.Entity<CityStatsData>(entity => entity.HasNoKey().ToView("vw_DestinationStats", "dbo"));
+            modelBuilder.Entity<CityStatsDto>(entity => entity.HasNoKey().ToView("vw_DestinationStats", "dbo"));
         }
     }
 }

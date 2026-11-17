@@ -29,7 +29,7 @@ namespace TravelApp.BusinessLogic.Interfaces
         /// <summary>Retrieves countries visited by a user on completed trips.</summary>
         /// <param name="userId">The user identifier.</param>
         /// <returns>The visited countries.</returns>
-        Task<List<VisitedCountryData>> GetVisitedCountriesAsync(int userId);
+        Task<List<VisitedCountryDto>> GetVisitedCountriesAsync(int userId);
 
         #endregion
 

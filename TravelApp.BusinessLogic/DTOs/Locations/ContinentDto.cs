@@ -1,7 +1,7 @@
 namespace TravelApp.BusinessLogic.Handlers.Locations.Data
 {
     /// <summary>Contains the continent fields exchanged with a repository.</summary>
-    public class ContinentData
+    public class ContinentDto
     {
         /// <summary>Gets or sets the continent identifier.</summary>
         public int Id { get; set; }

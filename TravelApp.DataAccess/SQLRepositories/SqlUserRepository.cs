@@ -80,21 +80,21 @@ namespace TravelApp.DataAccess.SQLRepositories
         }
 
         /// <inheritdoc />
-        public async Task<List<VisitedCountryData>> GetVisitedCountriesAsync(int userId)
+        public async Task<List<VisitedCountryDto>> GetVisitedCountriesAsync(int userId)
         {
-            IQueryable<VisitedCountryData> visitedCountries =
+            IQueryable<VisitedCountryDto> visitedCountries =
                 from participant in _context.TripParticipantEntities.AsNoTracking()
                 join stop in _context.TripStopEntities.AsNoTracking()
                     on participant.Trip!.Id equals stop.Trip!.Id
                 where participant.User!.Id == userId && participant.Trip!.IsCompleted
-                select new VisitedCountryData
+                select new VisitedCountryDto
                 {
                     Id = stop.City!.Country!.Id,
                     ContinentId = stop.City.Country.Continent!.Id,
                     Name = stop.City.Country.Name
                 };
 
-            List<VisitedCountryData> result = await visitedCountries
+            List<VisitedCountryDto> result = await visitedCountries
                 .Distinct()
                 .OrderBy(country => country.Name)
                 .ToListAsync();

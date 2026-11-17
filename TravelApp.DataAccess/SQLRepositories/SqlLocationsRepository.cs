@@ -74,7 +74,7 @@ namespace TravelApp.DataAccess.SQLRepositories
         #region Read - All Cities, Countries & Continents
 
         /// <inheritdoc />
-        public async Task<List<CityDto>> GetCitiesAsync(GetCitiesFilterData filter)
+        public async Task<List<CityDto>> GetCitiesAsync(GetCitiesFilterDto filter)
         {
             IQueryable<City> cities = _context.CityEntities.AsNoTracking();
 
@@ -95,19 +95,19 @@ namespace TravelApp.DataAccess.SQLRepositories
                 : cities.OrderBy(city => city.Name).ThenBy(city => city.Id);
 
             List<CityDto> result = await orderedCities
-                .Select(city => new CityDto
-                {
-                    Id = city.Id,
-                    Name = city.Name,
-                    CountryId = EF.Property<int>(city, "CountryId")
-                })
-                .ToListAsync();
+                                        .Select(city => new CityDto
+                                        {
+                                            Id = city.Id,
+                                            Name = city.Name,
+                                            CountryId = EF.Property<int>(city, "CountryId")
+                                        })
+                                        .ToListAsync();
 
             return result;
         }
 
         /// <inheritdoc />
-        public async Task<List<CountryData>> GetCountriesAsync(int? continentId)
+        public async Task<List<CountryDto>> GetCountriesAsync(int? continentId)
         {
             IQueryable<Country> countries = _context.CountryEntities.AsNoTracking();
 
@@ -117,9 +117,9 @@ namespace TravelApp.DataAccess.SQLRepositories
                 countries = countries.Where(country => EF.Property<int>(country, "ContinentId") == selectedContinentId);
             }
 
-            List<CountryData> result = await countries
+            List<CountryDto> result = await countries
                 .OrderBy(country => country.Name)
-                .Select(country => new CountryData
+                .Select(country => new CountryDto
                 {
                     Id = country.Id,
                     Name = country.Name,
@@ -131,12 +131,12 @@ namespace TravelApp.DataAccess.SQLRepositories
         }
 
         /// <inheritdoc />
-        public async Task<List<ContinentData>> GetContinentsAsync()
+        public async Task<List<ContinentDto>> GetContinentsAsync()
         {
-            List<ContinentData> result = await _context.ContinentEntities
+            List<ContinentDto> result = await _context.ContinentEntities
                 .AsNoTracking()
                 .OrderBy(continent => continent.Name)
-                .Select(continent => new ContinentData
+                .Select(continent => new ContinentDto
                 {
                     Id = continent.Id,
                     Name = continent.Name
@@ -178,62 +178,13 @@ namespace TravelApp.DataAccess.SQLRepositories
         }
 
         /// <inheritdoc />
-        public async Task<CityStatsData?> GetCityStatsAsync(int cityId)
+        public async Task<CityStatsDto?> GetCityStatsAsync(int cityId)
         {
-            CityStatsData? cityStats = await _context.DestinationStatistics
+            CityStatsDto? cityStats = await _context.DestinationStatistics
                 .AsNoTracking()
                 .FirstOrDefaultAsync(item => item.CityId == cityId);
 
             return cityStats;
-        }
-
-        #endregion
-
-        #region Update - Cities
-
-        /// <inheritdoc />
-        public async Task<UpdateCityData?> UpdateCityAsync(UpdateCityData cityToUpdate)
-        {
-            City? cityInDb = await _context.CityEntities
-                .FirstOrDefaultAsync(city => city.Id == cityToUpdate.Id);
-
-            if (cityInDb is null)
-            {
-                return null;
-            }
-
-            cityInDb.Name = cityToUpdate.Name;
-            _context.Entry(cityInDb).Property("CountryId").CurrentValue = cityToUpdate.CountryId;
-
-            UpdateCityData updatedCityData = new UpdateCityData
-            {
-                Id = cityInDb.Id,
-                Name = cityInDb.Name,
-                CountryId = cityToUpdate.CountryId
-            };
-
-            return updatedCityData;
-        }
-
-        #endregion
-
-        #region Delete - Cities
-
-        /// <inheritdoc />
-        public async Task<bool> DeleteCityAsync(int cityId)
-        {
-            if (_context.Database.CurrentTransaction is null)
-            {
-                await _context.Database.BeginTransactionAsync();
-            }
-
-            int deletedRows = await _context.CityEntities
-                .Where(city => city.Id == cityId)
-                .ExecuteDeleteAsync();
-
-            bool wasDeleted = deletedRows > 0;
-
-            return wasDeleted;
         }
 
         #endregion

@@ -1,7 +1,7 @@
 namespace TravelApp.BusinessLogic.Handlers.Locations.Data
 {
     /// <summary>Contains the repository filter and sort options for cities.</summary>
-    public class GetCitiesFilterData
+    public class GetCitiesFilterDto
     {
         /// <summary>Gets or sets the country identifier to filter by.</summary>
         public int? CountryId { get; set; }

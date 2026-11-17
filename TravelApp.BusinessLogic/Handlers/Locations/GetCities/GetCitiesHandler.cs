@@ -22,7 +22,7 @@ namespace TravelApp.BusinessLogic.Handlers.Locations.GetCities
         {
             await using IUnitOfWork unitOfWork = _unitOfWorkFactory.Create();
 
-            GetCitiesFilterData filter = new GetCitiesFilterData
+            GetCitiesFilterDto filter = new GetCitiesFilterDto
             {
                 CountryId = request.CountryId,
                 Search = request.Search,
@@ -32,7 +32,6 @@ namespace TravelApp.BusinessLogic.Handlers.Locations.GetCities
             List<CityDto> citiesFromDb = await unitOfWork.Locations.GetCitiesAsync(filter);
 
             List<GetCitiesResponse> cities = new List<GetCitiesResponse>();
-
             foreach (CityDto city in citiesFromDb)
             {
                 cities.Add(new GetCitiesResponse

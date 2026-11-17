@@ -1,7 +1,7 @@
 namespace TravelApp.BusinessLogic.Handlers.Locations.Data
 {
     /// <summary>Contains the values required to persist a city update.</summary>
-    public class UpdateCityData
+    public class UpdateCityDto
     {
         /// <summary>Gets or sets the city identifier.</summary>
         public int Id { get; set; }

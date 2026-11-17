@@ -42,11 +42,11 @@ namespace TravelApp.BusinessLogic.Handlers.Locations.GetVisitedCountries
                 throw new TravelAppNotFoundException($"User {userId} was not found.");
             }
 
-            List<VisitedCountryData> countriesFromDb = await unitOfWork.Users.GetVisitedCountriesAsync(userId);
+            List<VisitedCountryDto> countriesFromDb = await unitOfWork.Users.GetVisitedCountriesAsync(userId);
 
             List<GetVisitedCountriesResponse> visitedCountriesResponse = new List<GetVisitedCountriesResponse>();
 
-            foreach (VisitedCountryData country in countriesFromDb)
+            foreach (VisitedCountryDto country in countriesFromDb)
             {
                 visitedCountriesResponse.Add(new GetVisitedCountriesResponse
                 {

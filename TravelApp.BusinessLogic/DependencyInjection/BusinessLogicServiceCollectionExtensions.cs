@@ -12,14 +12,12 @@ using TravelApp.BusinessLogic.Handlers.Activities.GetActivity;
 using TravelApp.BusinessLogic.Handlers.Activities.UpdateActivity;
 using TravelApp.BusinessLogic.Handlers.DatabaseSelection.GetDatabaseProviders;
 using TravelApp.BusinessLogic.Handlers.Locations.CreateCity;
-using TravelApp.BusinessLogic.Handlers.Locations.DeleteCity;
 using TravelApp.BusinessLogic.Handlers.Locations.GetCities;
 using TravelApp.BusinessLogic.Handlers.Locations.GetCity;
 using TravelApp.BusinessLogic.Handlers.Locations.GetContinents;
 using TravelApp.BusinessLogic.Handlers.Locations.GetCountries;
 using TravelApp.BusinessLogic.Handlers.Locations.GetCityStats;
 using TravelApp.BusinessLogic.Handlers.Locations.GetVisitedCountries;
-using TravelApp.BusinessLogic.Handlers.Locations.UpdateCity;
 using TravelApp.BusinessLogic.Handlers.Users.DeleteUser;
 using TravelApp.BusinessLogic.Handlers.Users.GetUserProfile;
 using TravelApp.BusinessLogic.Handlers.Users.GetUserProfiles;
@@ -75,14 +73,12 @@ namespace TravelApp.BusinessLogic.DependencyInjection
         private static void RegisterLocations(IServiceCollection services)
         {
             services.AddScoped<CreateCityHandler>();
-            services.AddScoped<DeleteCityHandler>();
             services.AddScoped<GetCitiesHandler>();
             services.AddScoped<GetCityHandler>();
             services.AddScoped<GetContinentsHandler>();
             services.AddScoped<GetCountriesHandler>();
             services.AddScoped<GetCityStatsHandler>();
             services.AddScoped<GetVisitedCountriesHandler>();
-            services.AddScoped<UpdateCityHandler>();
         }
         private static void RegisterUsers(IServiceCollection services)
         {

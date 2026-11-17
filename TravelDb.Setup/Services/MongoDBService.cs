@@ -4,8 +4,12 @@ using MongoDB.Driver;
 namespace TravelDb.Setup.Services;
 
 //Kontrollerer MongoDB-forbindelsen og opretter ravelDb-collections, hvis de ikke findes.
+/// <summary>Checks MongoDB and creates the collections that are missing.</summary>
 public class MongoDBService
 {
+    /// <summary>Checks the MongoDB connection and creates the collections that are missing.</summary>
+    /// <param name="connectionString">The MongoDB connection string.</param>
+    /// <param name="databaseName">The database to prepare.</param>
     public async Task InitializeAsync(string connectionString, string databaseName)
     {
         //Opret MongoDB-client og Vælg databasen TravelDb

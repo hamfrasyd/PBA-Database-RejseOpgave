@@ -1,7 +1,4 @@
-﻿
-using TravelApp.BusinessLogic.Handlers.Locations.GetCities;
-using TravelApp.BusinessLogic.Handlers.Locations.GetDestinationStats;
-using TravelApp.BusinessLogic.Handlers.Locations.UpdateCity;
+﻿using TravelApp.BusinessLogic.Handlers.Locations.Data;
 using TravelApp.BusinessLogic.Models.Destinations;
 
 namespace TravelApp.BusinessLogic.Interfaces
@@ -11,50 +8,59 @@ namespace TravelApp.BusinessLogic.Interfaces
     {
         #region Create - Cities
 
-        /// <summary>Adds a city.</summary>
-        Task AddCityAsync(City city);
+        /// <summary>Persists a city and returns the stored values, including the generated identifier.</summary>
+        /// /// <param name="cityToCreate">The city values to persist.</param>
+        /// <returns>The persisted city.</returns>
+        Task<CityDto?> CreateCityAsync(CreateCityDto cityToCreate);
+
+        /// <summary>Returns the city staged by <see cref="CreateCityAsync"/> after the unit of work has committed.</summary>
+        /// <returns>The created city, including its generated identifier.</returns>
+        CityDto GetCreatedCity();
 
         #endregion
 
-        #region Read - Continents, Countries, Cities, Stats
-
-        /// <summary>Retrieves continents.</summary>
-        Task<List<Continent>> GetContinentsAsync();
-
-        /// <summary>Retrieves countries, optionally filtered by continent.</summary>
-        Task<List<Country>> GetCountriesAsync(int? continentId);
-
-        /// <summary>Retrieves countries by ID.</summary>
-        Task<Country?> GetCountryByIdAsync(int countryId);
+        #region Read - All Cities, Countries & Continents
 
         /// <summary>Retrieves cities with optional filtering and sorting.</summary>
-        Task<List<City>> GetCitiesAsync(GetCitiesRequest request);
+        /// <param name="filter">The filter and sort options.</param>
+        /// <returns>The matching cities.</returns>
+        Task<List<CityDto>> GetCitiesAsync(GetCitiesFilterDto filter);
+
+        /// <summary>Retrieves countries, optionally filtered by continent.</summary>
+        /// <param name="continentId">The continent identifier to filter by, or <see langword="null"/> for all continents.</param>
+        /// <returns>The matching countries.</returns>
+        Task<List<CountryDto>> GetCountriesAsync(int? continentId);
+
+        /// <summary>Retrieves continents.</summary>
+        /// <returns>The continents.</returns>
+        Task<List<ContinentDto>> GetContinentsAsync();
+
+        #endregion
+
+        #region Read - By-ID Cities & Stats
 
         /// <summary>Retrieves a city by ID.</summary>
+        /// <param name="cityId">The city identifier.</param>
+        /// <returns>The city, or <see langword="null"/> when it does not exist.</returns>
+        Task<CityDto?> GetCityAsync(int cityId);
+
+        /// <summary>Retrieves a city by ID.</summary>
+        /// <param name="cityId">The city identifier.</param>
+        /// <returns>The city, or <see langword="null"/> when it does not exist.</returns>
         Task<City?> GetCityByIdAsync(int cityId);
 
         /// <summary>Retrieves statistics for a city.</summary>
-        Task<GetCityStatsResponse?> GetStatsAsync(int cityId);
-
-        #endregion
-
-        #region Update - Cities
-
-        /// <summary>Updates a city.</summary>
-        Task<bool> UpdateCityAsync(int cityId, UpdateCityRequest request);
-
-        #endregion
-
-        #region Delete - Cities
-
-        /// <summary>Deletes a city.</summary>
-        Task<bool> DeleteCityAsync(int cityId);
+        /// <param name="cityId">The city identifier.</param>
+        /// <returns>The statistics, or <see langword="null"/> when the city does not exist.</returns>
+        Task<CityStatsDto?> GetCityStatsAsync(int cityId);
 
         #endregion
 
         #region Validation - Countries
 
         /// <summary>Checks whether a country exists.</summary>
+        /// <param name="countryId">The country identifier.</param>
+        /// <returns><see langword="true"/> when the country exists; otherwise, <see langword="false"/>.</returns>
         Task<bool> CountryExistsAsync(int countryId);
 
         #endregion

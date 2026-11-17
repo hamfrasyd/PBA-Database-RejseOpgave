@@ -9,13 +9,19 @@ namespace TravelApp.API.DatabaseSelection
         private readonly RequestDelegate _next;
         private readonly IConfiguration _configuration;
 
+        /// <summary>Initializes a new instance of the <see cref="DatabaseProviderMiddleware"/> class.</summary>
+        /// <param name="next">The next middleware in the pipeline.</param>
+        /// <param name="configuration">The application configuration used when the request does not select a provider.</param>
         public DatabaseProviderMiddleware(RequestDelegate next, IConfiguration configuration)
         {
             _next = next;
             _configuration = configuration;
         }
 
-        /// <summary>Processes the operation.</summary>
+        /// <summary>Selects the database provider for the current HTTP request.</summary>
+        /// <param name="context">The current HTTP context.</param>
+        /// <param name="selectedDatabaseProvider">The provider selection stored for this request.</param>
+        /// <returns>A task that completes when the request has been handled.</returns>
         public async Task InvokeAsync(HttpContext context, SelectedDatabaseProvider selectedDatabaseProvider)
         {
             string selectedProvider = context.Request.Headers[ProviderHeaderName].ToString();

@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using TravelApp.DataAccess.Auth;
 using TravelApp.BusinessLogic.Models.Posts;
 using TravelApp.BusinessLogic.Models.Groups;
 using TravelApp.BusinessLogic.Models.Destinations;
@@ -9,7 +10,7 @@ using TravelApp.BusinessLogic.Models.Trips;
 using TravelApp.BusinessLogic.Models.Invitations;
 using TravelApp.BusinessLogic.Handlers.Users.GetUserProfile;
 using TravelApp.BusinessLogic.Models.Users;
-using TravelApp.BusinessLogic.Handlers.Locations.GetDestinationStats;
+using TravelApp.BusinessLogic.Handlers.Locations.Data;
 
 namespace TravelApp.DataAccess.SQLRepositories.EntityFramework
 {
@@ -17,32 +18,56 @@ namespace TravelApp.DataAccess.SQLRepositories.EntityFramework
     public class TravelAppContext : DbContext
     {
         /// <summary>Initializes a new TravelAppContext instance.</summary>
+        /// <param name="options">The Entity Framework options for this context.</param>
         public TravelAppContext(DbContextOptions<TravelAppContext> options) : base(options)
         {
         }
 
+        /// <summary>Gets the continent entities.</summary>
         public DbSet<Continent> ContinentEntities => Set<Continent>();
+        /// <summary>Gets the country entities.</summary>
         public DbSet<Country> CountryEntities => Set<Country>();
+        /// <summary>Gets the city entities.</summary>
         public DbSet<City> CityEntities => Set<City>();
+        /// <summary>Gets the activity entities.</summary>
         public DbSet<Activity> ActivityEntities => Set<Activity>();
+        /// <summary>Gets the trip entities.</summary>
         public DbSet<Trip> TripEntities => Set<Trip>();
+        /// <summary>Gets the travel user entities.</summary>
         public DbSet<TravelUser> TravelUserEntities => Set<TravelUser>();
+        /// <summary>Gets the review entities.</summary>
         public DbSet<Review> ReviewEntities => Set<Review>();
+        /// <summary>Gets the post entities.</summary>
         public DbSet<Post> PostEntities => Set<Post>();
+        /// <summary>Gets the friendship entities.</summary>
         public DbSet<Friendship> FriendshipEntities => Set<Friendship>();
+        /// <summary>Gets the achievement entities.</summary>
         public DbSet<Achievement> AchievementEntities => Set<Achievement>();
+        /// <summary>Gets the invitation status entities.</summary>
         public DbSet<InvitationStatus> InvitationStatusEntities => Set<InvitationStatus>();
+        /// <summary>Gets the invite entities.</summary>
         public DbSet<Invite> InviteEntities => Set<Invite>();
+        /// <summary>Gets the travel group entities.</summary>
         public DbSet<TravelGroup> TravelGroupEntities => Set<TravelGroup>();
+        /// <summary>Gets the trip participant entities.</summary>
         public DbSet<TripParticipant> TripParticipantEntities => Set<TripParticipant>();
+        /// <summary>Gets the trip stop entities.</summary>
         public DbSet<TripStop> TripStopEntities => Set<TripStop>();
+        /// <summary>Gets the trip activity entities.</summary>
         public DbSet<TripActivity> TripActivityEntities => Set<TripActivity>();
+        /// <summary>Gets the earned achievement entities.</summary>
         public DbSet<EarnedAchievement> EarnedAchievementEntities => Set<EarnedAchievement>();
+        /// <summary>Gets the group membership entities.</summary>
         public DbSet<GroupMembership> GroupMembershipEntities => Set<GroupMembership>();
+        /// <summary>Gets the group trip entities.</summary>
         public DbSet<GroupTrip> GroupTripEntities => Set<GroupTrip>();
+        /// <summary>Gets the user profile view rows.</summary>
         public DbSet<GetUserProfileResponse> UserProfiles => Set<GetUserProfileResponse>();
-        public DbSet<GetCityStatsResponse> DestinationStatistics => Set<GetCityStatsResponse>();
+        /// <summary>Gets the destination statistics view rows.</summary>
+        public DbSet<CityStatsDto> DestinationStatistics => Set<CityStatsDto>();
 
+        /// <summary>Configures the SQL schema mappings.</summary>
+        /// <param name="modelBuilder">The model builder used to configure the entities.</param>
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
@@ -388,7 +413,19 @@ namespace TravelApp.DataAccess.SQLRepositories.EntityFramework
                 .OnDelete(DeleteBehavior.Cascade);
 
             modelBuilder.Entity<GetUserProfileResponse>(entity => entity.HasNoKey().ToView("vw_UserProfile", "dbo"));
-            modelBuilder.Entity<GetCityStatsResponse>(entity => entity.HasNoKey().ToView("vw_DestinationStats", "dbo"));
+            modelBuilder.Entity<CityStatsDto>(entity => entity.HasNoKey().ToView("vw_DestinationStats", "dbo"));
+
+            modelBuilder.Entity<UserAccount>(entity =>
+            {
+                entity.ToTable("UserAccount", "dbo");
+                entity.HasKey(account => account.TravelUserId);
+                entity.Property(account => account.TravelUserId).ValueGeneratedNever();
+                entity.Property(account => account.UserName).HasMaxLength(128);
+                entity.Property(account => account.NormalizedUserName).HasMaxLength(128);
+                entity.Property(account => account.PasswordHash).HasMaxLength(512);
+                entity.Property(account => account.Role).HasMaxLength(16);
+                entity.HasIndex(account => account.NormalizedUserName).IsUnique();
+            });
         }
     }
 }

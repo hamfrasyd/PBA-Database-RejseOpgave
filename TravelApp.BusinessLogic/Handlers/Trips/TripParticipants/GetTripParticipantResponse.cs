@@ -1,12 +1,12 @@
 ﻿namespace TravelApp.BusinessLogic.Handlers.Trips.TripParticipants
 {
-    /// <summary>Response model for retrieving trip participant details.</summary>
+    /// <summary>Describes a participant on a trip.</summary>
     public class GetTripParticipantResponse
     {
-        /// <summary>Gets or sets the unique identifier of the trip participant.</summary>
+        /// <summary>Gets or sets the user identifier.</summary>
         public int Id { get; set; }
 
-        /// <summary>Gets or sets the first name of the trip participant.</summary>
+        /// <summary>Gets or sets the participant's full name.</summary>
         public string FullName { get; set; } = string.Empty;
     }
 }

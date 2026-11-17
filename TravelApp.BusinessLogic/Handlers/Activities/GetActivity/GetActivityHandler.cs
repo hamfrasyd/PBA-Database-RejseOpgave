@@ -9,12 +9,17 @@ namespace TravelApp.BusinessLogic.Handlers.Activities.GetActivity
     {
         private readonly IUnitOfWorkFactory _unitOfWorkFactory;
         /// <summary>Initializes a new GetActivityHandler instance.</summary>
+        /// <param name="unitOfWorkFactory">The unit of work factory.</param>
         public GetActivityHandler(IUnitOfWorkFactory unitOfWorkFactory)
         {
             _unitOfWorkFactory = unitOfWorkFactory;
         }
 
         /// <summary>Retrieves activity.</summary>
+        /// <param name="id">The activity identifier.</param>
+        /// <returns>The activity.</returns>
+        /// <exception cref="TravelAppNotFoundException">Thrown when the activity does not exist.</exception>
+        /// <exception cref="TravelAppValidationException">Thrown when the activity has no city.</exception>
         public async Task<GetActivityResponse> GetActivityAsync(int id)
         {
             await using IUnitOfWork unitOfWork = _unitOfWorkFactory.Create();

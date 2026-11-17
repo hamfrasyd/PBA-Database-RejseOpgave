@@ -1,12 +1,11 @@
 ﻿namespace TravelApp.BusinessLogic.DTOs.Trips
 {
-    /// <summary>Data Transfer Object representing a relation between a trip and an activity.</summary>
+    /// <summary>Identifies an activity linked to a trip and the city it belongs to.</summary>
     public class TripActivityRelationDTO
     {
-        /// <summary>Gets or sets the unique identifier of the trip activity relation.</summary>
+        /// <summary>Gets or sets the activity identifier.</summary>
         public int Id { get; set; }
-
-        /// <summary>Gets or sets the unique identifier of the trip associated with the activity.</summary>
+        /// <summary>Gets or sets the city identifier.</summary>
         public int CityId { get; set; }
     }
 }

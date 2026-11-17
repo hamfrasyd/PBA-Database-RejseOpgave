@@ -3,8 +3,14 @@ using System.Globalization;
 using System.Text.RegularExpressions;
 using TravelDb.Migrator.Models;
 
+/// <summary>Creates one Neo4j node for each SQL row that has an id.</summary>
 public static class Neo4jNodeMapper
 {
+    /// <summary>Creates nodes from the SQL tables.</summary>
+    /// <param name="session">The open Neo4j session.</param>
+    /// <param name="snapshot">The copied SQL data.</param>
+    /// <returns>A task that finishes when the nodes are created.</returns>
+    /// <exception cref="InvalidOperationException">Thrown when a table name cannot be used as a Neo4j label.</exception>
     public static async Task MigrateAsync(IAsyncSession session, SqlSnapshot snapshot)
     {
         foreach (var (tableName, rows) in snapshot.Tables)
@@ -68,6 +74,9 @@ public static class Neo4jNodeMapper
         }
     }
 
+    /// <summary>Turns a SQL value into a value Neo4j can store.</summary>
+    /// <param name="value">The SQL value.</param>
+    /// <returns>A text, number, or other simple value Neo4j accepts.</returns>
     private static object ConvertValue(object value)
     {
         return value switch

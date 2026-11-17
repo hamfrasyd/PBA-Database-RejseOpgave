@@ -4,8 +4,12 @@ using TravelDb.Migrator.Models;
 
 namespace TravelDb.Migrator.Services;
 
+/// <summary>Reads the SQL database into memory.</summary>
 public class SqlSnapshotReader
 {
+    /// <summary>Reads every user table and its rows.</summary>
+    /// <param name="connectionString">The SQL Server connection string.</param>
+    /// <returns>A copy of the tables and their rows.</returns>
     // Henter alle SQL-tabeller og deres data til et SqlSnapshot.
     public async Task<SqlSnapshot> ReadAsync(string connectionString)
     {
@@ -54,6 +58,9 @@ public class SqlSnapshotReader
         return snapshot;
     }
 
+    /// <summary>Finds the user tables, skipping the DbUp migration history table.</summary>
+    /// <param name="connection">The open SQL connection.</param>
+    /// <returns>The schema and name of each table.</returns>
     // Finder alle brugertabeller undtagen DbUp's migrationsjournal.
     private static async Task<List<(string Schema, string Name)>> GetTableNamesAsync(SqlConnection connection)
     {

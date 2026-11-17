@@ -1,11 +1,11 @@
 ﻿namespace TravelApp.BusinessLogic.Handlers.Trips.GetTrip
 {
-    /// <summary>Response model for retrieving trip city details for all trips.</summary>
+    /// <summary>Summarizes a city in a trip list response.</summary>
     public class GetTripsCityResponse
     {
-        /// <summary>Gets or sets the unique identifier of the trip city.</summary>
+        /// <summary>Gets or sets the city identifier.</summary>
         public int Id { get; set; }
-        /// <summary>Gets or sets the name of the city.</summary>
+        /// <summary>Gets or sets the city name.</summary>
         public string Name { get; set; } = string.Empty;
     }
 }

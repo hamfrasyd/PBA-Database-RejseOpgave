@@ -7,10 +7,13 @@ using TravelApp.DataAccess.SQLRepositories.EntityFramework;
 
 namespace TravelApp.DataAccess.SQLRepositories
 {
+    /// <summary>Implements database operations for activities using Entity Framework Core.</summary>
     public class SqlActivitiesRepository : IActivitiesRepository
     {
         private readonly TravelAppContext _context;
 
+        /// <summary>Initializes a new instance of the <see cref="SqlActivitiesRepository"/> class.</summary>
+        /// <param name="context">The Entity Framework Core context connected to SQL Server.</param>
         public SqlActivitiesRepository(TravelAppContext context)
         {
             _context = context;
@@ -18,15 +21,17 @@ namespace TravelApp.DataAccess.SQLRepositories
 
         #region Create - Activities
 
-        public async Task AddActivityAsync(Activity activity)
+        /// <inheritdoc />
+        public async Task CreateActivityAsync(Activity activity)
         {
             await _context.ActivityEntities.AddAsync(activity);
         }
 
         #endregion
 
-        #region Read - Activities
+        #region Read - All Activities
 
+        /// <inheritdoc />
         public async Task<List<Activity>> GetActivitiesAsync(int? cityId)
         {
             IQueryable<Activity> activities = _context.ActivityEntities
@@ -46,6 +51,11 @@ namespace TravelApp.DataAccess.SQLRepositories
             return result;
         }
 
+        #endregion
+
+        #region Read - By-ID Activities
+
+        /// <inheritdoc />
         public async Task<Activity?> GetActivityByIdAsync(int activityId)
         {
             Activity? matchingActivity = await _context.ActivityEntities
@@ -59,6 +69,7 @@ namespace TravelApp.DataAccess.SQLRepositories
 
         #region Update - Activities
 
+        /// <inheritdoc />
         public Task UpdateActivityAsync(int activityId, UpdateActivityRequest request)
         {
             // The handler updated an entity already tracked by this Unit of Work.
@@ -69,6 +80,7 @@ namespace TravelApp.DataAccess.SQLRepositories
 
         #region Delete - Activities
 
+        /// <inheritdoc />
         public async Task<bool> DeleteActivityAsync(int activityId)
         {
             if (_context.Database.CurrentTransaction is null)
@@ -89,6 +101,7 @@ namespace TravelApp.DataAccess.SQLRepositories
 
         #region Validation - Activities
 
+        /// <inheritdoc />
         public async Task<bool> ActivityBelongsToCityAsync(int activityId, int cityId)
         {
             bool activityBelongsToCity = await _context.ActivityEntities

@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using TravelApp.API.ExceptionFilters;
+using TravelApp.BusinessLogic.Exceptions.SpecificCustomException;
 using TravelApp.BusinessLogic.Handlers.Achievements.GetAchievementDefinitions;
 using TravelApp.BusinessLogic.Handlers.Achievements.GetEarnedAchievements;
 
@@ -11,8 +12,11 @@ namespace TravelApp.API.Controllers
     [Route("api/achievements")]
     public class AchievementsController : ControllerBase
     {
+        #region GET - All AchievementDefinitions
 
         /// <summary>Lists available achievements.</summary>
+        /// <param name="getAchievementDefinitionsHandler">The handler that loads the achievement definitions.</param>
+        /// <returns>The achievement definitions.</returns>
         // GET api/achievements
         [HttpGet]
         [AllowAnonymous]
@@ -25,7 +29,16 @@ namespace TravelApp.API.Controllers
             return Ok(result);
         }
 
+        #endregion
+
+        #region GET - Earned Achievements By User
+
         /// <summary>Lists achievements earned by a user.</summary>
+        /// <param name="userId">The user identifier.</param>
+        /// <param name="getEarnedAchievementsHandler">The handler that loads the earned achievements.</param>
+        /// <returns>The achievements earned by the user.</returns>
+        /// <exception cref="TravelAppForbiddenException">Thrown when the current user cannot view the achievements.</exception>
+        /// <exception cref="TravelAppNotFoundException">Thrown when the user does not exist.</exception>
         // GET api/achievements/users/{userId}
         [HttpGet("users/{userId:int}")]
         [Authorize]
@@ -40,5 +53,7 @@ namespace TravelApp.API.Controllers
 
             return Ok(result);
         }
+
+        #endregion
     }
 }

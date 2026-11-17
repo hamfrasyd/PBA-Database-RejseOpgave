@@ -12,27 +12,27 @@ using TravelApp.BusinessLogic.Handlers.Activities.GetActivity;
 using TravelApp.BusinessLogic.Handlers.Activities.UpdateActivity;
 using TravelApp.BusinessLogic.Handlers.DatabaseSelection.GetDatabaseProviders;
 using TravelApp.BusinessLogic.Handlers.Locations.CreateCity;
-using TravelApp.BusinessLogic.Handlers.Locations.DeleteCity;
 using TravelApp.BusinessLogic.Handlers.Locations.GetCities;
 using TravelApp.BusinessLogic.Handlers.Locations.GetCity;
 using TravelApp.BusinessLogic.Handlers.Locations.GetContinents;
 using TravelApp.BusinessLogic.Handlers.Locations.GetCountries;
-using TravelApp.BusinessLogic.Handlers.Locations.GetDestinationStats;
+using TravelApp.BusinessLogic.Handlers.Locations.GetCityStats;
 using TravelApp.BusinessLogic.Handlers.Locations.GetVisitedCountries;
-using TravelApp.BusinessLogic.Handlers.Locations.UpdateCity;
 using TravelApp.BusinessLogic.Handlers.Users.DeleteUser;
 using TravelApp.BusinessLogic.Handlers.Users.GetUserProfile;
 using TravelApp.BusinessLogic.Handlers.Users.GetUserProfiles;
 using TravelApp.BusinessLogic.Handlers.Users.UpdateUser;
 using TravelApp.BusinessLogic.Handlers.Trips.TripCity;
-
+using TravelApp.BusinessLogic.Handlers.Posts;
 
 namespace TravelApp.BusinessLogic.DependencyInjection
 {
     /// <summary>Registers application handlers grouped by feature.</summary>
     public static class BusinessLogicServiceCollectionExtensions
     {
-        /// <summary>Adds business logic.</summary>
+        /// <summary>Adds business logic services to the service collection.</summary>
+        /// <param name="services">The service collection to register handlers in.</param>
+        /// <returns>The same service collection, so registration can be chained in Program.cs.</returns>
         public static IServiceCollection AddBusinessLogic(this IServiceCollection services)
         {
             RegisterDatabaseSelection(services);
@@ -42,6 +42,7 @@ namespace TravelApp.BusinessLogic.DependencyInjection
             RegisterLocations(services);
             RegisterUsers(services);
             RegisterTrips(services);
+            RegisterPosts(services);
 
             return services;
         }
@@ -74,14 +75,12 @@ namespace TravelApp.BusinessLogic.DependencyInjection
         private static void RegisterLocations(IServiceCollection services)
         {
             services.AddScoped<CreateCityHandler>();
-            services.AddScoped<DeleteCityHandler>();
             services.AddScoped<GetCitiesHandler>();
             services.AddScoped<GetCityHandler>();
             services.AddScoped<GetContinentsHandler>();
             services.AddScoped<GetCountriesHandler>();
             services.AddScoped<GetCityStatsHandler>();
             services.AddScoped<GetVisitedCountriesHandler>();
-            services.AddScoped<UpdateCityHandler>();
         }
         private static void RegisterUsers(IServiceCollection services)
         {
@@ -101,6 +100,15 @@ namespace TravelApp.BusinessLogic.DependencyInjection
             services.AddScoped<TripActivitiesHandler>();
             services.AddScoped<TripCityHandler>();
             services.AddScoped<TripParticipantsHandler>();
+        }
+
+        private static void RegisterPosts(IServiceCollection services)
+        {
+            services.AddScoped<GetPostsHandler>();
+            services.AddScoped<GetPostHandler>();
+            services.AddScoped<CreatePostHandler>();
+            services.AddScoped<DeletePostHandler>();
+            services.AddScoped<UpdatePostHandler>();
         }
     }
 }

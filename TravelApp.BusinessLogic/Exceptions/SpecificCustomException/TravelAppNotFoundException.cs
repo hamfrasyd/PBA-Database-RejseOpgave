@@ -2,9 +2,12 @@
 
 namespace TravelApp.BusinessLogic.Exceptions.SpecificCustomException
 {
+    /// <summary>Thrown when a requested resource does not exist.</summary>
     public sealed class TravelAppNotFoundException : TravelAppException
     {
-        public TravelAppNotFoundException(string message) : base(message)
+        /// <summary>Initializes a new instance with the specified message.</summary>
+        /// <param name="errorMessage">The error message.</param>
+        public TravelAppNotFoundException(string errorMessage) : base(errorMessage)
         {
         }
     }

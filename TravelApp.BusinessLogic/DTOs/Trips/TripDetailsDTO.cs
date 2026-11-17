@@ -1,27 +1,25 @@
 ﻿namespace TravelApp.BusinessLogic.DTOs.Trips
 {
-    /// <summary>Data Transfer Object representing detailed information about a trip.</summary>
+    /// <summary>Contains the details of a trip.</summary>
     public class TripDetailsDTO
     {
-        /// <summary>Gets or sets the unique identifier of the trip.</summary>
+        /// <summary>Gets or sets the trip identifier.</summary>
         public int Id { get; set; }
 
-        /// <summary>Gets or sets the name of the trip.</summary>
+        /// <summary>Gets or sets the start date.</summary>
         public DateTime? StartDate { get; set; }
-
-        /// <summary>Gets or sets the name of the trip.</summary>
+        /// <summary>Gets or sets the end date.</summary>
         public DateTime? EndDate { get; set; }
 
         /// <summary>Gets or sets a value indicating whether the trip is completed.</summary>
         public bool IsCompleted { get; set; }
 
-        /// <summary>Gets or sets the plan notes for the trip.</summary>
+        /// <summary>Gets or sets the planning notes.</summary>
         public string? PlanNotes { get; set; }
-
-        /// <summary>Gets or sets the experience notes for the trip.</summary>
+        /// <summary>Gets or sets the experience notes.</summary>
         public string? ExperienceNotes { get; set; }
 
-        /// <summary>Gets or sets the list of cities associated with the trip.</summary>
+        /// <summary>Gets or sets the cities on the trip.</summary>
         public List<TripDestinationDTO> Cities { get; set; } = [];
     }
 }

@@ -1,12 +1,11 @@
 ﻿namespace TravelApp.BusinessLogic.DTOs.Trips
 {
-    /// <summary>Data Transfer Object representing a summary of a trip city.</summary>
+    /// <summary>Summarizes a city on a trip.</summary>
     public class TripCitySummaryDTO
     {
-        /// <summary>Gets or sets the unique identifier of the trip city.</summary>
+        /// <summary>Gets or sets the city identifier.</summary>
         public int Id { get; set; }
-
-        /// <summary>Gets or sets the name of the trip city.</summary>
+        /// <summary>Gets or sets the city name.</summary>
         public string Name { get; set; } = string.Empty;
     }
 }

@@ -4,8 +4,12 @@ using static TravelDb.Migrator.Mapper.MongoMapper.SqlMapping;
 
 namespace TravelDb.Migrator.Mapper.MongoMapper;
 
+/// <summary>Turns SQL trips into MongoDB documents.</summary>
 public static class TripMapper
 {
+    /// <summary>Creates one document for each trip, including its stops, people, and activities.</summary>
+    /// <param name="snapshot">The copied SQL data.</param>
+    /// <returns>The trip documents.</returns>
     // Opretter alle rejser som dokumenter til MongoDB.
     public static List<BsonDocument> Map(SqlSnapshot snapshot)
     {

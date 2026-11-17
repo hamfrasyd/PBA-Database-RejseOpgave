@@ -9,12 +9,14 @@ namespace TravelApp.API.Auth
         private readonly IHttpContextAccessor _httpContextAccessor;
 
         /// <summary>Initializes a new CurrentUser instance.</summary>
+        /// <param name="httpContextAccessor">The accessor for the current HTTP context.</param>
         public CurrentUser(IHttpContextAccessor httpContextAccessor)
         {
             _httpContextAccessor = httpContextAccessor;
         }
 
         /// <summary>Gets or sets the user id.</summary>
+        /// <exception cref="UnauthorizedAccessException">Thrown when no authenticated user identifier is present.</exception>
         public int UserId
         {
             get

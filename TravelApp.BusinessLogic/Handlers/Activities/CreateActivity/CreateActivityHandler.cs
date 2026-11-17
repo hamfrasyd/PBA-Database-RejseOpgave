@@ -21,7 +21,7 @@ namespace TravelApp.BusinessLogic.Handlers.Activities.CreateActivity
         /// <param name="request">The activity to create.</param>
         /// <returns>The created activity.</returns>
         /// <exception cref="TravelAppValidationException">Thrown when the name is missing or the city does not exist.</exception>
-        public async Task<CreateActivityResponse> CreateNewActivityAsync(CreateActivityRequest request)
+        public async Task<CreateActivityResponse> CreateActivityAsync(CreateActivityRequest request)
         {
             await using IUnitOfWork unitOfWork = _unitOfWorkFactory.Create();
 

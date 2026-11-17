@@ -33,7 +33,7 @@ namespace TravelApp.API.Controllers
         [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status500InternalServerError)]
         public async Task<ActionResult<CreateActivityResponse>> CreateActivity([FromBody] CreateActivityRequest request, [FromServices] CreateActivityHandler createActivityHandler)
         {
-            CreateActivityResponse createdActivity = await createActivityHandler.CreateNewActivityAsync(request);
+            CreateActivityResponse createdActivity = await createActivityHandler.CreateActivityAsync(request);
 
             return Created($"/api/activities/{createdActivity.Id}", createdActivity);
         }

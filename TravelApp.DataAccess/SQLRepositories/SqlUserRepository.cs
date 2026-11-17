@@ -12,7 +12,7 @@ using TravelApp.DataAccess.SQLRepositories.EntityFramework;
 namespace TravelApp.DataAccess.SQLRepositories
 {
     /// <summary>Implements database operations for Users using Entity Framework Core.</summary>
-    internal class SqlUserRepository : IUserRepository
+    public class SqlUserRepository : IUserRepository
     {
         private readonly TravelAppContext _context;
         private readonly IPasswordHasher<UserAccount> _passwordHasher;
@@ -155,7 +155,7 @@ namespace TravelApp.DataAccess.SQLRepositories
         public Task UpdateAsync(TravelUser user)
         {
             // The handler updated an entity already tracked by this Unit of Work.
-            return Task.CompletedTask;
+            return Task.FromResult(true);
         }
 
         #endregion

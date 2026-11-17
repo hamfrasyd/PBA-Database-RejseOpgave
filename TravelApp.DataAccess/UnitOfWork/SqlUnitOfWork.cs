@@ -26,6 +26,8 @@ namespace TravelApp.DataAccess.UnitOfWork
         public ITripRepository Trips { get; }
         /// <inheritdoc/>
         public IUserRepository Users { get; }
+        /// <inheritdoc/>
+        public IPostRepository Posts { get; }
 
         /// <summary>
         /// Initializes a new instance of the SQL unit of work with the specified database connection and logger.
@@ -45,6 +47,7 @@ namespace TravelApp.DataAccess.UnitOfWork
             Locations = new SqlLocationsRepository(_context);
             Trips = new SqlTripRepository(_context);
             Users = new SqlUserRepository(_context, passwordHasher);
+            Posts = new SqlPostRepository(_context);
         }
 
         /// <summary>Persists all pending EF Core changes as one atomic database save.</summary>

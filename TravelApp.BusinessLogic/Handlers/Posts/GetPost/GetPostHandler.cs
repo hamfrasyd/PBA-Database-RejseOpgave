@@ -1,13 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Reflection.Metadata.Ecma335;
-using System.Text;
-using TravelApp.BusinessLogic.Exceptions.SpecificCustomException;
-using TravelApp.BusinessLogic.Handlers.Destinations;
+﻿using TravelApp.BusinessLogic.Exceptions.SpecificCustomException;
+using TravelApp.BusinessLogic.Handlers.Posts;
 using TravelApp.BusinessLogic.Interfaces;
 using TravelApp.BusinessLogic.Models;
 
-namespace TravelApp.BusinessLogic.Handlers.Posts.GetPost
+namespace TravelApp.BusinessLogic.Handlers
 {
     public class GetPostHandler
     {
@@ -23,19 +19,26 @@ namespace TravelApp.BusinessLogic.Handlers.Posts.GetPost
         {
             await using IUnitOfWork unitOfWork = _unitOfWorkFactory.Create();
 
-            GetPostResponse? postFromDb = await unitOfWork.Posts.GetPostByIdAsync(id);
-
+            Post? postFromDb = await unitOfWork.Posts.GetPostByIdAsync(id);
+            
             if (postFromDb is null)
             {
                 throw new TravelAppNotFoundException($"Post {id} was not found.");
             }
 
-            if (postFromDb.UserId is null)
+            if (postFromDb.User is null)
             {
                 throw new InvalidOperationException($"Required User relationship was not loaded for Post {id}.");
             }
 
-            return postFromDb;
+            GetPostResponse response = new GetPostResponse
+            {
+                Id = postFromDb.Id,
+                UserId = postFromDb.User.Id,
+                Content = postFromDb.Content
+            };  
+
+            return response;
         }
 
 

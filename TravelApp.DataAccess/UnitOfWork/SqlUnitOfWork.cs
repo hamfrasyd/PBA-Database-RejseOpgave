@@ -1,9 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using TravelApp.BusinessLogic.Interfaces;
-using TravelApp.BusinessLogic.Interfaces.Repository_Interfaces;
-using TravelApp.BusinessLogic.Models;
-using TravelApp.DataAccess.SQLRepositories;
 using TravelApp.DataAccess.SQLRepositories.EntityFramework;
 
 namespace TravelApp.DataAccess.SQLRepositories.UnitOfWork
@@ -17,7 +14,6 @@ namespace TravelApp.DataAccess.SQLRepositories.UnitOfWork
         public IDestinationRepository Destinations { get; }
         public IAchievementRepository Achievements { get; }
         public IUserRepository Users { get; }
-
         public IPostRepository Posts { get; }
 
         public SqlUnitOfWork(string connectionString, ILogger<SqlUnitOfWork> logger)

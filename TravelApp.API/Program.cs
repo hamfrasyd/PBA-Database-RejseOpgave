@@ -40,6 +40,7 @@ if (allowedOrigins.Length > 0)
 // Register Application Services
 // -- Add API Services
 // --- Add AUTH services
+builder.Services.AddHttpContextAccessor();
 builder.Services.AddScoped<ICurrentUser, CurrentUser>();
 // Cookie session for the local demonstration login (no user passwords exist in dbo.User).
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)

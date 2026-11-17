@@ -18,7 +18,7 @@ namespace TravelApp.BusinessLogic.Interfaces
         /// <summary>Adds a user to the database.</summary>
         public Task AddAsync(TravelUser user);
         /// <summary>Updates a user in the database.</summary>
-        public Task UpdateAsync(TravelUser user);
+        public Task<bool> UpdateAsync(TravelUser user);
         /// <summary>Deletes a user by its ID.</summary>
         public Task<bool> DeleteAsync(int userId);
     }

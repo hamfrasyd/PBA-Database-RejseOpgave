@@ -100,10 +100,10 @@ namespace TravelApp.DataAccess.SQLRepositories
         }
 
 
-        public Task UpdateAsync(TravelUser user)
+        public Task<bool> UpdateAsync(TravelUser user)
         {
             // The handler updated an entity already tracked by this Unit of Work.
-            return Task.CompletedTask;
+            return Task.FromResult(true);
         }
 
         public async Task<bool> DeleteAsync(int userId)

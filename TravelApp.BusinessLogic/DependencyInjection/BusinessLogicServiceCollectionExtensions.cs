@@ -1,9 +1,11 @@
 using Microsoft.Extensions.DependencyInjection;
 using TravelApp.BusinessLogic.DatabaseSelection;
+using TravelApp.BusinessLogic.Handlers;
 using TravelApp.BusinessLogic.Handlers.Accounts;
 using TravelApp.BusinessLogic.Handlers.Achievements;
 using TravelApp.BusinessLogic.Handlers.DatabaseSelection;
 using TravelApp.BusinessLogic.Handlers.Destinations;
+using TravelApp.BusinessLogic.Handlers.Posts;
 using TravelApp.BusinessLogic.Handlers.Users;
 using TravelApp.BusinessLogic.Interfaces;
 
@@ -21,6 +23,7 @@ namespace TravelApp.BusinessLogic.DependencyInjection
             RegisterAchievements(services);
             RegisterDestinations(services);
             RegisterUsers(services);
+            RegisterPosts(services);
 
             return services;
         }
@@ -66,6 +69,15 @@ namespace TravelApp.BusinessLogic.DependencyInjection
             services.AddScoped<GetUserProfileHandler>();
             services.AddScoped<GetUserProfilesHandler>();
             services.AddScoped<UpdateUserHandler>();
+        }
+
+        private static void RegisterPosts(IServiceCollection services)
+        {
+            services.AddScoped<GetPostsHandler>();
+            services.AddScoped<GetPostHandler>();
+            services.AddScoped<CreatePostHandler>();
+            services.AddScoped<DeletePostHandler>();
+            services.AddScoped<UpdatePostHandler>();
         }
     }
 }

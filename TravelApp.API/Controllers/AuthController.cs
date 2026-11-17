@@ -58,6 +58,5 @@ namespace TravelApp.API.Controllers
             return Ok(result);
         }
 
-        #endregion
     }
 }

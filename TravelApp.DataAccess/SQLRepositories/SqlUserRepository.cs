@@ -1,6 +1,6 @@
 
 using Microsoft.EntityFrameworkCore;
-using TravelApp.BusinessLogic.Handlers.Locations.GetCountries;
+using TravelApp.BusinessLogic.Handlers.Locations.Data;
 using TravelApp.BusinessLogic.Handlers.Users.GetUserProfile;
 using TravelApp.BusinessLogic.Handlers.Users.GetUserProfiles;
 using TravelApp.BusinessLogic.Interfaces;
@@ -80,21 +80,21 @@ namespace TravelApp.DataAccess.SQLRepositories
         }
 
         /// <inheritdoc />
-        public async Task<List<GetCountriesResponse>> GetVisitedCountriesAsync(int userId)
+        public async Task<List<VisitedCountryData>> GetVisitedCountriesAsync(int userId)
         {
-            IQueryable<GetCountriesResponse> visitedCountries =
+            IQueryable<VisitedCountryData> visitedCountries =
                 from participant in _context.TripParticipantEntities.AsNoTracking()
                 join stop in _context.TripStopEntities.AsNoTracking()
                     on participant.Trip!.Id equals stop.Trip!.Id
                 where participant.User!.Id == userId && participant.Trip!.IsCompleted
-                select new GetCountriesResponse
+                select new VisitedCountryData
                 {
                     Id = stop.City!.Country!.Id,
                     ContinentId = stop.City.Country.Continent!.Id,
                     Name = stop.City.Country.Name
                 };
 
-            List<GetCountriesResponse> result = await visitedCountries
+            List<VisitedCountryData> result = await visitedCountries
                 .Distinct()
                 .OrderBy(country => country.Name)
                 .ToListAsync();

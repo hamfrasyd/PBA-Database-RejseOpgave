@@ -1,8 +1,8 @@
-using TravelApp.BusinessLogic.Exceptions.SpecificCustomException;
-using TravelApp.BusinessLogic.Interfaces;
 using TravelApp.BusinessLogic.Auth;
+using TravelApp.BusinessLogic.Exceptions.SpecificCustomException;
+using TravelApp.BusinessLogic.Handlers.Locations.Data;
 using TravelApp.BusinessLogic.Handlers.Users.GetUserProfile;
-using TravelApp.BusinessLogic.Handlers.Locations.GetCountries;
+using TravelApp.BusinessLogic.Interfaces;
 
 namespace TravelApp.BusinessLogic.Handlers.Locations.GetVisitedCountries
 {
@@ -31,16 +31,22 @@ namespace TravelApp.BusinessLogic.Handlers.Locations.GetVisitedCountries
 
             GetUserProfileResponse? profileFromDb = await unitOfWork.Users.GetProfileAsync(userId);
 
-            if (profileFromDb is null || (profileFromDb.IsPrivate && _currentUser.IsAdmin is false && _currentUser.UserId != userId))
+            bool profileIsMissing = profileFromDb is null;
+            bool profileIsPrivate = profileFromDb is not null && profileFromDb.IsPrivate;
+            bool currentUserIsAdmin = _currentUser.IsAdmin;
+            bool currentUserOwnsProfile = _currentUser.UserId == userId;
+            bool privateProfileIsHidden = profileIsPrivate && currentUserIsAdmin is false && currentUserOwnsProfile is false;
+
+            if (profileIsMissing || privateProfileIsHidden)
             {
                 throw new TravelAppNotFoundException($"User {userId} was not found.");
             }
 
-            List<GetCountriesResponse> countriesFromDb = await unitOfWork.Users.GetVisitedCountriesAsync(userId);
+            List<VisitedCountryData> countriesFromDb = await unitOfWork.Users.GetVisitedCountriesAsync(userId);
 
             List<GetVisitedCountriesResponse> visitedCountriesResponse = new List<GetVisitedCountriesResponse>();
 
-            foreach (GetCountriesResponse country in countriesFromDb)
+            foreach (VisitedCountryData country in countriesFromDb)
             {
                 visitedCountriesResponse.Add(new GetVisitedCountriesResponse
                 {

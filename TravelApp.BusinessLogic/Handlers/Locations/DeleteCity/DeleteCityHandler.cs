@@ -15,21 +15,23 @@ namespace TravelApp.BusinessLogic.Handlers.Locations.DeleteCity
             _unitOfWorkFactory = unitOfWorkFactory;
         }
 
-        /// <summary>Deletes city.</summary>
-        /// <param name="resourceId">The city identifier.</param>
+        /// <summary>Deletes a city and returns its identifier.</summary>
+        /// <param name="cityId">The city identifier.</param>
+        /// <returns>The identifier of the deleted city.</returns>
         /// <exception cref="TravelAppNotFoundException">Thrown when the city does not exist.</exception>
-        public async Task DeleteCityAsync(int resourceId)
+        public async Task<int> DeleteCityAsync(int cityId)
         {
             await using IUnitOfWork unitOfWork = _unitOfWorkFactory.Create();
 
-            bool wasDeleted = await unitOfWork.Locations.DeleteCityAsync(resourceId);
-
+            bool wasDeleted = await unitOfWork.Locations.DeleteCityAsync(cityId);
             if (wasDeleted is false)
             {
-                throw new TravelAppNotFoundException($"City {resourceId} was not found.");
+                throw new TravelAppNotFoundException($"City {cityId} was not found.");
             }
 
             await unitOfWork.CommitAsync();
+
+            return cityId;
         }
     }
 }

@@ -1,6 +1,6 @@
 using TravelApp.BusinessLogic.Exceptions.SpecificCustomException;
+using TravelApp.BusinessLogic.Handlers.Locations.Data;
 using TravelApp.BusinessLogic.Interfaces;
-using TravelApp.BusinessLogic.Models.Destinations;
 
 namespace TravelApp.BusinessLogic.Handlers.Locations.UpdateCity
 {
@@ -16,39 +16,66 @@ namespace TravelApp.BusinessLogic.Handlers.Locations.UpdateCity
             _unitOfWorkFactory = unitOfWorkFactory;
         }
 
-        /// <summary>Updates city.</summary>
+        /// <summary>Updates a city's name and country and returns the persisted result.</summary>
         /// <param name="cityId">The city identifier.</param>
         /// <param name="request">The updated city details.</param>
-        /// <exception cref="TravelAppValidationException">Thrown when the city name is missing.</exception>
+        /// <returns>The updated city.</returns>
+        /// <exception cref="TravelAppValidationException">Thrown when the city name is missing or longer than 64 characters.</exception>
         /// <exception cref="TravelAppNotFoundException">Thrown when the city or country does not exist.</exception>
-        public async Task UpdateNameAndCountryAsync(int cityId, UpdateCityRequest request)
+        public async Task<UpdateCityResponse> UpdateCityAsync(int cityId, UpdateCityRequest request)
         {
-            await using IUnitOfWork unitOfWork = _unitOfWorkFactory.Create();
+            string cityName = request.Name.Trim();
 
-            if (string.IsNullOrWhiteSpace(request.Name))
+            bool cityNameIsMissing = string.IsNullOrWhiteSpace(cityName);
+            if (cityNameIsMissing)
             {
                 throw new TravelAppValidationException("City name is required.");
             }
 
-            City? cityInDb = await unitOfWork.Locations.GetCityByIdAsync(cityId);
-            if (cityInDb is null)
+            bool cityNameIsTooLong = cityName.Length > 64;
+            if (cityNameIsTooLong)
+            {
+                throw new TravelAppValidationException("City name must be 64 characters or fewer.");
+            }
+
+            await using IUnitOfWork unitOfWork = _unitOfWorkFactory.Create();
+
+            CityDto? existingCityData = await unitOfWork.Locations.GetCityAsync(cityId);
+            bool cityNotFound = existingCityData is null;
+            if (cityNotFound)
             {
                 throw new TravelAppNotFoundException($"City {cityId} was not found.");
             }
 
-            bool operationSuccessful = await unitOfWork.Locations.UpdateCityAsync(cityId, request);
-            if (operationSuccessful is false)
+            bool countryExists = await unitOfWork.Locations.CountryExistsAsync(request.CountryId);
+            if (countryExists is false)
             {
                 throw new TravelAppNotFoundException($"Country {request.CountryId} was not found.");
-                throw new TravelAppNotFoundException($"City with ID: {cityId} was not found.");
             }
 
-            cityInDb.Country = cityInDb.Country;
-            cityInDb.Name = request.Name.Trim();
+            UpdateCityData cityToUpdate = new UpdateCityData
+            {
+                Id = cityId,
+                Name = cityName,
+                CountryId = request.CountryId
+            };
 
-            await unitOfWork.Locations.UpdateCityAsync(cityId, request);
+            UpdateCityData? updatedCityData = await unitOfWork.Locations.UpdateCityAsync(cityToUpdate);
+            if (updatedCityData is null)
+            {
+                throw new TravelAppNotFoundException($"City {cityId} was not found.");
+            }
 
             await unitOfWork.CommitAsync();
+
+            UpdateCityResponse response = new UpdateCityResponse
+            {
+                Id = updatedCityData.Id,
+                Name = updatedCityData.Name,
+                CountryId = updatedCityData.CountryId
+            };
+
+            return response;
         }
     }
 }

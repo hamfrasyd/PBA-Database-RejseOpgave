@@ -17,7 +17,7 @@ using TravelApp.BusinessLogic.Handlers.Locations.GetCities;
 using TravelApp.BusinessLogic.Handlers.Locations.GetCity;
 using TravelApp.BusinessLogic.Handlers.Locations.GetContinents;
 using TravelApp.BusinessLogic.Handlers.Locations.GetCountries;
-using TravelApp.BusinessLogic.Handlers.Locations.GetDestinationStats;
+using TravelApp.BusinessLogic.Handlers.Locations.GetCityStats;
 using TravelApp.BusinessLogic.Handlers.Locations.GetVisitedCountries;
 using TravelApp.BusinessLogic.Handlers.Locations.UpdateCity;
 using TravelApp.BusinessLogic.Handlers.Users.DeleteUser;

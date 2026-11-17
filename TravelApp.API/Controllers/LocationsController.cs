@@ -1,5 +1,4 @@
-﻿
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using TravelApp.API.ExceptionFilters;
 using TravelApp.BusinessLogic.Exceptions.SpecificCustomException;
@@ -7,9 +6,9 @@ using TravelApp.BusinessLogic.Handlers.Locations.CreateCity;
 using TravelApp.BusinessLogic.Handlers.Locations.DeleteCity;
 using TravelApp.BusinessLogic.Handlers.Locations.GetCities;
 using TravelApp.BusinessLogic.Handlers.Locations.GetCity;
+using TravelApp.BusinessLogic.Handlers.Locations.GetCityStats;
 using TravelApp.BusinessLogic.Handlers.Locations.GetContinents;
 using TravelApp.BusinessLogic.Handlers.Locations.GetCountries;
-using TravelApp.BusinessLogic.Handlers.Locations.GetDestinationStats;
 using TravelApp.BusinessLogic.Handlers.Locations.UpdateCity;
 
 namespace TravelApp.API.Controllers
@@ -22,25 +21,27 @@ namespace TravelApp.API.Controllers
 
         #region POST - Create City
 
-        /// <summary>Creates a city and returns its ID.</summary>
+        /// <summary>Creates a city and returns the created city.</summary>
         /// <param name="request">The city to create.</param>
         /// <param name="createCityHandler">The handler that creates the city.</param>
         /// <returns>A created response for the new city.</returns>
-        /// <exception cref="TravelAppValidationException">Thrown when the name is missing or the country does not exist.</exception>
+        /// <exception cref="TravelAppValidationException">Thrown when the name is missing or longer than 64 characters.</exception>
+        /// <exception cref="TravelAppNotFoundException">Thrown when the country does not exist.</exception>
         // POST api/locations/cities
         [HttpPost("cities")]
         [Authorize(Roles = "Admin")]
-        [ProducesResponseType(typeof(int), StatusCodes.Status201Created)]
+        [ProducesResponseType(typeof(CreateCityResponse), StatusCodes.Status201Created)]
         [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status404NotFound)]
         [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status409Conflict)]
         [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult<int>> CreateCity([FromBody] CreateCityRequest request, [FromServices] CreateCityHandler createCityHandler)
+        public async Task<ActionResult<CreateCityResponse>> CreateCity([FromBody] CreateCityRequest request, [FromServices] CreateCityHandler createCityHandler)
         {
-            int cityId = await createCityHandler.CreateCityAsync(request);
+            CreateCityResponse createdCity = await createCityHandler.CreateCityAsync(request);
 
-            return Created($"/api/locations/cities/{cityId}", request);
+            return Created($"/api/locations/cities/{createdCity.Id}", createdCity);
         }
 
         #endregion
@@ -51,7 +52,6 @@ namespace TravelApp.API.Controllers
         /// <param name="request">The filter and sort options.</param>
         /// <param name="getCitiesHandler">The handler that loads the cities.</param>
         /// <returns>The matching cities.</returns>
-        /// <exception cref="InvalidOperationException">Thrown when a city's country was not loaded.</exception>
         // GET api/locations/cities
         [HttpGet("cities")]
         [AllowAnonymous]
@@ -68,7 +68,6 @@ namespace TravelApp.API.Controllers
         /// <param name="continentId">The continent identifier to filter by, or <see langword="null"/> for all continents.</param>
         /// <param name="getCountriesHandler">The handler that loads the countries.</param>
         /// <returns>The matching countries.</returns>
-        /// <exception cref="InvalidOperationException">Thrown when a country's continent was not loaded.</exception>
         // GET api/locations/countries
         [HttpGet("countries")]
         [AllowAnonymous]
@@ -105,7 +104,6 @@ namespace TravelApp.API.Controllers
         /// <param name="getCityHandler">The handler that loads the city.</param>
         /// <returns>The city.</returns>
         /// <exception cref="TravelAppNotFoundException">Thrown when the city does not exist.</exception>
-        /// <exception cref="InvalidOperationException">Thrown when the city's country was not loaded.</exception>
         // GET api/locations/cities/{cityId}
         [HttpGet("cities/{cityId:int}")]
         [AllowAnonymous]
@@ -121,7 +119,7 @@ namespace TravelApp.API.Controllers
 
         /// <summary>Retrieves destination statistics for a city.</summary>
         /// <param name="cityId">The city identifier.</param>
-        /// <param name="getDestinationStatsHandler">The handler that loads the statistics.</param>
+        /// <param name="getCityStatsHandler">The handler that loads the statistics.</param>
         /// <returns>The statistics for the city.</returns>
         /// <exception cref="TravelAppNotFoundException">Thrown when the city does not exist.</exception>
         // GET api/locations/cities/{cityId}/stats
@@ -130,9 +128,9 @@ namespace TravelApp.API.Controllers
         [ProducesResponseType(typeof(GetCityStatsResponse), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status404NotFound)]
         [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult<GetCityStatsResponse>> GetStats([FromRoute] int cityId, [FromServices] GetCityStatsHandler getDestinationStatsHandler)
+        public async Task<ActionResult<GetCityStatsResponse>> GetStats([FromRoute] int cityId, [FromServices] GetCityStatsHandler getCityStatsHandler)
         {
-            GetCityStatsResponse result = await getDestinationStatsHandler.GetCityStatsAsync(cityId);
+            GetCityStatsResponse result = await getCityStatsHandler.GetCityStatsAsync(cityId);
 
             return Ok(result);
         }
@@ -141,27 +139,27 @@ namespace TravelApp.API.Controllers
 
         #region PUT - Update City
 
-        /// <summary>Updates a city and returns its ID.</summary>
+        /// <summary>Updates a city and returns the persisted city.</summary>
         /// <param name="cityId">The city identifier.</param>
         /// <param name="request">The updated city details.</param>
         /// <param name="updateCityHandler">The handler that updates the city.</param>
-        /// <returns>The identifier of the updated city.</returns>
-        /// <exception cref="TravelAppValidationException">Thrown when the city name is missing.</exception>
+        /// <returns>The updated city.</returns>
+        /// <exception cref="TravelAppValidationException">Thrown when the city name is missing or longer than 64 characters.</exception>
         /// <exception cref="TravelAppNotFoundException">Thrown when the city or country does not exist.</exception>
         // PUT api/locations/cities/{cityId}
         [HttpPut("cities/{cityId:int}")]
         [Authorize(Roles = "Admin")]
-        [ProducesResponseType(typeof(int), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(UpdateCityResponse), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status403Forbidden)]
         [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status404NotFound)]
         [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult<int>> UpdateCity([FromRoute] int cityId, [FromBody] UpdateCityRequest request, [FromServices] UpdateCityHandler updateCityHandler)
+        public async Task<ActionResult<UpdateCityResponse>> UpdateCity([FromRoute] int cityId, [FromBody] UpdateCityRequest request, [FromServices] UpdateCityHandler updateCityHandler)
         {
-            await updateCityHandler.UpdateNameAndCountryAsync(cityId, request);
+            UpdateCityResponse updatedCity = await updateCityHandler.UpdateCityAsync(cityId, request);
 
-            return Ok(cityId);
+            return Ok(updatedCity);
         }
 
         #endregion
@@ -184,9 +182,9 @@ namespace TravelApp.API.Controllers
         [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status500InternalServerError)]
         public async Task<ActionResult<int>> DeleteCity([FromRoute] int cityId, [FromServices] DeleteCityHandler deleteCityHandler)
         {
-            await deleteCityHandler.DeleteCityAsync(cityId);
+            int deletedCityId = await deleteCityHandler.DeleteCityAsync(cityId);
 
-            return Ok(cityId);
+            return Ok(deletedCityId);
         }
 
         #endregion

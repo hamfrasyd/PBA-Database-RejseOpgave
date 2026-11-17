@@ -1,5 +1,5 @@
+using TravelApp.BusinessLogic.Handlers.Locations.Data;
 using TravelApp.BusinessLogic.Interfaces;
-using TravelApp.BusinessLogic.Models.Destinations;
 
 namespace TravelApp.BusinessLogic.Handlers.Locations.GetContinents
 {
@@ -21,11 +21,11 @@ namespace TravelApp.BusinessLogic.Handlers.Locations.GetContinents
         {
             await using IUnitOfWork unitOfWork = _unitOfWorkFactory.Create();
 
-            List<Continent> continentsFromDb = await unitOfWork.Locations.GetContinentsAsync();
+            List<ContinentData> continentsFromDb = await unitOfWork.Locations.GetContinentsAsync();
 
             List<GetContinentsResponse> continentsResponse = new List<GetContinentsResponse>();
 
-            foreach (Continent continent in continentsFromDb)
+            foreach (ContinentData continent in continentsFromDb)
             {
                 continentsResponse.Add(new GetContinentsResponse
                 {

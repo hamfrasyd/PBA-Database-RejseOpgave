@@ -1,4 +1,5 @@
 ﻿using TravelApp.BusinessLogic.Auth;
+using TravelApp.BusinessLogic.DTOs.Activities;
 using TravelApp.BusinessLogic.DTOs.Trips;
 using TravelApp.BusinessLogic.Exceptions.SpecificCustomException;
 using TravelApp.BusinessLogic.Handlers.Activities.GetActivity;
@@ -46,7 +47,7 @@ namespace TravelApp.BusinessLogic.Handlers.Trips
 
             await TripAccessHelper.EnsureCanModifyAsync(unitOfWork, tripId, _currentUser);
 
-            Activity? activity = await unitOfWork.Activities.GetActivityByIdAsync(activityId);
+            ActivityDto? activity = await unitOfWork.Activities.GetActivityByIdAsync(activityId);
             if (activity is null)
             {
                 throw new TravelAppNotFoundException($"Activity {activityId} was not found.");
@@ -58,7 +59,7 @@ namespace TravelApp.BusinessLogic.Handlers.Trips
                 throw new TravelAppNotFoundException($"Trip {tripId} was not found.");
             }
 
-            bool cityIsOnTrip = relations.CityIds.Contains(activity.City!.Id);
+            bool cityIsOnTrip = relations.CityIds.Contains(activity.CityId);
             if (!cityIsOnTrip)
             {
                 throw new TravelAppValidationException("Add the activity's city to the trip first.");

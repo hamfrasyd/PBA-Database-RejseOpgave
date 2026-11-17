@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using TravelApp.BusinessLogic.DTOs.Activities;
 using TravelApp.BusinessLogic.Interfaces;
-using TravelApp.BusinessLogic.Models.Destinations;
+using TravelApp.BusinessLogic.Models.Activities;
 using TravelApp.DataAccess.SQLRepositories.EntityFramework;
 
 namespace TravelApp.DataAccess.SQLRepositories
@@ -131,7 +131,7 @@ namespace TravelApp.DataAccess.SQLRepositories
         #region Update - Activities
 
         /// <inheritdoc />
-        public async Task<ActivityDTO?> UpdateActivityAsync(UpdateActivityDTO activityToUpdate)
+        public async Task<ActivityDTO?> UpdateActivityAsync(ActivityDTO activityToUpdate)
         {
             Activity? activityInDb = await _context.ActivityEntities.FirstOrDefaultAsync(activity => activity.Id == activityToUpdate.Id);
 

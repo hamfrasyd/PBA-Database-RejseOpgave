@@ -1,5 +1,5 @@
+using TravelApp.BusinessLogic.DTOs.Locations;
 using TravelApp.BusinessLogic.DTOs.Users;
-using TravelApp.BusinessLogic.Handlers.Locations.Data;
 using TravelApp.BusinessLogic.Models.Users;
 
 namespace TravelApp.BusinessLogic.Interfaces

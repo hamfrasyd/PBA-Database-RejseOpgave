@@ -1,4 +1,4 @@
-namespace TravelApp.BusinessLogic.Handlers.Locations.Data
+namespace TravelApp.BusinessLogic.DTOs.Locations
 {
     /// <summary>Contains the values required to persist a new city.</summary>
     public class CreateCityDTO

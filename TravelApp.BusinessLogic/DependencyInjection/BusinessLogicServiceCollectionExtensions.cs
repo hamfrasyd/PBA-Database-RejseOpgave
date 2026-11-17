@@ -1,6 +1,5 @@
 using Microsoft.Extensions.DependencyInjection;
 using TravelApp.BusinessLogic.DatabaseSelection;
-using TravelApp.BusinessLogic.Handlers.Trips;
 using TravelApp.BusinessLogic.Handlers.Trips.GetTrip;
 using TravelApp.BusinessLogic.Handlers.Accounts.Login;
 using TravelApp.BusinessLogic.Handlers.Achievements.GetAchievementDefinitions;
@@ -23,7 +22,16 @@ using TravelApp.BusinessLogic.Handlers.Users.GetUserProfile;
 using TravelApp.BusinessLogic.Handlers.Users.GetAllUserProfiles;
 using TravelApp.BusinessLogic.Handlers.Users.UpdateUser;
 using TravelApp.BusinessLogic.Handlers.Trips.TripCity;
-using TravelApp.BusinessLogic.Handlers.Posts;
+using TravelApp.BusinessLogic.Handlers.Trips.TripParticipants;
+using TravelApp.BusinessLogic.Handlers.Trips.CreateTrip;
+using TravelApp.BusinessLogic.Handlers.Trips.DeleteTrip;
+using TravelApp.BusinessLogic.Handlers.Trips.UpdateTrip;
+using TravelApp.BusinessLogic.Handlers.Trips.TripActivities;
+using TravelApp.BusinessLogic.Handlers.Posts.UpdatePost;
+using TravelApp.BusinessLogic.Handlers.Posts.CreatePost;
+using TravelApp.BusinessLogic.Handlers.Posts.GetPosts;
+using TravelApp.BusinessLogic.Handlers.Posts.GetPost;
+using TravelApp.BusinessLogic.Handlers.Posts.DeletePost;
 
 namespace TravelApp.BusinessLogic.DependencyInjection
 {

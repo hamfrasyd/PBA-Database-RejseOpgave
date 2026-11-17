@@ -1,5 +1,5 @@
-﻿using TravelApp.BusinessLogic.Handlers.Locations.Data;
-using TravelApp.BusinessLogic.Models.Destinations;
+﻿using TravelApp.BusinessLogic.DTOs.Locations;
+using TravelApp.BusinessLogic.Models.Locations;
 
 namespace TravelApp.BusinessLogic.Interfaces
 {

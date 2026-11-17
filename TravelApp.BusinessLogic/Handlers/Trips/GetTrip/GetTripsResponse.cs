@@ -1,4 +1,6 @@
 ﻿
+using TravelApp.BusinessLogic.Handlers.Trips.TripCity;
+
 namespace TravelApp.BusinessLogic.Handlers.Trips.GetTrip
 {
     /// <summary>Summarizes a trip in a list response.</summary>

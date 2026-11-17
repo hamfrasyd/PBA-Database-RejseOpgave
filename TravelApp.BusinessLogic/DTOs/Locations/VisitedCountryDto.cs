@@ -1,4 +1,4 @@
-namespace TravelApp.BusinessLogic.Handlers.Locations.Data
+namespace TravelApp.BusinessLogic.DTOs.Locations
 {
     /// <summary>Contains a country visited on a completed trip.</summary>
     public class VisitedCountryDTO

@@ -1,7 +1,7 @@
 using Microsoft.EntityFrameworkCore;
-using TravelApp.BusinessLogic.Handlers.Locations.Data;
+using TravelApp.BusinessLogic.DTOs.Locations;
 using TravelApp.BusinessLogic.Interfaces;
-using TravelApp.BusinessLogic.Models.Destinations;
+using TravelApp.BusinessLogic.Models.Locations;
 using TravelApp.DataAccess.SQLRepositories.EntityFramework;
 
 namespace TravelApp.DataAccess.SQLRepositories

@@ -2,7 +2,6 @@ using Microsoft.EntityFrameworkCore;
 using TravelApp.DataAccess.Auth;
 using TravelApp.BusinessLogic.Models.Posts;
 using TravelApp.BusinessLogic.Models.Groups;
-using TravelApp.BusinessLogic.Models.Destinations;
 using TravelApp.BusinessLogic.Models.Reviews;
 using TravelApp.BusinessLogic.Models.Friendships;
 using TravelApp.BusinessLogic.Models.Achievements;
@@ -10,7 +9,9 @@ using TravelApp.BusinessLogic.Models.Trips;
 using TravelApp.BusinessLogic.Models.Invitations;
 using TravelApp.BusinessLogic.DTOs.Users;
 using TravelApp.BusinessLogic.Models.Users;
-using TravelApp.BusinessLogic.Handlers.Locations.Data;
+using TravelApp.BusinessLogic.DTOs.Locations;
+using TravelApp.BusinessLogic.Models.Activities;
+using TravelApp.BusinessLogic.Models.Locations;
 
 namespace TravelApp.DataAccess.SQLRepositories.EntityFramework
 {

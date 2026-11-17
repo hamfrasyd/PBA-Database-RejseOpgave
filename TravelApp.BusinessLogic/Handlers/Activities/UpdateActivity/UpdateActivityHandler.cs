@@ -1,6 +1,6 @@
 using TravelApp.BusinessLogic.DTOs.Activities;
+using TravelApp.BusinessLogic.DTOs.Locations;
 using TravelApp.BusinessLogic.Exceptions.SpecificCustomException;
-using TravelApp.BusinessLogic.Handlers.Locations.Data;
 using TravelApp.BusinessLogic.Interfaces;
 
 namespace TravelApp.BusinessLogic.Handlers.Activities.UpdateActivity
@@ -33,7 +33,7 @@ namespace TravelApp.BusinessLogic.Handlers.Activities.UpdateActivity
                 throw new TravelAppValidationException("The City for the activity does not exist.");
             }
 
-            UpdateActivityDTO activityToUpdate = new UpdateActivityDTO
+            ActivityDTO activityToUpdate = new ActivityDTO
             {
                 Id = activityId,
                 CityId = request.CityId,

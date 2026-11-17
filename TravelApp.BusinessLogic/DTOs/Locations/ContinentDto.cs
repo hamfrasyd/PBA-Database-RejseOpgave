@@ -1,4 +1,4 @@
-namespace TravelApp.BusinessLogic.Handlers.Locations.Data
+namespace TravelApp.BusinessLogic.DTOs.Locations
 {
     /// <summary>Contains the continent fields exchanged with a repository.</summary>
     public class ContinentDTO

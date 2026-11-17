@@ -1,4 +1,4 @@
-namespace TravelApp.BusinessLogic.Handlers.Locations.Data
+namespace TravelApp.BusinessLogic.DTOs.Locations
 {
     /// <summary>Contains the repository filter and sort options for cities.</summary>
     public class GetCitiesFilterDTO

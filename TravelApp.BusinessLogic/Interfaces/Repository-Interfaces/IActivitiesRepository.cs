@@ -41,7 +41,7 @@ namespace TravelApp.BusinessLogic.Interfaces
         /// <summary>Updates an activity.</summary>
         /// <param name="activityToUpdate">The activity values to persist.</param>
         /// <returns>The updated activity, or <see langword="null"/> when the activity does not exist.</returns>
-        Task<ActivityDTO?> UpdateActivityAsync(UpdateActivityDTO activityToUpdate);
+        Task<ActivityDTO?> UpdateActivityAsync(ActivityDTO activityToUpdate);
 
         #endregion
 

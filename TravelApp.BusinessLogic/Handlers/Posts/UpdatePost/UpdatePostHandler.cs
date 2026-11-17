@@ -1,13 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using TravelApp.BusinessLogic.Auth;
-using TravelApp.BusinessLogic.Exceptions.SpecificCustomException;
+﻿using TravelApp.BusinessLogic.Exceptions.SpecificCustomException;
 using TravelApp.BusinessLogic.Interfaces;
-using TravelApp.BusinessLogic.Models;
 using TravelApp.BusinessLogic.Models.Posts;
 
-namespace TravelApp.BusinessLogic.Handlers.Posts
+namespace TravelApp.BusinessLogic.Handlers.Posts.UpdatePost
 {
     /// <summary>Handles the update post operation.</summary>
     public class UpdatePostHandler

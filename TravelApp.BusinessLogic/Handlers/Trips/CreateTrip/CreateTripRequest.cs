@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace TravelApp.BusinessLogic.Handlers.Trips
+namespace TravelApp.BusinessLogic.Handlers.Trips.CreateTrip
 {
     /// <summary>Request to create a trip.</summary>
     public class CreateTripRequest

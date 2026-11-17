@@ -1,4 +1,6 @@
-namespace TravelApp.BusinessLogic.Models.Destinations
+using TravelApp.BusinessLogic.Models.Locations;
+
+namespace TravelApp.BusinessLogic.Models.Activities
 {
     /// <summary>Represents an activity available in a city.</summary>
     public class Activity

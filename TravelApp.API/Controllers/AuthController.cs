@@ -1,8 +1,6 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System.Security.Claims;
 using TravelApp.API.ExceptionFilters;
-using TravelApp.BusinessLogic.Exceptions.SpecificCustomException;
 using TravelApp.BusinessLogic.Auth;
 using TravelApp.BusinessLogic.Handlers.Accounts.Login;
 using TravelApp.BusinessLogic.Handlers.Users.GetUserProfile;

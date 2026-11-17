@@ -3,11 +3,10 @@ using TravelApp.BusinessLogic.DTOs.Activities;
 using TravelApp.BusinessLogic.DTOs.Trips;
 using TravelApp.BusinessLogic.Exceptions.SpecificCustomException;
 using TravelApp.BusinessLogic.Handlers.Activities.GetActivity;
+using TravelApp.BusinessLogic.Handlers.Trips.ManageTripRelations;
 using TravelApp.BusinessLogic.Interfaces;
-using TravelApp.BusinessLogic.Models.Destinations;
-using TravelApp.BusinessLogic.Models.Trips;
 
-namespace TravelApp.BusinessLogic.Handlers.Trips
+namespace TravelApp.BusinessLogic.Handlers.Trips.TripActivities
 {
     /// <summary>Handler for managing trip-activity relationships.</summary>
     public class TripActivitiesHandler

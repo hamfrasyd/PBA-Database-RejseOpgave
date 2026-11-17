@@ -1,4 +1,4 @@
-namespace TravelApp.BusinessLogic.Handlers.Locations.Data
+namespace TravelApp.BusinessLogic.DTOs.Locations
 {
     /// <summary>Contains destination statistics for a city read from a repository.</summary>
     public class CityStatsDTO

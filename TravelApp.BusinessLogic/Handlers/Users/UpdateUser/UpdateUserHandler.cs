@@ -1,8 +1,8 @@
-using TravelApp.BusinessLogic.Exceptions.SpecificCustomException;
-using TravelApp.BusinessLogic.Interfaces;
 using TravelApp.BusinessLogic.Auth;
-using TravelApp.BusinessLogic.Models.Destinations;
-using TravelApp.BusinessLogic.Models.Users;
+using TravelApp.BusinessLogic.DTOs.Users;
+using TravelApp.BusinessLogic.Exceptions.SpecificCustomException;
+using TravelApp.BusinessLogic.Handlers.Locations.Data;
+using TravelApp.BusinessLogic.Interfaces;
 
 namespace TravelApp.BusinessLogic.Handlers.Users.UpdateUser
 {
@@ -21,33 +21,73 @@ namespace TravelApp.BusinessLogic.Handlers.Users.UpdateUser
             _currentUser = currentUser;
         }
 
-        /// <summary>Updates user.</summary>
+        /// <summary>Updates a user and returns the persisted result.</summary>
+        /// <param name="userId">The user identifier.</param>
         /// <param name="request">The updated user details.</param>
+        /// <returns>The updated user.</returns>
         /// <exception cref="TravelAppForbiddenException">Thrown when the current user cannot update the user.</exception>
         /// <exception cref="TravelAppNotFoundException">Thrown when the user does not exist.</exception>
-        /// <exception cref="TravelAppValidationException">Thrown when the home city does not exist.</exception>
-        public async Task UpdateUserAsync(UpdateUserRequest request)
+        /// <exception cref="TravelAppValidationException">Thrown when a name is missing or the home city does not exist.</exception>
+        public async Task<UpdateUserResponse> UpdateUserAsync(int userId, UpdateUserRequest request)
         {
-            AccessRules.RequireOwnerOrAdmin(_currentUser, request.UserId);
-            await using IUnitOfWork unitOfWork = _unitOfWorkFactory.Create();
+            AccessRules.RequireOwnerOrAdmin(_currentUser, userId);
 
-            TravelUser? user = await unitOfWork.Users.GetByIdAsync(request.UserId);
-            if (user is null)
+            bool firstNameIsMissing = string.IsNullOrWhiteSpace(request.FirstName);
+            bool lastNameIsMissing = string.IsNullOrWhiteSpace(request.LastName);
+
+            if (firstNameIsMissing || lastNameIsMissing)
             {
-                throw new TravelAppNotFoundException($"User {request.UserId} was not found.");
+                throw new TravelAppValidationException("First name and last name are required.");
             }
 
-            City? city = await unitOfWork.Locations.GetCityByIdAsync(request.CityId);
-            if (city is null)
+            string normalizedFirstName = request.FirstName.Trim();
+            string normalizedLastName = request.LastName.Trim();
+
+            await using IUnitOfWork unitOfWork = _unitOfWorkFactory.Create();
+
+            bool userExists = await unitOfWork.Users.UserExistsAsync(userId);
+            if (userExists is false)
+            {
+                throw new TravelAppNotFoundException($"User {userId} was not found.");
+            }
+
+            CityDto? existingCity = await unitOfWork.Locations.GetCityAsync(request.CityId);
+            bool cityNotFound = existingCity is null;
+            if (cityNotFound)
             {
                 throw new TravelAppValidationException($"City {request.CityId} does not exist.");
             }
-            user.FirstName = request.FirstName.Trim();
-            user.LastName = request.LastName.Trim();
-            user.City = city;
-            user.IsPrivate = request.IsPrivate;
-            await unitOfWork.Users.UpdateAsync(user);
+
+            UpdateUserBasicInfoDto userToUpdate = new UpdateUserBasicInfoDto
+            {
+                Id = userId,
+                FirstName = normalizedFirstName,
+                LastName = normalizedLastName,
+                CityId = request.CityId,
+                IsPrivate = request.IsPrivate
+            };
+
+            UserBasicInfoDto? updatedUser = await unitOfWork.Users.UpdateUserAsync(userToUpdate);
+            bool userNotFound = updatedUser is null;
+            if (userNotFound)
+            {
+                throw new TravelAppNotFoundException($"User {userId} was not found.");
+            }
+
             await unitOfWork.CommitAsync();
+
+            UserBasicInfoDto persistedUser = updatedUser ?? throw new TravelAppNotFoundException($"User {userId} was not found.");
+
+            UpdateUserResponse response = new UpdateUserResponse
+            {
+                Id = persistedUser.Id,
+                FirstName = persistedUser.FirstName,
+                LastName = persistedUser.LastName,
+                CityId = persistedUser.CityId,
+                IsPrivate = persistedUser.IsPrivate
+            };
+
+            return response;
         }
     }
 }

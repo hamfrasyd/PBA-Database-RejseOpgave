@@ -1,7 +1,7 @@
 using TravelApp.BusinessLogic.Auth;
+using TravelApp.BusinessLogic.DTOs.Users;
 using TravelApp.BusinessLogic.Exceptions.SpecificCustomException;
 using TravelApp.BusinessLogic.Handlers.Locations.Data;
-using TravelApp.BusinessLogic.Handlers.Users.GetUserProfile;
 using TravelApp.BusinessLogic.Interfaces;
 
 namespace TravelApp.BusinessLogic.Handlers.Locations.GetVisitedCountries
@@ -29,7 +29,7 @@ namespace TravelApp.BusinessLogic.Handlers.Locations.GetVisitedCountries
         {
             await using IUnitOfWork unitOfWork = _unitOfWorkFactory.Create();
 
-            GetUserProfileResponse? profileFromDb = await unitOfWork.Users.GetProfileAsync(userId);
+            UserProfileDetailsDto? profileFromDb = await unitOfWork.Users.GetProfileAsync(userId);
 
             bool profileIsMissing = profileFromDb is null;
             bool profileIsPrivate = profileFromDb is not null && profileFromDb.IsPrivate;

@@ -1,6 +1,5 @@
+using TravelApp.BusinessLogic.DTOs.Users;
 using TravelApp.BusinessLogic.Handlers.Locations.Data;
-using TravelApp.BusinessLogic.Handlers.Users.GetUserProfile;
-using TravelApp.BusinessLogic.Handlers.Users.GetUserProfiles;
 using TravelApp.BusinessLogic.Models.Users;
 
 namespace TravelApp.BusinessLogic.Interfaces
@@ -19,12 +18,10 @@ namespace TravelApp.BusinessLogic.Interfaces
 
         #region Read - All Profiles & VisitedCountries
 
-        /// <summary>Retrieves user profiles with optional filtering and sorting.</summary>
-        /// <param name="request">The filter and sort options.</param>
-        /// <param name="viewerUserId">The identifier of the user viewing the profiles.</param>
-        /// <param name="includePrivate">A value indicating whether private profiles are included.</param>
-        /// <returns>The matching user profiles.</returns>
-        Task<List<GetUserProfilesResponse>> GetProfilesAsync(GetUserProfilesRequest request, int viewerUserId, bool includePrivate);
+        /// <summary>Retrieves detailed user profiles that match a search.</summary>
+        /// <param name="profileSearch">The name search, sort direction, and privacy scope.</param>
+        /// <returns>The matching detailed user profiles.</returns>
+        Task<List<UserProfileDetailsDto>> GetProfilesAsync(SearchUserProfilesDto profileSearch);
 
         /// <summary>Retrieves countries visited by a user on completed trips.</summary>
         /// <param name="userId">The user identifier.</param>
@@ -35,33 +32,38 @@ namespace TravelApp.BusinessLogic.Interfaces
 
         #region Read - By ID
 
+        /// <summary>Checks whether a user exists.</summary>
+        /// <param name="userId">The user identifier.</param>
+        /// <returns><see langword="true"/> when the user exists; otherwise, <see langword="false"/>.</returns>
+        Task<bool> UserExistsAsync(int userId);
+
         /// <summary>Retrieves a user by ID.</summary>
         /// <param name="userId">The user identifier.</param>
         /// <returns>The user, or <see langword="null"/> when it does not exist.</returns>
         Task<TravelUser?> GetByIdAsync(int userId);
 
-        /// <summary>Retrieves a user profile by ID.</summary>
+        /// <summary>Retrieves one detailed user profile by ID.</summary>
         /// <param name="userId">The user identifier.</param>
-        /// <returns>The profile, or <see langword="null"/> when the user does not exist.</returns>
-        Task<GetUserProfileResponse?> GetProfileAsync(int userId);
+        /// <returns>The detailed profile, or <see langword="null"/> when the user does not exist.</returns>
+        Task<UserProfileDetailsDto?> GetProfileAsync(int userId);
 
         #endregion
 
         #region Update - Users
 
-        /// <summary>Updates a user in the database.</summary>
-        /// <param name="user">The user to update.</param>
-        /// <returns>A task that completes when the user is updated.</returns>
-        Task UpdateAsync(TravelUser user);
+        /// <summary>Updates a user's basic info: first name, last name, home city, and privacy.</summary>
+        /// <param name="userToUpdate">The basic user fields to persist.</param>
+        /// <returns>The saved basic user, or <see langword="null"/> when the user does not exist.</returns>
+        Task<UserBasicInfoDto?> UpdateUserAsync(UpdateUserBasicInfoDto userToUpdate);
 
         #endregion
 
         #region Delete - Users
 
-        /// <summary>Deletes a user by ID.</summary>
+        /// <summary>Deletes a user.</summary>
         /// <param name="userId">The user identifier.</param>
-        /// <returns><see langword="true"/> when the user was deleted; otherwise, <see langword="false"/>.</returns>
-        Task<bool> DeleteAsync(int userId);
+        /// <returns>A task that completes when the user is marked for deletion.</returns>
+        Task DeleteAsync(int userId);
 
         #endregion
     }

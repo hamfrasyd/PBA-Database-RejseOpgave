@@ -1,4 +1,5 @@
 using TravelApp.BusinessLogic.Auth;
+using TravelApp.BusinessLogic.DTOs.Users;
 using TravelApp.BusinessLogic.Interfaces;
 
 namespace TravelApp.BusinessLogic.Handlers.Users.GetUserProfiles
@@ -25,8 +26,37 @@ namespace TravelApp.BusinessLogic.Handlers.Users.GetUserProfiles
         {
             await using IUnitOfWork unitOfWork = _unitOfWorkFactory.Create();
 
-            List<GetUserProfilesResponse> result = await unitOfWork.Users.GetProfilesAsync(request, _currentUser.UserId, _currentUser.IsAdmin);
-            return result;
+            SearchUserProfilesDto profileSearch = new SearchUserProfilesDto
+            {
+                Search = request.Search,
+                Descending = request.Descending,
+                ViewerUserId = _currentUser.UserId,
+                IncludePrivate = _currentUser.IsAdmin
+            };
+
+            List<UserProfileDetailsDto> profilesFromDb = await unitOfWork.Users.GetProfilesAsync(profileSearch);
+
+            List<GetUserProfilesResponse> profiles = new List<GetUserProfilesResponse>();
+            foreach (UserProfileDetailsDto profile in profilesFromDb)
+            {
+                profiles.Add(new GetUserProfilesResponse
+                {
+                    UserId = profile.UserId,
+                    FullName = profile.FullName,
+                    Age = profile.Age,
+                    HomeCity = profile.HomeCity,
+                    HomeCountry = profile.HomeCountry,
+                    IsPrivate = profile.IsPrivate,
+                    MemberSince = profile.MemberSince,
+                    FriendCount = profile.FriendCount,
+                    CompletedTrips = profile.CompletedTrips,
+                    PlannedTrips = profile.PlannedTrips,
+                    ReviewCount = profile.ReviewCount,
+                    AchievementCount = profile.AchievementCount
+                });
+            }
+
+            return profiles;
         }
     }
 }

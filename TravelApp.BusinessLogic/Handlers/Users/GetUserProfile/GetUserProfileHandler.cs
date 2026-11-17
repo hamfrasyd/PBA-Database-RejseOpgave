@@ -1,4 +1,5 @@
 using TravelApp.BusinessLogic.Auth;
+using TravelApp.BusinessLogic.DTOs.Users;
 using TravelApp.BusinessLogic.Exceptions.SpecificCustomException;
 using TravelApp.BusinessLogic.Interfaces;
 
@@ -27,13 +28,39 @@ namespace TravelApp.BusinessLogic.Handlers.Users.GetUserProfile
         {
             await using IUnitOfWork unitOfWork = _unitOfWorkFactory.Create();
 
-            GetUserProfileResponse? profile = await unitOfWork.Users.GetProfileAsync(userId);
-            if (profile is null || (profile.IsPrivate && _currentUser.IsAdmin is false && _currentUser.UserId != userId))
+            UserProfileDetailsDto? existingProfile = await unitOfWork.Users.GetProfileAsync(userId);
+
+            bool profileNotFound = existingProfile is null;
+            bool profileIsPrivate = existingProfile is not null && existingProfile.IsPrivate;
+            bool currentUserIsAdmin = _currentUser.IsAdmin;
+            bool currentUserIsNotOwner = _currentUser.UserId != userId;
+
+            bool privateProfileIsHidden = profileIsPrivate && currentUserIsAdmin is false && currentUserIsNotOwner;
+
+            if (profileNotFound || privateProfileIsHidden)
             {
                 throw new TravelAppNotFoundException($"User {userId} was not found.");
             }
 
-            return profile;
+            UserProfileDetailsDto profile = existingProfile ?? throw new TravelAppNotFoundException($"User {userId} was not found.");
+
+            GetUserProfileResponse response = new GetUserProfileResponse
+            {
+                UserId = profile.UserId,
+                FullName = profile.FullName,
+                Age = profile.Age,
+                HomeCity = profile.HomeCity,
+                HomeCountry = profile.HomeCountry,
+                IsPrivate = profile.IsPrivate,
+                MemberSince = profile.MemberSince,
+                FriendCount = profile.FriendCount,
+                CompletedTrips = profile.CompletedTrips,
+                PlannedTrips = profile.PlannedTrips,
+                ReviewCount = profile.ReviewCount,
+                AchievementCount = profile.AchievementCount
+            };
+
+            return response;
         }
     }
 }

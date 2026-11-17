@@ -21,22 +21,16 @@ namespace TravelApp.API.Controllers
         /// <summary>Lists visible user profiles with optional search and sorting.</summary>
         /// <param name="request">The filter and sort options.</param>
         /// <param name="getUserProfilesHandler">The handler that loads the profiles.</param>
-        /// <returns>The matching profiles, or no content when none match.</returns>
+        /// <returns>The matching profiles. An empty list is returned when none match.</returns>
         // GET api/users
         [HttpGet]
         [ProducesResponseType(typeof(List<GetUserProfilesResponse>), StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(typeof(UnauthorizedResult), StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status403Forbidden)]
         [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status500InternalServerError)]
         public async Task<ActionResult<List<GetUserProfilesResponse>>> GetUsers([FromQuery] GetUserProfilesRequest request, [FromServices] GetUserProfilesHandler getUserProfilesHandler)
         {
             List<GetUserProfilesResponse> result = await getUserProfilesHandler.GetUserProfilesAsync(request);
-
-            if (result.Count == 0)
-            {
-                return NoContent();
-            }
 
             return Ok(result);
         }
@@ -97,53 +91,52 @@ namespace TravelApp.API.Controllers
 
         #region PUT - Update User
 
-        /// <summary>Updates a user profile and returns its ID.</summary>
+        /// <summary>Updates a user profile and returns the persisted user.</summary>
         /// <param name="userId">The user identifier.</param>
         /// <param name="request">The updated user details.</param>
         /// <param name="updateUserHandler">The handler that updates the user.</param>
-        /// <returns>The identifier of the updated user.</returns>
+        /// <returns>The updated user.</returns>
         /// <exception cref="TravelAppForbiddenException">Thrown when the current user cannot update the user.</exception>
         /// <exception cref="TravelAppNotFoundException">Thrown when the user does not exist.</exception>
         /// <exception cref="TravelAppValidationException">Thrown when the home city does not exist.</exception>
         // PUT api/users/{userId}
         [HttpPut("{userId:int}")]
-        [ProducesResponseType(typeof(int), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(UpdateUserResponse), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(UnauthorizedResult), StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status403Forbidden)]
         [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status404NotFound)]
         [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult<int>> UpdateUser([FromRoute] int userId, [FromBody] UpdateUserRequest request, [FromServices] UpdateUserHandler updateUserHandler)
+        public async Task<ActionResult<UpdateUserResponse>> UpdateUser([FromRoute] int userId, [FromBody] UpdateUserRequest request, [FromServices] UpdateUserHandler updateUserHandler)
         {
-            request.UserId = userId;
+            UpdateUserResponse result = await updateUserHandler.UpdateUserAsync(userId, request);
 
-            await updateUserHandler.UpdateUserAsync(request);
-
-            return Ok(userId);
+            return Ok(result);
         }
 
         #endregion
 
         #region DELETE - User
 
-        /// <summary>Deletes a user and returns its ID.</summary>
+        /// <summary>Deletes a user.</summary>
         /// <param name="userId">The user identifier.</param>
         /// <param name="deleteUserHandler">The handler that deletes the user.</param>
-        /// <returns>The identifier of the deleted user.</returns>
+        /// <returns>An empty response when the user is deleted.</returns>
         /// <exception cref="TravelAppForbiddenException">Thrown when the current user cannot delete the user.</exception>
         /// <exception cref="TravelAppNotFoundException">Thrown when the user does not exist.</exception>
         // DELETE api/users/{userId}
         [HttpDelete("{userId:int}")]
-        [ProducesResponseType(typeof(int), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(typeof(UnauthorizedResult), StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status403Forbidden)]
         [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status404NotFound)]
+        [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status409Conflict)]
         [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult<int>> DeleteUser([FromRoute] int userId, [FromServices] DeleteUserHandler deleteUserHandler)
+        public async Task<IActionResult> DeleteUser([FromRoute] int userId, [FromServices] DeleteUserHandler deleteUserHandler)
         {
             await deleteUserHandler.DeleteUserAsync(userId);
 
-            return Ok(userId);
+            return NoContent();
         }
 
         #endregion

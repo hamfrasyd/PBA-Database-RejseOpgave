@@ -1,7 +1,7 @@
 using TravelApp.BusinessLogic.Auth;
 using TravelApp.BusinessLogic.DTOs.Achievements;
+using TravelApp.BusinessLogic.DTOs.Users;
 using TravelApp.BusinessLogic.Exceptions.SpecificCustomException;
-using TravelApp.BusinessLogic.Handlers.Users.GetUserProfile;
 using TravelApp.BusinessLogic.Interfaces;
 
 namespace TravelApp.BusinessLogic.Handlers.Achievements.GetEarnedAchievements
@@ -33,7 +33,7 @@ namespace TravelApp.BusinessLogic.Handlers.Achievements.GetEarnedAchievements
             await using IUnitOfWork unitOfWork = _unitOfWorkFactory.Create();
 
             // TODO: Replace with Cecilia's AccessInfo when available.
-            GetUserProfileResponse? existingProfile = await unitOfWork.Users.GetProfileAsync(userId);
+            UserProfileDetailsDto? existingProfile = await unitOfWork.Users.GetProfileAsync(userId);
 
             if (existingProfile is null)
             {

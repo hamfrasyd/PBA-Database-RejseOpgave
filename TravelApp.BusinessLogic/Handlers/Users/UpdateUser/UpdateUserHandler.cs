@@ -58,7 +58,7 @@ namespace TravelApp.BusinessLogic.Handlers.Users.UpdateUser
                 throw new TravelAppValidationException($"City {request.CityId} does not exist.");
             }
 
-            UpdateUserBasicInfoDto userToUpdate = new UpdateUserBasicInfoDto
+            UserBasicInfoDto userToUpdate = new UserBasicInfoDto
             {
                 Id = userId,
                 FirstName = normalizedFirstName,

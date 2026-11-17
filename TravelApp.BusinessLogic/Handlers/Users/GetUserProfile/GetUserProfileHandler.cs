@@ -24,7 +24,7 @@ namespace TravelApp.BusinessLogic.Handlers.Users.GetUserProfile
         /// <param name="userId">The user identifier.</param>
         /// <returns>The user profile.</returns>
         /// <exception cref="TravelAppNotFoundException">Thrown when the user does not exist or the profile is private.</exception>
-        public async Task<GetUserProfileResponse> GetUserProfileAsync(int userId)
+        public async Task<UserProfileResponse> GetUserProfileAsync(int userId)
         {
             await using IUnitOfWork unitOfWork = _unitOfWorkFactory.Create();
 
@@ -44,7 +44,7 @@ namespace TravelApp.BusinessLogic.Handlers.Users.GetUserProfile
 
             UserProfileDetailsDTO profile = existingProfile ?? throw new TravelAppNotFoundException($"User {userId} was not found.");
 
-            GetUserProfileResponse response = new GetUserProfileResponse
+            UserProfileResponse response = new UserProfileResponse
             {
                 UserId = profile.UserId,
                 FullName = profile.FullName,

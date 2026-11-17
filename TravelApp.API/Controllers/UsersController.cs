@@ -24,13 +24,13 @@ namespace TravelApp.API.Controllers
         /// <returns>The matching profiles. An empty list is returned when none match.</returns>
         // GET api/users
         [HttpGet]
-        [ProducesResponseType(typeof(List<GetUserProfilesResponse>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(List<UserProfileResponse>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(UnauthorizedResult), StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status403Forbidden)]
         [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult<List<GetUserProfilesResponse>>> GetUsers([FromQuery] GetUserProfilesRequest request, [FromServices] GetUserProfilesHandler getUserProfilesHandler)
+        public async Task<ActionResult<List<UserProfileResponse>>> GetUsers([FromQuery] GetUserProfilesRequest request, [FromServices] GetUserProfilesHandler getUserProfilesHandler)
         {
-            List<GetUserProfilesResponse> result = await getUserProfilesHandler.GetUserProfilesAsync(request);
+            List<UserProfileResponse> result = await getUserProfilesHandler.GetUserProfilesAsync(request);
 
             return Ok(result);
         }
@@ -46,14 +46,14 @@ namespace TravelApp.API.Controllers
         /// <exception cref="TravelAppNotFoundException">Thrown when the user does not exist or the profile is private.</exception>
         // GET api/users/{userId}
         [HttpGet("{userId:int}")]
-        [ProducesResponseType(typeof(GetUserProfileResponse), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(UserProfileResponse), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(UnauthorizedResult), StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status403Forbidden)]
         [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status404NotFound)]
         [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult<GetUserProfileResponse>> GetUser([FromRoute] int userId, [FromServices] GetUserProfileHandler getUserProfileHandler)
+        public async Task<ActionResult<UserProfileResponse>> GetUser([FromRoute] int userId, [FromServices] GetUserProfileHandler getUserProfileHandler)
         {
-            GetUserProfileResponse result = await getUserProfileHandler.GetUserProfileAsync(userId);
+            UserProfileResponse result = await getUserProfileHandler.GetUserProfileAsync(userId);
 
             return Ok(result);
         }

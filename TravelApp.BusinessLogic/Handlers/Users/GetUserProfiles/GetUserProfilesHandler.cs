@@ -1,8 +1,7 @@
 using TravelApp.BusinessLogic.Auth;
 using TravelApp.BusinessLogic.DTOs.Users;
-using TravelApp.BusinessLogic.Handlers.Activities.GetActivity;
+using TravelApp.BusinessLogic.Handlers.Users.GetUserProfile;
 using TravelApp.BusinessLogic.Interfaces;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace TravelApp.BusinessLogic.Handlers.Users.GetUserProfiles
 {
@@ -24,7 +23,7 @@ namespace TravelApp.BusinessLogic.Handlers.Users.GetUserProfiles
         /// <summary>Retrieves user profiles.</summary>
         /// <param name="request">The filter and sort options.</param>
         /// <returns>The matching user profiles.</returns>
-        public async Task<List<GetUserProfilesResponse>> GetUserProfilesAsync(GetUserProfilesRequest request)
+        public async Task<List<UserProfileResponse>> GetUserProfilesAsync(GetUserProfilesRequest request)
         {
             await using IUnitOfWork unitOfWork = _unitOfWorkFactory.Create();
 
@@ -38,7 +37,7 @@ namespace TravelApp.BusinessLogic.Handlers.Users.GetUserProfiles
 
             List<UserProfileDetailsDTO> userProfiles = await unitOfWork.Users.GetProfilesAsync(userSearchProfileDTO);
 
-            List<GetUserProfilesResponse> profileDetailsResponeList = userProfiles.Select(profile => new GetUserProfilesResponse
+            List<UserProfileResponse> profileDetailsResponeList = userProfiles.Select(profile => new UserProfileResponse
             {
                 UserId = profile.UserId,
                 FullName = profile.FullName,

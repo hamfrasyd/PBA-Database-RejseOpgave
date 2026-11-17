@@ -114,7 +114,7 @@ namespace TravelApp.DataAccess.SQLRepositories
         #region Update - Users
 
         /// <inheritdoc />
-        public async Task<UserBasicInfoDto?> UpdateUserAsync(UpdateUserBasicInfoDto userToUpdate)
+        public async Task<UserBasicInfoDto?> UpdateUserAsync(UserBasicInfoDto userToUpdate)
         {
             TravelUser? userInDb = await _context.TravelUserEntities.FirstOrDefaultAsync(user => user.Id == userToUpdate.Id);
 
@@ -128,16 +128,7 @@ namespace TravelApp.DataAccess.SQLRepositories
             userInDb.IsPrivate = userToUpdate.IsPrivate;
             _context.Entry(userInDb).Property("CityId").CurrentValue = userToUpdate.CityId;
 
-            UserBasicInfoDto updatedUser = new UserBasicInfoDto
-            {
-                Id = userInDb.Id,
-                FirstName = userInDb.FirstName,
-                LastName = userInDb.LastName,
-                CityId = userToUpdate.CityId,
-                IsPrivate = userInDb.IsPrivate
-            };
-
-            return updatedUser;
+            return userToUpdate;
         }
 
         #endregion

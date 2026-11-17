@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using TravelApp.BusinessLogic.Exceptions.Filters;
+using TravelApp.API.ExceptionFilters;
 using TravelApp.BusinessLogic.Handlers;
 using TravelApp.BusinessLogic.Handlers.Posts;
 

@@ -31,7 +31,7 @@ namespace TravelApp.BusinessLogic.Interfaces
 
         #region Update - Users
         /// <summary>Updates a user in the database.</summary>
-        public Task UpdateAsync(TravelUser user);
+        public Task<bool> UpdateAsync(TravelUser user);
 
         #endregion
         

@@ -2,9 +2,11 @@
 using TravelApp.BusinessLogic.Handlers.Posts;
 using TravelApp.BusinessLogic.Interfaces;
 using TravelApp.BusinessLogic.Models;
+using TravelApp.BusinessLogic.Models.Posts;
 
-namespace TravelApp.BusinessLogic.Handlers
+namespace TravelApp.BusinessLogic.Handlers.Posts
 {
+    /// <summary>Handles the get post operation.</summary>
     public class GetPostHandler
     {
         private readonly IUnitOfWorkFactory _unitOfWorkFactory;

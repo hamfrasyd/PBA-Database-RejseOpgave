@@ -24,7 +24,7 @@ using TravelApp.BusinessLogic.Handlers.Users.DeleteUser;
 using TravelApp.BusinessLogic.Handlers.Users.GetUserProfile;
 using TravelApp.BusinessLogic.Handlers.Users.GetUserProfiles;
 using TravelApp.BusinessLogic.Handlers.Users.UpdateUser;
-
+using TravelApp.BusinessLogic.Handlers.Posts;
 
 namespace TravelApp.BusinessLogic.DependencyInjection
 {

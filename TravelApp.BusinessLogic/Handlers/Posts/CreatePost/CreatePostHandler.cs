@@ -1,9 +1,12 @@
 ﻿using TravelApp.BusinessLogic.Exceptions.SpecificCustomException;
 using TravelApp.BusinessLogic.Interfaces;
 using TravelApp.BusinessLogic.Models;
+using TravelApp.BusinessLogic.Models.Posts;
+using TravelApp.BusinessLogic.Models.Users;
 
 namespace TravelApp.BusinessLogic.Handlers.Posts
 {
+    /// <summary>Handles the create post operation.</summary>
     public class CreatePostHandler
     {
         private readonly IUnitOfWorkFactory _unitOfWorkFactory;

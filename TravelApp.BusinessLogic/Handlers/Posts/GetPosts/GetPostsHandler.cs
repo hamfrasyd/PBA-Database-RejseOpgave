@@ -4,9 +4,11 @@ using System.Text;
 using TravelApp.BusinessLogic.Exceptions.SpecificCustomException;
 using TravelApp.BusinessLogic.Interfaces;
 using TravelApp.BusinessLogic.Models;
+using TravelApp.BusinessLogic.Models.Posts;
 
 namespace TravelApp.BusinessLogic.Handlers.Posts
 {
+    /// <summary>Handles the get posts operation.</summary>
     public class GetPostsHandler
     {
         private readonly IUnitOfWorkFactory _unitOfWorkFactory;
@@ -16,6 +18,7 @@ namespace TravelApp.BusinessLogic.Handlers.Posts
             _unitOfWorkFactory = unitOfWorkFactory;
         }
 
+        /// <summary>Retrieves posts for a specific user.</summary>
         public async Task<List<GetPostsResponse>> GetPostsByUserIdAsync(int userId)
         {
             await using IUnitOfWork unitOfWork = _unitOfWorkFactory.Create();

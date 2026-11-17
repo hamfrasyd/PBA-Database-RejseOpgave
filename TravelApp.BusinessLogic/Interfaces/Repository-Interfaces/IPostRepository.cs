@@ -1,5 +1,5 @@
-﻿using TravelApp.BusinessLogic.Handlers.Posts;
-using TravelApp.BusinessLogic.Models;
+﻿using TravelApp.BusinessLogic.Handlers;
+using TravelApp.BusinessLogic.Models.Posts;
 
 namespace TravelApp.BusinessLogic.Interfaces
 {

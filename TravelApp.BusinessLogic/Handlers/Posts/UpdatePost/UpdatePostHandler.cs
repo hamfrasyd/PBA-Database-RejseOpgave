@@ -5,19 +5,22 @@ using TravelApp.BusinessLogic.Auth;
 using TravelApp.BusinessLogic.Exceptions.SpecificCustomException;
 using TravelApp.BusinessLogic.Interfaces;
 using TravelApp.BusinessLogic.Models;
+using TravelApp.BusinessLogic.Models.Posts;
 
 namespace TravelApp.BusinessLogic.Handlers.Posts
 {
+    /// <summary>Handles the update post operation.</summary>
     public class UpdatePostHandler
     {
         private readonly IUnitOfWorkFactory _unitOfWorkFactory;
 
-        /// <summary>Initializes a new CreatePostHandler instance.</summary>
+        /// <summary>Initializes a new UpdatePostHandler instance.</summary>
         public UpdatePostHandler(IUnitOfWorkFactory unitOfWorkFactory)
         {
             _unitOfWorkFactory = unitOfWorkFactory;
         }
 
+        /// <summary>Updates a post</summary>
         public async Task UpdatePostAsync(UpdatePostRequest request)
         {
             if (string.IsNullOrWhiteSpace(request.Content))

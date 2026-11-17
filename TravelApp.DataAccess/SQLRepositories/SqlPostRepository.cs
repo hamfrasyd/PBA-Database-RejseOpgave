@@ -1,9 +1,6 @@
-﻿using Azure.Core;
-using Microsoft.EntityFrameworkCore;
-using TravelApp.BusinessLogic.Exceptions.SpecificCustomException;
-using TravelApp.BusinessLogic.Handlers.Posts;
+﻿using Microsoft.EntityFrameworkCore;
 using TravelApp.BusinessLogic.Interfaces;
-using TravelApp.BusinessLogic.Models;
+using TravelApp.BusinessLogic.Models.Posts;
 using TravelApp.DataAccess.SQLRepositories.EntityFramework;
 
 namespace TravelApp.DataAccess.SQLRepositories
@@ -13,6 +10,7 @@ namespace TravelApp.DataAccess.SQLRepositories
     {
         private readonly TravelAppContext _context;
 
+        /// <summary>Initializes a new instance of the SqlPostRepository class.</summary>
         public SqlPostRepository(TravelAppContext context)
         {
             _context = context;

@@ -21,6 +21,7 @@ namespace TravelApp.DataAccess.SQLRepositories.EntityFramework
         {
         }
 
+
         public DbSet<Continent> ContinentEntities => Set<Continent>();
         public DbSet<Country> CountryEntities => Set<Country>();
         public DbSet<City> CityEntities => Set<City>();

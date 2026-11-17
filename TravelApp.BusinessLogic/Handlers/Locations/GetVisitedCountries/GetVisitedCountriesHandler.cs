@@ -41,17 +41,12 @@ namespace TravelApp.BusinessLogic.Handlers.Locations.GetVisitedCountries
 
             List<VisitedCountryDTO> countriesFromDb = await unitOfWork.Users.GetVisitedCountriesAsync(userId);
 
-            List<GetVisitedCountriesResponse> visitedCountriesResponse = new List<GetVisitedCountriesResponse>();
-
-            foreach (VisitedCountryDTO country in countriesFromDb)
+            List<GetVisitedCountriesResponse> visitedCountriesResponse = countriesFromDb.Select(country => new GetVisitedCountriesResponse
             {
-                visitedCountriesResponse.Add(new GetVisitedCountriesResponse
-                {
-                    Id = country.Id,
-                    ContinentId = country.ContinentId,
-                    Name = country.Name
-                });
-            }
+                Id = country.Id,
+                ContinentId = country.ContinentId,
+                Name = country.Name
+            }).ToList();
 
             return visitedCountriesResponse;
         }

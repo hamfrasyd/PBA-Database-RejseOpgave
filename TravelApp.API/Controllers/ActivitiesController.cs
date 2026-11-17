@@ -49,11 +49,11 @@ namespace TravelApp.API.Controllers
         // GET api/activities/cities/{cityId}
         [HttpGet("cities/{cityId:int}")]
         [AllowAnonymous]
-        [ProducesResponseType(typeof(List<GetActivitiesByCityResponse>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(List<GetAllActivitiesByCityResponse>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult<List<GetActivitiesByCityResponse>>> GetActivitiesByCity([FromRoute] int cityId, [FromServices] GetActivitiesByCityHandler getActivitiesByCityHandler)
+        public async Task<ActionResult<List<GetAllActivitiesByCityResponse>>> GetActivitiesByCity([FromRoute] int cityId, [FromServices] GetAllActivitiesByCityHandler getActivitiesByCityHandler)
         {
-            List<GetActivitiesByCityResponse> result = await getActivitiesByCityHandler.GetActivitiesByCityIdAsync(cityId);
+            List<GetAllActivitiesByCityResponse> result = await getActivitiesByCityHandler.GetActivitiesByCityIdAsync(cityId);
 
             return Ok(result);
         }

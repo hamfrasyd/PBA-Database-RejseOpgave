@@ -52,14 +52,13 @@ namespace TravelApp.DataAccess.SQLRepositories
                 ? cities.OrderByDescending(city => city.Name).ThenBy(city => city.Id)
                 : cities.OrderBy(city => city.Name).ThenBy(city => city.Id);
 
-            List<CityDTO> result = await orderedCities
-                                        .Select(city => new CityDTO
-                                        {
-                                            Id = city.Id,
-                                            Name = city.Name,
-                                            CountryId = EF.Property<int>(city, "CountryId")
-                                        })
-                                        .ToListAsync();
+            List<CityDTO> result = await orderedCities.Select(city => new CityDTO
+            {
+                Id = city.Id,
+                Name = city.Name,
+                CountryId = EF.Property<int>(city, "CountryId")
+                })
+                .ToListAsync();
 
             return result;
         }

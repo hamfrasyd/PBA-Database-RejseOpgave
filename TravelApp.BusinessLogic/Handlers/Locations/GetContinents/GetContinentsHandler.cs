@@ -23,16 +23,11 @@ namespace TravelApp.BusinessLogic.Handlers.Locations.GetContinents
 
             List<ContinentDTO> continentsFromDb = await unitOfWork.Locations.GetContinentsAsync();
 
-            List<GetContinentsResponse> continentsResponse = new List<GetContinentsResponse>();
-
-            foreach (ContinentDTO continent in continentsFromDb)
+            List<GetContinentsResponse> continentsResponse = continentsFromDb.Select(continent => new GetContinentsResponse
             {
-                continentsResponse.Add(new GetContinentsResponse
-                {
-                    Id = continent.Id,
-                    Name = continent.Name
-                });
-            }
+                Id = continent.Id,
+                Name = continent.Name
+            }).ToList();
 
             return continentsResponse;
         }

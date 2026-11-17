@@ -1,7 +1,7 @@
 namespace TravelApp.BusinessLogic.Handlers.Activities.GetActivitiesByCity
 {
     /// <summary>Contains the result of get city activities.</summary>
-    public class GetActivitiesByCityResponse
+    public class GetAllActivitiesByCityResponse
     {
         /// <summary>Gets or sets the entity ID.</summary>
         public int Id { get; set; }

@@ -24,17 +24,12 @@ namespace TravelApp.BusinessLogic.Handlers.Locations.GetCountries
 
             List<CountryDTO> countriesFromDb = await unitOfWork.Locations.GetCountriesAsync(continentId);
 
-            List<GetCountriesResponse> countriesResponse = new List<GetCountriesResponse>();
-
-            foreach (CountryDTO country in countriesFromDb)
+            List<GetCountriesResponse> countriesResponse = countriesFromDb.Select(country => new GetCountriesResponse
             {
-                countriesResponse.Add(new GetCountriesResponse
-                {
-                    Id = country.Id,
-                    ContinentId = country.ContinentId,
-                    Name = country.Name
-                });
-            }
+                Id = country.Id,
+                ContinentId = country.ContinentId,
+                Name = country.Name
+            }).ToList();
 
             return countriesResponse;
         }

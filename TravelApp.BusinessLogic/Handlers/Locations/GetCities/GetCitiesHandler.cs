@@ -31,16 +31,12 @@ namespace TravelApp.BusinessLogic.Handlers.Locations.GetCities
 
             List<CityDTO> citiesFromDb = await unitOfWork.Locations.GetCitiesAsync(filter);
 
-            List<GetCitiesResponse> cities = new List<GetCitiesResponse>();
-            foreach (CityDTO city in citiesFromDb)
+            List<GetCitiesResponse> cities = citiesFromDb.Select(city => new GetCitiesResponse
             {
-                cities.Add(new GetCitiesResponse
-                {
-                    Id = city.Id,
-                    CountryId = city.CountryId,
-                    Name = city.Name
-                });
-            }
+                Id = city.Id,
+                CountryId = city.CountryId,
+                Name = city.Name
+            }).ToList();
 
             return cities;
         }

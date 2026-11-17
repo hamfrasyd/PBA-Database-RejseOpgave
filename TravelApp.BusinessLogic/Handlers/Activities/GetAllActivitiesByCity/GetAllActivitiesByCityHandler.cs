@@ -4,13 +4,13 @@ using TravelApp.BusinessLogic.Interfaces;
 namespace TravelApp.BusinessLogic.Handlers.Activities.GetActivitiesByCity
 {
     /// <summary>Handles the get city activities use case.</summary>
-    public class GetActivitiesByCityHandler
+    public class GetAllActivitiesByCityHandler
     {
         private readonly IUnitOfWorkFactory _unitOfWorkFactory;
 
         /// <summary>Initializes a new GetCityActivitiesHandler instance.</summary>
         /// <param name="unitOfWorkFactory">The unit of work factory.</param>
-        public GetActivitiesByCityHandler(IUnitOfWorkFactory unitOfWorkFactory)
+        public GetAllActivitiesByCityHandler(IUnitOfWorkFactory unitOfWorkFactory)
         {
             _unitOfWorkFactory = unitOfWorkFactory;
         }
@@ -18,24 +18,19 @@ namespace TravelApp.BusinessLogic.Handlers.Activities.GetActivitiesByCity
         /// <summary>Retrieves city activities.</summary>
         /// <param name="cityId">The city identifier.</param>
         /// <returns>The activities in the city.</returns>
-        public async Task<List<GetActivitiesByCityResponse>> GetActivitiesByCityIdAsync(int cityId)
+        public async Task<List<GetAllActivitiesByCityResponse>> GetActivitiesByCityIdAsync(int cityId)
         {
             await using IUnitOfWork unitOfWork = _unitOfWorkFactory.Create();
 
             List<ActivityDTO> activitiesFromDb = await unitOfWork.Activities.GetActivitiesAsync(cityId);
 
-            List<GetActivitiesByCityResponse> cityActivities = new List<GetActivitiesByCityResponse>();
-
-            foreach (ActivityDTO activity in activitiesFromDb)
+            List<GetAllActivitiesByCityResponse> cityActivities = activitiesFromDb.Select(activity => new GetAllActivitiesByCityResponse
             {
-                cityActivities.Add(new GetActivitiesByCityResponse
-                {
-                    Id = activity.Id,
-                    CityId = activity.CityId,
-                    Name = activity.Name,
-                    Description = activity.Description
-                });
-            }
+                Id = activity.Id,
+                CityId = activity.CityId,
+                Name = activity.Name,
+                Description = activity.Description
+            }).ToList();
 
             return cityActivities;
         }

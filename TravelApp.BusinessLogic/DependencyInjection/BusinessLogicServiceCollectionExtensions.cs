@@ -76,7 +76,7 @@ namespace TravelApp.BusinessLogic.DependencyInjection
             services.AddScoped<CreateActivityHandler>();
             services.AddScoped<DeleteActivityHandler>();
             services.AddScoped<GetActivityHandler>();
-            services.AddScoped<GetActivitiesByCityHandler>();
+            services.AddScoped<GetAllActivitiesByCityHandler>();
             services.AddScoped<UpdateActivityHandler>();
         }
 

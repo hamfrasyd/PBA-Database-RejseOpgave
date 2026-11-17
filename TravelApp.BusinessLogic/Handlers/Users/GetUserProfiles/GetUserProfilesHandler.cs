@@ -1,6 +1,8 @@
 using TravelApp.BusinessLogic.Auth;
 using TravelApp.BusinessLogic.DTOs.Users;
+using TravelApp.BusinessLogic.Handlers.Activities.GetActivity;
 using TravelApp.BusinessLogic.Interfaces;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace TravelApp.BusinessLogic.Handlers.Users.GetUserProfiles
 {
@@ -26,37 +28,33 @@ namespace TravelApp.BusinessLogic.Handlers.Users.GetUserProfiles
         {
             await using IUnitOfWork unitOfWork = _unitOfWorkFactory.Create();
 
-            SearchUserProfilesDto profileSearch = new SearchUserProfilesDto
+            UserProfileSearchDTO userSearchProfileDTO = new UserProfileSearchDTO
             {
                 Search = request.Search,
                 Descending = request.Descending,
-                ViewerUserId = _currentUser.UserId,
-                IncludePrivate = _currentUser.IsAdmin
+                CurrentUserId = _currentUser.UserId,
+                IncludePrivateProfiles = _currentUser.IsAdmin
             };
 
-            List<UserProfileDetailsDto> profilesFromDb = await unitOfWork.Users.GetProfilesAsync(profileSearch);
+            List<UserProfileDetailsDTO> userProfiles = await unitOfWork.Users.GetProfilesAsync(userSearchProfileDTO);
 
-            List<GetUserProfilesResponse> profiles = new List<GetUserProfilesResponse>();
-            foreach (UserProfileDetailsDto profile in profilesFromDb)
+            List<GetUserProfilesResponse> profileDetailsResponeList = userProfiles.Select(profile => new GetUserProfilesResponse
             {
-                profiles.Add(new GetUserProfilesResponse
-                {
-                    UserId = profile.UserId,
-                    FullName = profile.FullName,
-                    Age = profile.Age,
-                    HomeCity = profile.HomeCity,
-                    HomeCountry = profile.HomeCountry,
-                    IsPrivate = profile.IsPrivate,
-                    MemberSince = profile.MemberSince,
-                    FriendCount = profile.FriendCount,
-                    CompletedTrips = profile.CompletedTrips,
-                    PlannedTrips = profile.PlannedTrips,
-                    ReviewCount = profile.ReviewCount,
-                    AchievementCount = profile.AchievementCount
-                });
-            }
+                UserId = profile.UserId,
+                FullName = profile.FullName,
+                Age = profile.Age,
+                HomeCity = profile.HomeCity,
+                HomeCountry = profile.HomeCountry,
+                IsPrivate = profile.IsPrivate,
+                MemberSince = profile.MemberSince,
+                FriendCount = profile.FriendCount,
+                CompletedTrips = profile.CompletedTrips,
+                PlannedTrips = profile.PlannedTrips,
+                ReviewCount = profile.ReviewCount,
+                AchievementCount = profile.AchievementCount
+            }).ToList();
 
-            return profiles;
+            return profileDetailsResponeList;
         }
     }
 }

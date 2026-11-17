@@ -32,22 +32,23 @@ namespace TravelApp.DataAccess.SQLRepositories
         #region Read - All Profiles & VisitedCountries
 
         /// <inheritdoc />
-        public async Task<List<UserProfileDetailsDto>> GetProfilesAsync(SearchUserProfilesDto profileSearch)
+        public async Task<List<UserProfileDetailsDTO>> GetProfilesAsync(UserProfileSearchDTO profileSearch)
         {
-            IQueryable<UserProfileDetailsDto> profiles = _context.UserProfiles.AsNoTracking();
+            IQueryable<UserProfileDetailsDTO> profiles = _context.UserProfiles.AsNoTracking();
 
-            if (profileSearch.IncludePrivate is false)
+            if (profileSearch.IncludePrivateProfiles is false)
             {
-                profiles = profiles.Where(profile => profile.IsPrivate == false || profile.UserId == profileSearch.ViewerUserId);
+                profiles = profiles.Where(profile => profile.IsPrivate == false || profile.UserId == profileSearch.CurrentUserId);
             }
 
             if (string.IsNullOrWhiteSpace(profileSearch.Search) is false)
             {
                 string search = profileSearch.Search.Trim();
+
                 profiles = profiles.Where(profile => profile.FullName.Contains(search));
             }
 
-            if (profileSearch.Descending)
+            if (profileSearch.Descending) 
             {
                 profiles = profiles.OrderByDescending(profile => profile.UserId);
             }
@@ -56,7 +57,7 @@ namespace TravelApp.DataAccess.SQLRepositories
                 profiles = profiles.OrderBy(profile => profile.UserId);
             }
 
-            List<UserProfileDetailsDto> result = await profiles.ToListAsync();
+            List<UserProfileDetailsDTO> result = await profiles.ToListAsync();
 
             return result;
         }
@@ -108,9 +109,9 @@ namespace TravelApp.DataAccess.SQLRepositories
         }
 
         /// <inheritdoc />
-        public async Task<UserProfileDetailsDto?> GetProfileAsync(int userId)
+        public async Task<UserProfileDetailsDTO?> GetProfileAsync(int userId)
         {
-            UserProfileDetailsDto? matchingProfile = await _context.UserProfiles
+            UserProfileDetailsDTO? matchingProfile = await _context.UserProfiles
                 .AsNoTracking()
                 .FirstOrDefaultAsync(profile => profile.UserId == userId);
 

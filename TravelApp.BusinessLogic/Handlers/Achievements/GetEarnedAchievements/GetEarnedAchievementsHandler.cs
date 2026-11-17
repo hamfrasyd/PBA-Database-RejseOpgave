@@ -33,7 +33,7 @@ namespace TravelApp.BusinessLogic.Handlers.Achievements.GetEarnedAchievements
             await using IUnitOfWork unitOfWork = _unitOfWorkFactory.Create();
 
             // TODO: Replace with Cecilia's AccessInfo when available.
-            UserProfileDetailsDto? existingProfile = await unitOfWork.Users.GetProfileAsync(userId);
+            UserProfileDetailsDTO? existingProfile = await unitOfWork.Users.GetProfileAsync(userId);
 
             if (existingProfile is null)
             {

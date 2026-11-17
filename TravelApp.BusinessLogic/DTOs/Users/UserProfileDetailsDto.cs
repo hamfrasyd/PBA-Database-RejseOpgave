@@ -1,7 +1,7 @@
 namespace TravelApp.BusinessLogic.DTOs.Users
 {
     /// <summary>Contains the detailed profile: name, age, home location, and activity counts.</summary>
-    public class UserProfileDetailsDto
+    public class UserProfileDetailsDTO
     {
         /// <summary>Gets or sets the user identifier.</summary>
         public int UserId { get; set; }

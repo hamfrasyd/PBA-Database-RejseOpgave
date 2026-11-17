@@ -28,7 +28,7 @@ namespace TravelApp.BusinessLogic.Handlers.Users.GetUserProfile
         {
             await using IUnitOfWork unitOfWork = _unitOfWorkFactory.Create();
 
-            UserProfileDetailsDto? existingProfile = await unitOfWork.Users.GetProfileAsync(userId);
+            UserProfileDetailsDTO? existingProfile = await unitOfWork.Users.GetProfileAsync(userId);
 
             bool profileNotFound = existingProfile is null;
             bool profileIsPrivate = existingProfile is not null && existingProfile.IsPrivate;
@@ -42,7 +42,7 @@ namespace TravelApp.BusinessLogic.Handlers.Users.GetUserProfile
                 throw new TravelAppNotFoundException($"User {userId} was not found.");
             }
 
-            UserProfileDetailsDto profile = existingProfile ?? throw new TravelAppNotFoundException($"User {userId} was not found.");
+            UserProfileDetailsDTO profile = existingProfile ?? throw new TravelAppNotFoundException($"User {userId} was not found.");
 
             GetUserProfileResponse response = new GetUserProfileResponse
             {

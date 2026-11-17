@@ -29,7 +29,7 @@ namespace TravelApp.BusinessLogic.Handlers.Locations.GetVisitedCountries
         {
             await using IUnitOfWork unitOfWork = _unitOfWorkFactory.Create();
 
-            UserProfileDetailsDto? profileFromDb = await unitOfWork.Users.GetProfileAsync(userId);
+            UserProfileDetailsDTO? profileFromDb = await unitOfWork.Users.GetProfileAsync(userId);
 
             bool profileIsMissing = profileFromDb is null;
             bool profileIsPrivate = profileFromDb is not null && profileFromDb.IsPrivate;

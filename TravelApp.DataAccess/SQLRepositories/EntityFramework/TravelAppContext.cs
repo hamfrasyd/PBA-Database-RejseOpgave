@@ -62,7 +62,7 @@ namespace TravelApp.DataAccess.SQLRepositories.EntityFramework
         /// <summary>Gets the group trip entities.</summary>
         public DbSet<GroupTrip> GroupTripEntities => Set<GroupTrip>();
         /// <summary>Gets the user profile view rows.</summary>
-        public DbSet<UserProfileDetailsDto> UserProfiles => Set<UserProfileDetailsDto>();
+        public DbSet<UserProfileDetailsDTO> UserProfiles => Set<UserProfileDetailsDTO>();
         /// <summary>Gets the destination statistics view rows.</summary>
         public DbSet<CityStatsDto> DestinationStatistics => Set<CityStatsDto>();
 
@@ -412,7 +412,7 @@ namespace TravelApp.DataAccess.SQLRepositories.EntityFramework
                 .IsRequired()
                 .OnDelete(DeleteBehavior.Cascade);
 
-            modelBuilder.Entity<UserProfileDetailsDto>(entity => entity.HasNoKey().ToView("vw_UserProfile", "dbo"));
+            modelBuilder.Entity<UserProfileDetailsDTO>(entity => entity.HasNoKey().ToView("vw_UserProfile", "dbo"));
             modelBuilder.Entity<CityStatsDto>(entity => entity.HasNoKey().ToView("vw_DestinationStats", "dbo"));
 
             modelBuilder.Entity<UserAccount>(entity =>

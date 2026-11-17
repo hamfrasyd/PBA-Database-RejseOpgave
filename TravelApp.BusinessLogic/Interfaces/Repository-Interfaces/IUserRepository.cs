@@ -21,7 +21,7 @@ namespace TravelApp.BusinessLogic.Interfaces
         /// <summary>Retrieves detailed user profiles that match a search.</summary>
         /// <param name="profileSearch">The name search, sort direction, and privacy scope.</param>
         /// <returns>The matching detailed user profiles.</returns>
-        Task<List<UserProfileDetailsDto>> GetProfilesAsync(SearchUserProfilesDto profileSearch);
+        Task<List<UserProfileDetailsDTO>> GetProfilesAsync(UserProfileSearchDTO profileSearch);
 
         /// <summary>Retrieves countries visited by a user on completed trips.</summary>
         /// <param name="userId">The user identifier.</param>
@@ -45,7 +45,7 @@ namespace TravelApp.BusinessLogic.Interfaces
         /// <summary>Retrieves one detailed user profile by ID.</summary>
         /// <param name="userId">The user identifier.</param>
         /// <returns>The detailed profile, or <see langword="null"/> when the user does not exist.</returns>
-        Task<UserProfileDetailsDto?> GetProfileAsync(int userId);
+        Task<UserProfileDetailsDTO?> GetProfileAsync(int userId);
 
         #endregion
 

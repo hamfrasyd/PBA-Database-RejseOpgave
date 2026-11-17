@@ -38,13 +38,14 @@ namespace TravelApp.BusinessLogic.Handlers.Locations.CreateCity
             };
 
             CityDto? createdCity = await unitOfWork.Locations.CreateCityAsync(cityToCreate);
+           
+            await unitOfWork.CommitAsync();
 
+            // cowboy, skal bruge cecilias måde at Create på
             if (createdCity is null)
             {
                 createdCity = unitOfWork.Locations.GetCreatedCity();
             }
-
-            await unitOfWork.CommitAsync();
 
             CreateCityResponse response = new CreateCityResponse
             {

@@ -1,5 +1,6 @@
 ﻿
 using TravelApp.BusinessLogic.Auth;
+using TravelApp.BusinessLogic.DTOs.Activities;
 using TravelApp.BusinessLogic.DTOs.Trips;
 using TravelApp.BusinessLogic.Exceptions.SpecificCustomException;
 using TravelApp.BusinessLogic.Interfaces;
@@ -113,14 +114,14 @@ namespace TravelApp.BusinessLogic.Handlers.Trips
 
             TripRelationsDTO trip = await GetTripRelationsAsync(unitOfWork, tripId, _currentUser);
 
-            Activity? activity = await unitOfWork.Activities.GetActivityByIdAsync(activityId);
+            ActivityDto? activity = await unitOfWork.Activities.GetActivityByIdAsync(activityId);
 
             if (activity is null)
             {
                 throw new TravelAppNotFoundException($"Activity {activityId} was not found.");
             }
 
-            bool cityIsOnTrip = trip.CityIds.Contains(activity.City!.Id);
+            bool cityIsOnTrip = trip.CityIds.Contains(activity.CityId);
 
             if (!cityIsOnTrip)
             {

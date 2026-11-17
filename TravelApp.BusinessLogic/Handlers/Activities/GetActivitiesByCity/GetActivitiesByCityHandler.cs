@@ -1,5 +1,5 @@
+using TravelApp.BusinessLogic.DTOs.Activities;
 using TravelApp.BusinessLogic.Interfaces;
-using TravelApp.BusinessLogic.Models.Destinations;
 
 namespace TravelApp.BusinessLogic.Handlers.Activities.GetActivitiesByCity
 {
@@ -18,21 +18,20 @@ namespace TravelApp.BusinessLogic.Handlers.Activities.GetActivitiesByCity
         /// <summary>Retrieves city activities.</summary>
         /// <param name="cityId">The city identifier.</param>
         /// <returns>The activities in the city.</returns>
-        /// <exception cref="InvalidOperationException">Thrown when an activity's city was not loaded.</exception>
         public async Task<List<GetActivitiesByCityResponse>> GetActivitiesByCityIdAsync(int cityId)
         {
             await using IUnitOfWork unitOfWork = _unitOfWorkFactory.Create();
 
-            List<Activity> activitiesFromDb = await unitOfWork.Activities.GetActivitiesAsync(cityId);
+            List<ActivityDto> activitiesFromDb = await unitOfWork.Activities.GetActivitiesAsync(cityId);
 
             List<GetActivitiesByCityResponse> cityActivities = new List<GetActivitiesByCityResponse>();
 
-            foreach (Activity activity in activitiesFromDb)
+            foreach (ActivityDto activity in activitiesFromDb)
             {
                 cityActivities.Add(new GetActivitiesByCityResponse
                 {
                     Id = activity.Id,
-                    CityId = activity.City?.Id ?? throw new InvalidOperationException("Required City relationship was not loaded."),
+                    CityId = activity.CityId,
                     Name = activity.Name,
                     Description = activity.Description
                 });

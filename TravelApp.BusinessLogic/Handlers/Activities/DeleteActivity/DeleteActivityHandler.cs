@@ -1,9 +1,10 @@
+using TravelApp.BusinessLogic.DTOs.Activities;
 using TravelApp.BusinessLogic.Exceptions.SpecificCustomException;
 using TravelApp.BusinessLogic.Interfaces;
 
 namespace TravelApp.BusinessLogic.Handlers.Activities.DeleteActivity
 {
-    /// <summary>Handles the delete activity use case.</summary>
+    /// <summary>Deletes an activity.</summary>
     public class DeleteActivityHandler
     {
         private readonly IUnitOfWorkFactory _unitOfWorkFactory;
@@ -15,20 +16,21 @@ namespace TravelApp.BusinessLogic.Handlers.Activities.DeleteActivity
             _unitOfWorkFactory = unitOfWorkFactory;
         }
 
-        /// <summary>Deletes activity.</summary>
-        /// <param name="resourceId">The activity identifier.</param>
+        /// <summary>Deletes the activity with the specified identifier.</summary>
+        /// <param name="activityId">The activity identifier.</param>
         /// <exception cref="TravelAppNotFoundException">Thrown when the activity does not exist.</exception>
-        public async Task DeleteActivityAsync(int resourceId)
+        public async Task DeleteActivityAsync(int activityId)
         {
             await using IUnitOfWork unitOfWork = _unitOfWorkFactory.Create();
 
-            bool wasDeleted = await unitOfWork.Activities.DeleteActivityAsync(resourceId);
+            ActivityDto? activity = await unitOfWork.Activities.GetActivityByIdAsync(activityId);
 
-            if (wasDeleted is false)
+            if (activity is null)
             {
-                throw new TravelAppNotFoundException($"Activity {resourceId} was not found.");
+                throw new TravelAppNotFoundException($"Activity {activityId} was not found.");
             }
 
+            await unitOfWork.Activities.DeleteAsync(activityId);
             await unitOfWork.CommitAsync();
         }
     }

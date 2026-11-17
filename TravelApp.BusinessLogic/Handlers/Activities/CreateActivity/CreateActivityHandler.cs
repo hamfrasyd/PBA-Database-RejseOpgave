@@ -1,6 +1,7 @@
+using TravelApp.BusinessLogic.DTOs.Activities;
 using TravelApp.BusinessLogic.Exceptions.SpecificCustomException;
+using TravelApp.BusinessLogic.Handlers.Locations.Data;
 using TravelApp.BusinessLogic.Interfaces;
-using TravelApp.BusinessLogic.Models.Destinations;
 
 namespace TravelApp.BusinessLogic.Handlers.Activities.CreateActivity
 {
@@ -16,38 +17,46 @@ namespace TravelApp.BusinessLogic.Handlers.Activities.CreateActivity
             _unitOfWorkFactory = unitOfWorkFactory;
         }
 
-        /// <summary>Creates activity.</summary>
+        /// <summary>Creates an activity and returns the persisted result.</summary>
         /// <param name="request">The activity to create.</param>
-        /// <returns>The identifier of the created activity.</returns>
+        /// <returns>The created activity.</returns>
         /// <exception cref="TravelAppValidationException">Thrown when the name is missing or the city does not exist.</exception>
-        public async Task<int> CreateNewActivityAsync(CreateActivityRequest request)
+        public async Task<CreateActivityResponse> CreateNewActivityAsync(CreateActivityRequest request)
         {
-            if (string.IsNullOrWhiteSpace(request.Name))
-            {
-                throw new TravelAppValidationException("Activity name is required.");
-            }
-
             await using IUnitOfWork unitOfWork = _unitOfWorkFactory.Create();
 
-            City? cityFromDb = await unitOfWork.Locations.GetCityByIdAsync(request.CityId);
-
-            if (cityFromDb is null)
+            CityDto? existingCity = await unitOfWork.Locations.GetCityAsync(request.CityId);
+            if (existingCity is null)
             {
-                throw new TravelAppValidationException("The parent destination does not exist.");
+                throw new TravelAppValidationException("The City for the activity does not exist.");
             }
 
-            Activity createdActivity = new Activity
+            CreateActivityDto activityToCreate = new CreateActivityDto
             {
+                CityId = request.CityId,
                 Name = request.Name.Trim(),
-                City = cityFromDb,
                 Description = request.Description
             };
 
-            await unitOfWork.Activities.CreateActivityAsync(createdActivity);
+            ActivityDto? createdActivity = await unitOfWork.Activities.CreateActivityAsync(activityToCreate);
 
             await unitOfWork.CommitAsync();
 
-            return createdActivity.Id;
+            // cowboy, skal bruge cecilias måde at Create på
+            if (createdActivity is null)
+            {
+                createdActivity = unitOfWork.Activities.GetCreatedActivity();
+            }
+
+            CreateActivityResponse response = new CreateActivityResponse
+            {
+                Id = createdActivity.Id,
+                CityId = createdActivity.CityId,
+                Name = createdActivity.Name,
+                Description = createdActivity.Description
+            };
+
+            return response;
         }
     }
 }

@@ -31,15 +31,7 @@ namespace TravelApp.BusinessLogic.Handlers.Trips
         {
             await using IUnitOfWork unitOfWork = _unitOfWorkFactory.Create();
 
-            TripAccessInfoDTO? access = await unitOfWork.Trips.GetAccessInfoAsync(tripId, _currentUser.UserId);
-            if (access is null)
-            {
-                throw new TravelAppNotFoundException($"Trip {tripId} was not found.");
-            }
-            if (!access.IsParticipant && !_currentUser.IsAdmin)
-            {
-                throw new TravelAppForbiddenException("You cannot view this trip.");
-            }
+            await TripAccessHelper.EnsureCanViewAsync(unitOfWork, tripId, _currentUser);
 
             TripDetailsDTO? trip = await unitOfWork.Trips.GetDetailsAsync(tripId);
             if (trip is null)

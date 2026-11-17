@@ -22,6 +22,7 @@ using TravelApp.BusinessLogic.Handlers.Users.DeleteUser;
 using TravelApp.BusinessLogic.Handlers.Users.GetUserProfile;
 using TravelApp.BusinessLogic.Handlers.Users.GetUserProfiles;
 using TravelApp.BusinessLogic.Handlers.Users.UpdateUser;
+using TravelApp.BusinessLogic.Handlers.Trips.TripCity;
 using TravelApp.BusinessLogic.Handlers.Posts;
 
 namespace TravelApp.BusinessLogic.DependencyInjection
@@ -96,10 +97,9 @@ namespace TravelApp.BusinessLogic.DependencyInjection
             services.AddScoped<GetTripsHandler>();
             services.AddScoped<UpdateTripHandler>();
             services.AddScoped<DeleteTripHandler>();
-            services.AddScoped<ManageTripRelationsHandler>();
-
-            services.AddScoped<GetTripActivitiesHandler>();
-            services.AddScoped<GetTripParticipantsHandler>();
+            services.AddScoped<TripActivitiesHandler>();
+            services.AddScoped<TripCityHandler>();
+            services.AddScoped<TripParticipantsHandler>();
         }
 
         private static void RegisterPosts(IServiceCollection services)

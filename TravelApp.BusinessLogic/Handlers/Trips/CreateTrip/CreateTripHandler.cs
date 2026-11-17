@@ -50,7 +50,7 @@ namespace TravelApp.BusinessLogic.Handlers.Trips
                 IsCompleted = false
             };
 
-            await unitOfWork.Trips.AddForUserAsync(trip, user.Id);
+            await unitOfWork.Trips.CreateTripForUserAsync(trip, user.Id);
 
             await unitOfWork.CommitAsync();
 

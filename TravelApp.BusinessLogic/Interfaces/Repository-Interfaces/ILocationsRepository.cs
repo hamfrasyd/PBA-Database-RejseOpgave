@@ -8,9 +8,10 @@ namespace TravelApp.BusinessLogic.Interfaces
     {
         #region Create - Cities
 
-        /// <summary>Persists a city and returns the stored values, including the generated identifier.</summary>        /// <param name="cityToCreate">The city values to persist.</param>
+        /// <summary>Persists a city and returns the stored values, including the generated identifier.</summary>
+        /// /// <param name="cityToCreate">The city values to persist.</param>
         /// <returns>The persisted city.</returns>
-        Task<CityDto> CreateCityAsync(CreateCityDto cityToCreate);
+        Task<CityDto?> CreateCityAsync(CreateCityDto cityToCreate);
 
         /// <summary>Returns the city staged by <see cref="CreateCityAsync"/> after the unit of work has committed.</summary>
         /// <returns>The created city, including its generated identifier.</returns>

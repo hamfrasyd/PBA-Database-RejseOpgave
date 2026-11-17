@@ -37,11 +37,14 @@ namespace TravelApp.BusinessLogic.Handlers.Locations.CreateCity
                 CountryId = request.CountryId
             };
 
-            await unitOfWork.Locations.CreateCityAsync(cityToCreate);
+            CityDto? createdCity = await unitOfWork.Locations.CreateCityAsync(cityToCreate);
+
+            if (createdCity is null)
+            {
+                createdCity = unitOfWork.Locations.GetCreatedCity();
+            }
 
             await unitOfWork.CommitAsync();
-
-            CityDto createdCity = unitOfWork.Locations.GetCreatedCity();
 
             CreateCityResponse response = new CreateCityResponse
             {

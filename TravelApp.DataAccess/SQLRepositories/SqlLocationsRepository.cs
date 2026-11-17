@@ -34,6 +34,11 @@ namespace TravelApp.DataAccess.SQLRepositories
             
             int countryId = _context.Entry(_addedCity).Property<int>("CountryId").CurrentValue;
 
+            if (_addedCity.Id <= 0)
+            {
+                return null;
+            }
+
             CityDto createdCity = new CityDto
             {
                 Id = _addedCity.Id,

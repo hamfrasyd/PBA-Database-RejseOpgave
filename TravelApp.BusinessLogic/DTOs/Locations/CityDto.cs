@@ -1,7 +1,7 @@
 namespace TravelApp.BusinessLogic.Handlers.Locations.Data
 {
     /// <summary>Contains the persisted fields of a city exchanged with a repository.</summary>
-    public class CityDto
+    public class CityDTO
     {
         /// <summary>Gets or sets the city identifier.</summary>
         public int Id { get; set; }

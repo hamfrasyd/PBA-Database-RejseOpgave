@@ -26,7 +26,7 @@ namespace TravelApp.BusinessLogic.Interfaces
         /// <summary>Retrieves countries visited by a user on completed trips.</summary>
         /// <param name="userId">The user identifier.</param>
         /// <returns>The visited countries.</returns>
-        Task<List<VisitedCountryDto>> GetVisitedCountriesAsync(int userId);
+        Task<List<VisitedCountryDTO>> GetVisitedCountriesAsync(int userId);
 
         #endregion
 

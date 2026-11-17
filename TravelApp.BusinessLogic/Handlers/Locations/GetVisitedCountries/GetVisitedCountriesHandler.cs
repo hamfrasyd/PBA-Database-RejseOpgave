@@ -39,11 +39,11 @@ namespace TravelApp.BusinessLogic.Handlers.Locations.GetVisitedCountries
 
             AccessRules.RequirePublicOrOwnerOrAdmin(_currentUser, userId, profileFromDb.IsPrivate);
 
-            List<VisitedCountryDto> countriesFromDb = await unitOfWork.Users.GetVisitedCountriesAsync(userId);
+            List<VisitedCountryDTO> countriesFromDb = await unitOfWork.Users.GetVisitedCountriesAsync(userId);
 
             List<GetVisitedCountriesResponse> visitedCountriesResponse = new List<GetVisitedCountriesResponse>();
 
-            foreach (VisitedCountryDto country in countriesFromDb)
+            foreach (VisitedCountryDTO country in countriesFromDb)
             {
                 visitedCountriesResponse.Add(new GetVisitedCountriesResponse
                 {

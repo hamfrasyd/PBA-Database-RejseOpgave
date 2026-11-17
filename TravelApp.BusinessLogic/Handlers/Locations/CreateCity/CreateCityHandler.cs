@@ -31,13 +31,13 @@ namespace TravelApp.BusinessLogic.Handlers.Locations.CreateCity
                 throw new TravelAppNotFoundException($"Country {request.CountryId} was not found.");
             }
 
-            CreateCityDto cityToCreate = new CreateCityDto
+            CreateCityDTO cityToCreate = new CreateCityDTO
             {
                 Name = request.Name.Trim(),
                 CountryId = request.CountryId
             };
 
-            CityDto? createdCity = await unitOfWork.Locations.CreateCityAsync(cityToCreate);
+            CityDTO? createdCity = await unitOfWork.Locations.CreateCityAsync(cityToCreate);
            
             await unitOfWork.CommitAsync();
 

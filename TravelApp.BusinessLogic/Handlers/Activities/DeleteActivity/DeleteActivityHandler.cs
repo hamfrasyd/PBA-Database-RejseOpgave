@@ -23,7 +23,7 @@ namespace TravelApp.BusinessLogic.Handlers.Activities.DeleteActivity
         {
             await using IUnitOfWork unitOfWork = _unitOfWorkFactory.Create();
 
-            ActivityDto? activity = await unitOfWork.Activities.GetActivityByIdAsync(activityId);
+            ActivityDTO? activity = await unitOfWork.Activities.GetActivityByIdAsync(activityId);
 
             if (activity is null)
             {

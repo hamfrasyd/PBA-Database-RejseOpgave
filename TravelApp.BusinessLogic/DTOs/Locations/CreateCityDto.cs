@@ -1,7 +1,7 @@
 namespace TravelApp.BusinessLogic.Handlers.Locations.Data
 {
     /// <summary>Contains the values required to persist a new city.</summary>
-    public class CreateCityDto
+    public class CreateCityDTO
     {
         /// <summary>Gets or sets the city name.</summary>
         public string Name { get; set; } = string.Empty;

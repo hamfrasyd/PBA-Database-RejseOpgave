@@ -23,7 +23,7 @@ namespace TravelApp.DataAccess.SQLRepositories
         #region Create - Activities
 
         /// <inheritdoc />
-        public async Task<ActivityDto?> CreateActivityAsync(CreateActivityDto activityToCreate)
+        public async Task<ActivityDTO?> CreateActivityAsync(CreateActivityDTO activityToCreate)
         {
             _addedActivity = new Activity
             {
@@ -42,7 +42,7 @@ namespace TravelApp.DataAccess.SQLRepositories
                 return null;
             }
 
-            ActivityDto createdActivity = new ActivityDto
+            ActivityDTO createdActivity = new ActivityDTO
             {
                 Id = _addedActivity.Id,
                 CityId = cityId,
@@ -54,7 +54,7 @@ namespace TravelApp.DataAccess.SQLRepositories
         }
 
         /// <inheritdoc />
-        public ActivityDto GetCreatedActivity()
+        public ActivityDTO GetCreatedActivity()
         {
             if (_addedActivity is null)
             {
@@ -63,7 +63,7 @@ namespace TravelApp.DataAccess.SQLRepositories
 
             int cityId = _context.Entry(_addedActivity).Property<int>("CityId").CurrentValue;
 
-            ActivityDto createdActivity = new ActivityDto
+            ActivityDTO createdActivity = new ActivityDTO
             {
                 Id = _addedActivity.Id,
                 CityId = cityId,
@@ -79,7 +79,7 @@ namespace TravelApp.DataAccess.SQLRepositories
         #region Read - All Activities
 
         /// <inheritdoc />
-        public async Task<List<ActivityDto>> GetActivitiesAsync(int? cityId)
+        public async Task<List<ActivityDTO>> GetActivitiesAsync(int? cityId)
         {
             IQueryable<Activity> activities = _context.ActivityEntities.AsNoTracking();
 
@@ -89,10 +89,10 @@ namespace TravelApp.DataAccess.SQLRepositories
                 activities = activities.Where(activity => EF.Property<int>(activity, "CityId") == filterCityId);
             }
 
-            List<ActivityDto> result = await activities
+            List<ActivityDTO> result = await activities
                 .OrderBy(activity => activity.Name)
                 .ThenBy(activity => activity.Id)
-                .Select(activity => new ActivityDto
+                .Select(activity => new ActivityDTO
                 {
                     Id = activity.Id,
                     CityId = EF.Property<int>(activity, "CityId"),
@@ -109,12 +109,12 @@ namespace TravelApp.DataAccess.SQLRepositories
         #region Read - By-ID Activities
 
         /// <inheritdoc />
-        public async Task<ActivityDto?> GetActivityByIdAsync(int activityId)
+        public async Task<ActivityDTO?> GetActivityByIdAsync(int activityId)
         {
-            ActivityDto? activityData = await _context.ActivityEntities
+            ActivityDTO? activityData = await _context.ActivityEntities
                 .AsNoTracking()
                 .Where(activity => activity.Id == activityId)
-                .Select(activity => new ActivityDto
+                .Select(activity => new ActivityDTO
                 {
                     Id = activity.Id,
                     CityId = EF.Property<int>(activity, "CityId"),
@@ -131,7 +131,7 @@ namespace TravelApp.DataAccess.SQLRepositories
         #region Update - Activities
 
         /// <inheritdoc />
-        public async Task<ActivityDto?> UpdateActivityAsync(UpdateActivityDto activityToUpdate)
+        public async Task<ActivityDTO?> UpdateActivityAsync(UpdateActivityDTO activityToUpdate)
         {
             Activity? activityInDb = await _context.ActivityEntities.FirstOrDefaultAsync(activity => activity.Id == activityToUpdate.Id);
 
@@ -144,7 +144,7 @@ namespace TravelApp.DataAccess.SQLRepositories
             activityInDb.Description = activityToUpdate.Description;
             _context.Entry(activityInDb).Property("CityId").CurrentValue = activityToUpdate.CityId;
 
-            ActivityDto updatedActivity = new ActivityDto
+            ActivityDTO updatedActivity = new ActivityDTO
             {
                 Id = activityInDb.Id,
                 CityId = activityToUpdate.CityId,

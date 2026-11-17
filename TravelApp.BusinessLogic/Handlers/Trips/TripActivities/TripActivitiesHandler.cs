@@ -47,7 +47,7 @@ namespace TravelApp.BusinessLogic.Handlers.Trips
 
             await TripAccessHelper.EnsureCanModifyAsync(unitOfWork, tripId, _currentUser);
 
-            ActivityDto? activity = await unitOfWork.Activities.GetActivityByIdAsync(activityId);
+            ActivityDTO? activity = await unitOfWork.Activities.GetActivityByIdAsync(activityId);
             if (activity is null)
             {
                 throw new TravelAppNotFoundException($"Activity {activityId} was not found.");

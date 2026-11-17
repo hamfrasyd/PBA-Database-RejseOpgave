@@ -11,11 +11,11 @@ namespace TravelApp.BusinessLogic.Interfaces
         /// <summary>Persists a city and returns the stored values, including the generated identifier.</summary>
         /// /// <param name="cityToCreate">The city values to persist.</param>
         /// <returns>The persisted city.</returns>
-        Task<CityDto?> CreateCityAsync(CreateCityDto cityToCreate);
+        Task<CityDTO?> CreateCityAsync(CreateCityDTO cityToCreate);
 
         /// <summary>Returns the city staged by <see cref="CreateCityAsync"/> after the unit of work has committed.</summary>
         /// <returns>The created city, including its generated identifier.</returns>
-        CityDto GetCreatedCity();
+        CityDTO GetCreatedCity();
 
         #endregion
 
@@ -24,16 +24,16 @@ namespace TravelApp.BusinessLogic.Interfaces
         /// <summary>Retrieves cities with optional filtering and sorting.</summary>
         /// <param name="filter">The filter and sort options.</param>
         /// <returns>The matching cities.</returns>
-        Task<List<CityDto>> GetCitiesAsync(GetCitiesFilterDto filter);
+        Task<List<CityDTO>> GetCitiesAsync(GetCitiesFilterDTO filter);
 
         /// <summary>Retrieves countries, optionally filtered by continent.</summary>
         /// <param name="continentId">The continent identifier to filter by, or <see langword="null"/> for all continents.</param>
         /// <returns>The matching countries.</returns>
-        Task<List<CountryDto>> GetCountriesAsync(int? continentId);
+        Task<List<CountryDTO>> GetCountriesAsync(int? continentId);
 
         /// <summary>Retrieves continents.</summary>
         /// <returns>The continents.</returns>
-        Task<List<ContinentDto>> GetContinentsAsync();
+        Task<List<ContinentDTO>> GetContinentsAsync();
 
         #endregion
 
@@ -42,7 +42,7 @@ namespace TravelApp.BusinessLogic.Interfaces
         /// <summary>Retrieves a city by ID.</summary>
         /// <param name="cityId">The city identifier.</param>
         /// <returns>The city, or <see langword="null"/> when it does not exist.</returns>
-        Task<CityDto?> GetCityAsync(int cityId);
+        Task<CityDTO?> GetCityAsync(int cityId);
 
         /// <summary>Retrieves a city by ID.</summary>
         /// <param name="cityId">The city identifier.</param>
@@ -52,7 +52,7 @@ namespace TravelApp.BusinessLogic.Interfaces
         /// <summary>Retrieves statistics for a city.</summary>
         /// <param name="cityId">The city identifier.</param>
         /// <returns>The statistics, or <see langword="null"/> when the city does not exist.</returns>
-        Task<CityStatsDto?> GetCityStatsAsync(int cityId);
+        Task<CityStatsDTO?> GetCityStatsAsync(int cityId);
 
         #endregion
 

@@ -22,11 +22,11 @@ namespace TravelApp.BusinessLogic.Handlers.Activities.GetActivitiesByCity
         {
             await using IUnitOfWork unitOfWork = _unitOfWorkFactory.Create();
 
-            List<ActivityDto> activitiesFromDb = await unitOfWork.Activities.GetActivitiesAsync(cityId);
+            List<ActivityDTO> activitiesFromDb = await unitOfWork.Activities.GetActivitiesAsync(cityId);
 
             List<GetActivitiesByCityResponse> cityActivities = new List<GetActivitiesByCityResponse>();
 
-            foreach (ActivityDto activity in activitiesFromDb)
+            foreach (ActivityDTO activity in activitiesFromDb)
             {
                 cityActivities.Add(new GetActivitiesByCityResponse
                 {

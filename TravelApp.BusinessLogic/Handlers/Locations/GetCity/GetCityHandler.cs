@@ -24,7 +24,7 @@ namespace TravelApp.BusinessLogic.Handlers.Locations.GetCity
         {
             await using IUnitOfWork unitOfWork = _unitOfWorkFactory.Create();
 
-            CityDto? cityFromDb = await unitOfWork.Locations.GetCityAsync(cityId);
+            CityDTO? cityFromDb = await unitOfWork.Locations.GetCityAsync(cityId);
             if (cityFromDb is null)
             {
                 throw new TravelAppNotFoundException($"City {cityId} was not found.");

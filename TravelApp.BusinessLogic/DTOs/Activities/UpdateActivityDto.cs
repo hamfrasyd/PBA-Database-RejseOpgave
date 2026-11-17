@@ -1,7 +1,7 @@
 namespace TravelApp.BusinessLogic.DTOs.Activities
 {
     /// <summary>Contains the values required to persist an activity update.</summary>
-    public class UpdateActivityDto
+    public class UpdateActivityDTO
     {
         /// <summary>Gets or sets the activity identifier.</summary>
         public int Id { get; set; }

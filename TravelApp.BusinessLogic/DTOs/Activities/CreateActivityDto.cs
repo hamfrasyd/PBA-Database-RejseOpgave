@@ -1,7 +1,7 @@
 namespace TravelApp.BusinessLogic.DTOs.Activities
 {
     /// <summary>Contains the values required to persist a new activity.</summary>
-    public class CreateActivityDto
+    public class CreateActivityDTO
     {
         /// <summary>Gets or sets the city identifier.</summary>
         public int CityId { get; set; }

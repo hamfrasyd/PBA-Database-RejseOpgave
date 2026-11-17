@@ -27,13 +27,13 @@ namespace TravelApp.BusinessLogic.Handlers.Activities.UpdateActivity
         {
             await using IUnitOfWork unitOfWork = _unitOfWorkFactory.Create();
 
-            CityDto? existingCity = await unitOfWork.Locations.GetCityAsync(request.CityId);
+            CityDTO? existingCity = await unitOfWork.Locations.GetCityAsync(request.CityId);
             if (existingCity is null)
             {
                 throw new TravelAppValidationException("The City for the activity does not exist.");
             }
 
-            UpdateActivityDto activityToUpdate = new UpdateActivityDto
+            UpdateActivityDTO activityToUpdate = new UpdateActivityDTO
             {
                 Id = activityId,
                 CityId = request.CityId,
@@ -41,7 +41,7 @@ namespace TravelApp.BusinessLogic.Handlers.Activities.UpdateActivity
                 Description = request.Description
             };
 
-            ActivityDto? updatedActivity = await unitOfWork.Activities.UpdateActivityAsync(activityToUpdate);
+            ActivityDTO? updatedActivity = await unitOfWork.Activities.UpdateActivityAsync(activityToUpdate);
             if (updatedActivity is null)
             {
                 throw new TravelAppNotFoundException($"Activity with ID {activityId} was not found.");

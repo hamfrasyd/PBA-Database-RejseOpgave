@@ -22,11 +22,11 @@ namespace TravelApp.BusinessLogic.Handlers.Locations.GetCountries
         {
             await using IUnitOfWork unitOfWork = _unitOfWorkFactory.Create();
 
-            List<CountryDto> countriesFromDb = await unitOfWork.Locations.GetCountriesAsync(continentId);
+            List<CountryDTO> countriesFromDb = await unitOfWork.Locations.GetCountriesAsync(continentId);
 
             List<GetCountriesResponse> countriesResponse = new List<GetCountriesResponse>();
 
-            foreach (CountryDto country in countriesFromDb)
+            foreach (CountryDTO country in countriesFromDb)
             {
                 countriesResponse.Add(new GetCountriesResponse
                 {

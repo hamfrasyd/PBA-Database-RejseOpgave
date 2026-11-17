@@ -1,7 +1,7 @@
 namespace TravelApp.BusinessLogic.Handlers.Locations.Data
 {
     /// <summary>Contains a country visited on a completed trip.</summary>
-    public class VisitedCountryDto
+    public class VisitedCountryDTO
     {
         /// <summary>Gets or sets the country identifier.</summary>
         public int Id { get; set; }

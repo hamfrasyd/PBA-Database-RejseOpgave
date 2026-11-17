@@ -24,7 +24,7 @@ namespace TravelApp.BusinessLogic.Handlers.Activities.GetActivity
         {
             await using IUnitOfWork unitOfWork = _unitOfWorkFactory.Create();
 
-            ActivityDto? activityFromDb = await unitOfWork.Activities.GetActivityByIdAsync(id);
+            ActivityDTO? activityFromDb = await unitOfWork.Activities.GetActivityByIdAsync(id);
             if (activityFromDb is null)
             {
                 throw new TravelAppNotFoundException($"Activity {id} was not found.");

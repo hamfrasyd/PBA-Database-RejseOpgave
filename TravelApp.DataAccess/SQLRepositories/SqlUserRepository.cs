@@ -63,20 +63,20 @@ namespace TravelApp.DataAccess.SQLRepositories
         }
 
         /// <inheritdoc />
-        public async Task<List<VisitedCountryDto>> GetVisitedCountriesAsync(int userId)
+        public async Task<List<VisitedCountryDTO>> GetVisitedCountriesAsync(int userId)
         {
             // The ! only reassures the compiler. These links are always stored, and a missing one is skipped instead of crashing.
-            IQueryable<VisitedCountryDto> visitedCountries = _context.TripParticipantEntities.AsNoTracking()
+            IQueryable<VisitedCountryDTO> visitedCountries = _context.TripParticipantEntities.AsNoTracking()
                 .Where(participant => participant.User!.Id == userId && participant.Trip!.IsCompleted)
                 .SelectMany(participant => participant.Trip!.TripStops)
-                .Select(stop => new VisitedCountryDto
+                .Select(stop => new VisitedCountryDTO
                 {
                     Id = stop.City!.Country!.Id,
                     ContinentId = stop.City.Country.Continent!.Id,
                     Name = stop.City.Country.Name
                 });
 
-            List<VisitedCountryDto> result = await visitedCountries.Distinct().OrderBy(country => country.Name).ToListAsync();
+            List<VisitedCountryDTO> result = await visitedCountries.Distinct().OrderBy(country => country.Name).ToListAsync();
 
             return result;
         }

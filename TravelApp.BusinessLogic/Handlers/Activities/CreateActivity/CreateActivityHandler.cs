@@ -25,20 +25,20 @@ namespace TravelApp.BusinessLogic.Handlers.Activities.CreateActivity
         {
             await using IUnitOfWork unitOfWork = _unitOfWorkFactory.Create();
 
-            CityDto? existingCity = await unitOfWork.Locations.GetCityAsync(request.CityId);
+            CityDTO? existingCity = await unitOfWork.Locations.GetCityAsync(request.CityId);
             if (existingCity is null)
             {
                 throw new TravelAppValidationException("The City for the activity does not exist.");
             }
 
-            CreateActivityDto activityToCreate = new CreateActivityDto
+            CreateActivityDTO activityToCreate = new CreateActivityDTO
             {
                 CityId = request.CityId,
                 Name = request.Name.Trim(),
                 Description = request.Description
             };
 
-            ActivityDto? createdActivity = await unitOfWork.Activities.CreateActivityAsync(activityToCreate);
+            ActivityDTO? createdActivity = await unitOfWork.Activities.CreateActivityAsync(activityToCreate);
 
             await unitOfWork.CommitAsync();
 

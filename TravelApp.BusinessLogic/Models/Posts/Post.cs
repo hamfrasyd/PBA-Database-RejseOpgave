@@ -36,6 +36,7 @@ namespace TravelApp.BusinessLogic.Models.Posts
         public Post()
         {
             _content = string.Empty;
+
         }
     }
 }

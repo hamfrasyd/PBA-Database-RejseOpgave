@@ -85,7 +85,7 @@ namespace TravelApp.DataAccess.SQLRepositories
         #region Update - Activities
 
         /// <inheritdoc />
-        public async Task<bool> UpdateActivityAsync(ActivityDTO activityToUpdate)
+        public async Task<bool> UpdateActivityAsync(UpdateActivityDTO activityToUpdate)
         {
             Activity? activityInDb = await _context.ActivityEntities.FirstOrDefaultAsync(activity => activity.Id == activityToUpdate.Id);
 
@@ -94,7 +94,17 @@ namespace TravelApp.DataAccess.SQLRepositories
                 return false;
             }
 
-            activityInDb.Name = activityToUpdate.Name;
+            if (activityToUpdate.Name is not null)
+            {
+                activityInDb.Name = activityToUpdate.Name.Trim();
+            }
+
+
+            if (activityToUpdate.Description is not null)
+            {
+                activityInDb.Description = activityToUpdate.Description.Trim();
+            }
+  
             activityInDb.Description = activityToUpdate.Description;
             _context.Entry(activityInDb).Property("CityId").CurrentValue = activityToUpdate.CityId;
 

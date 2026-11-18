@@ -32,11 +32,11 @@ namespace TravelApp.BusinessLogic.Handlers.Activities.UpdateActivity
                 throw new TravelAppValidationException($"City with ID {request.CityId} does not exist.");
             }
 
-            ActivityDTO activityToUpdate = new ActivityDTO
+            UpdateActivityDTO activityToUpdate = new UpdateActivityDTO
             {
                 Id = activityId,
                 CityId = request.CityId,
-                Name = request.Name.Trim(),
+                Name = request.Name,
                 Description = request.Description
             };
 

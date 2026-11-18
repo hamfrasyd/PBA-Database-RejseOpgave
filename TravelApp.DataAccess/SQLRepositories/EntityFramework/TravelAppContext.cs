@@ -532,7 +532,7 @@ namespace TravelApp.DataAccess.SQLRepositories.EntityFramework
                 entity.Property(item => item.NewStars).HasColumnType("tinyint");
             });
 
-            modelBuilder.Entity<GetCityStatsResponse>(entity => entity.HasNoKey().ToView("vw_DestinationStats", "dbo"));
+            modelBuilder.Entity<DestinationStatsView>(entity => entity.HasNoKey().ToView("vw_DestinationStats", "dbo"));
         }
     }
 }

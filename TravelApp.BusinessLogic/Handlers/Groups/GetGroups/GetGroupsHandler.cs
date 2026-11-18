@@ -1,9 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using TravelApp.BusinessLogic.DTOs.Groups;
 using TravelApp.BusinessLogic.Interfaces;
 
-namespace TravelApp.BusinessLogic.Handlers.Groups.GetGroups
+namespace TravelApp.BusinessLogic.Handlers.Groups
 {
     ///<summary>Handles the retrieval of groups.</summary>
     public class GetGroupsHandler
@@ -19,11 +17,27 @@ namespace TravelApp.BusinessLogic.Handlers.Groups.GetGroups
         public async Task<List<GetGroupsResponse>> GetGroupsAsync()
         {
             await using IUnitOfWork unitOfWork = _unitOfWorkFactory.Create();
-            List<Group> groups = await unitOfWork.Groups.GetAllGroupsAsync();
+            List<TravelGroupDTO> groups = await unitOfWork.Groups.GetAllGroupsAsync();
             return groups
                 .Select(group => new GetGroupsResponse
                 {
-                    // Map properties from Group to GetGroupsResponse as needed
+                    Id = group.Id,
+                    Name = group.Name,
+                    Description = group.Description,
+                    Members = group.Members
+                        .Select(member => new GetGroupsMember
+                        {
+                            UserId = member.UserId,
+                            Name = member.Name
+                        })
+                        .ToList(),
+                    Trips = group.Trips
+                        .Select(trip => new GetGroupsTrip
+                        {
+                            TripId = trip.TripId,
+                            Name = trip.Name
+                        })
+                        .ToList()
                 })
                 .ToList();
         }

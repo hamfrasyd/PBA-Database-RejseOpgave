@@ -1,9 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using TravelApp.BusinessLogic.Exceptions.BaseCustomException;
 using TravelApp.BusinessLogic.Exceptions.SpecificCustomException;
 using TravelApp.BusinessLogic.Interfaces;
 using TravelApp.BusinessLogic.Models.Posts;
-using TravelApp.BusinessLogic.Models.Trips;
 using TravelApp.DataAccess.SQLRepositories.EntityFramework;
 
 namespace TravelApp.DataAccess.SQLRepositories
@@ -37,8 +35,8 @@ namespace TravelApp.DataAccess.SQLRepositories
         /// <summary>Adds a post</summary>
         public async Task<Post> AddPostAsync(Post post)
         {
-            var createdUser = await _context.PostEntities.AddAsync(post);
-            return createdUser.Entity;
+            var createdPost = await _context.PostEntities.AddAsync(post);
+            return createdPost.Entity;
         }
 
         /// <inheritdoc/>

@@ -1,6 +1,4 @@
 using Microsoft.EntityFrameworkCore;
-using TravelApp.DataAccess.Audit;
-using TravelApp.DataAccess.Auth;
 using TravelApp.BusinessLogic.Models.Posts;
 using TravelApp.BusinessLogic.Models.Groups;
 using TravelApp.BusinessLogic.Models.Reviews;
@@ -532,28 +530,7 @@ namespace TravelApp.DataAccess.SQLRepositories.EntityFramework
                 entity.Property(item => item.NewStars).HasColumnType("tinyint");
             });
 
-            modelBuilder.Entity<UserAccount>(entity =>
-            {
-                entity.ToTable("UserAccount", "dbo", table =>
-                {
-                    table.HasCheckConstraint("CK_UserAccount_Role", "[Role] IN (N'User', N'Admin')");
-                });
-                entity.HasKey(account => account.TravelUserId).HasName("PK_UserAccount");
-                entity.Property(account => account.TravelUserId).ValueGeneratedNever();
-                entity.Property(account => account.UserName).HasMaxLength(128);
-                entity.Property(account => account.NormalizedUserName).HasMaxLength(128);
-                entity.Property(account => account.PasswordHash).HasMaxLength(512);
-                entity.Property(account => account.Role).HasMaxLength(16);
-                entity.HasIndex(account => account.NormalizedUserName)
-                    .IsUnique()
-                    .HasDatabaseName("UQ_UserAccount_NormalizedUserName");
-                entity.HasOne<TravelUser>()
-                    .WithOne()
-                    .HasForeignKey<UserAccount>(account => account.TravelUserId)
-                    .IsRequired()
-                    .OnDelete(DeleteBehavior.NoAction)
-                    .HasConstraintName("FK_UserAccount_User");
-            });
+            modelBuilder.Entity<GetCityStatsResponse>(entity => entity.HasNoKey().ToView("vw_DestinationStats", "dbo"));
         }
     }
 }

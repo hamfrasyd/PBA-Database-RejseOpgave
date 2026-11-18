@@ -2,6 +2,7 @@ using Microsoft.Extensions.DependencyInjection;
 using TravelApp.BusinessLogic.DatabaseSelection;
 using TravelApp.BusinessLogic.Handlers.Trips.GetTrip;
 using TravelApp.BusinessLogic.Handlers.Accounts.Login;
+using TravelApp.BusinessLogic.Handlers.Accounts.Register;
 using TravelApp.BusinessLogic.Handlers.Achievements.GetAchievementDefinitions;
 using TravelApp.BusinessLogic.Handlers.Achievements.GetEarnedAchievements;
 using TravelApp.BusinessLogic.Handlers.Activities.CreateActivity;
@@ -64,6 +65,7 @@ namespace TravelApp.BusinessLogic.DependencyInjection
         private static void RegisterAccounts(IServiceCollection services)
         {
             services.AddScoped<LoginHandler>();
+            services.AddScoped<RegisterHandler>();
         }
 
         private static void RegisterAchievements(IServiceCollection services)

@@ -55,5 +55,14 @@ namespace TravelApp.BusinessLogic.Interfaces
         Task<bool> UpdateStatusAsync(int invitationId, int statusId);
 
         #endregion
+
+        #region Delete - Invitations
+
+        /// <summary>Stages deletion of an invitation by its identifier.</summary>
+        /// <param name="invitationId">The invitation identifier.</param>
+        /// <returns><see langword="true"/> if the invitation was found; otherwise, <see langword="false"/>.</returns>
+        Task<bool> DeleteAsync(int invitationId);
+
+        #endregion
     }
 }

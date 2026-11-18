@@ -126,5 +126,24 @@ namespace TravelApp.DataAccess.SQLRepositories
         }
 
         #endregion
+
+        #region Delete - Invitations
+
+        /// <inheritdoc/>
+        public async Task<bool> DeleteAsync(int invitationId)
+        {
+            // FindAsync uses the tracked invitation from GetByIdAsync without another query.
+            Invite? invitationFromDb = await _context.InviteEntities.FindAsync(invitationId);
+            if (invitationFromDb is null)
+            {
+                return false;
+            }
+
+            _context.InviteEntities.Remove(invitationFromDb);
+
+            return true;
+        }
+
+        #endregion
     }
 }

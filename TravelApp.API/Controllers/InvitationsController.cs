@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using TravelApp.API.ExceptionFilters;
 using TravelApp.BusinessLogic.Handlers.Invitations.CreateInvitation;
+using TravelApp.BusinessLogic.Handlers.Invitations.DeleteInvitation;
 using TravelApp.BusinessLogic.Handlers.Invitations.GetInvitation;
 using TravelApp.BusinessLogic.Handlers.Invitations.GetInvitations;
 using TravelApp.BusinessLogic.Handlers.Invitations.RespondInvitation;
@@ -119,6 +120,29 @@ namespace TravelApp.API.Controllers
             RespondInvitationResponse response = await respondInvitationHandler.RespondInvitationAsync(invitationId, request);
 
             return Ok(response);
+        }
+
+        #endregion
+
+        #region DELETE - Cancel Invitation
+
+        /// <summary>Cancels an invitation for its sender or an administrator.</summary>
+        /// <param name="invitationId">The invitation identifier.</param>
+        /// <param name="deleteInvitationHandler">The handler that cancels the invitation.</param>
+        /// <returns>An empty response when the invitation is deleted.</returns>
+        // DELETE api/invitations/{invitationId}
+        [HttpDelete("{invitationId:int}")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status404NotFound)]
+        [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status409Conflict)]
+        [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status500InternalServerError)]
+        public async Task<IActionResult> DeleteInvitation([FromRoute] int invitationId, [FromServices] DeleteInvitationHandler deleteInvitationHandler)
+        {
+            await deleteInvitationHandler.DeleteInvitationAsync(invitationId);
+
+            return NoContent();
         }
 
         #endregion

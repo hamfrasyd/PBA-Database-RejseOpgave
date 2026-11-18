@@ -6,7 +6,9 @@ using System.Security.Claims;
 using System.Security.Cryptography;
 using TravelApp.API.Auth;
 using TravelApp.BusinessLogic.Auth;
+using TravelApp.BusinessLogic.Interfaces;
 using TravelApp.DataAccess.Auth;
+using TravelApp.DataAccess.SQLRepositories;
 
 namespace TravelApp.API.DependencyInjection
 {
@@ -26,6 +28,7 @@ namespace TravelApp.API.DependencyInjection
 
             builder.Services.AddScoped<IPasswordHasher<UserAccount>, PasswordHasher<UserAccount>>();
             builder.Services.AddScoped<ILoginAccountVerifier, SqlLoginAccountVerifier>();
+            builder.Services.AddScoped<IUserAccountRepository, SqlUserAccountRepository>();
             builder.Services.AddScoped<IAccessTokenIssuer, JwtAccessTokenIssuer>();
 
             if (builder.Environment.IsDevelopment())
@@ -53,25 +56,25 @@ namespace TravelApp.API.DependencyInjection
             builder.Services.AddSingleton(new SigningCredentials(signingKey, SecurityAlgorithms.HmacSha256));
 
             builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options =>
-                {
-                    options.MapInboundClaims = false;
+            {
+                options.MapInboundClaims = false;
 
-                    options.TokenValidationParameters = new TokenValidationParameters
-                    {
-                        ValidateIssuer = true,
-                        ValidIssuer = jwtIssuer,
-                        ValidateAudience = true,
-                        ValidAudience = jwtAudience,
-                        ValidateIssuerSigningKey = true,
-                        IssuerSigningKey = signingKey,
-                        ValidAlgorithms = [SecurityAlgorithms.HmacSha256],
-                        ValidateLifetime = true,
-                        RequireExpirationTime = true,
-                        RequireSignedTokens = true,
-                        RoleClaimType = ClaimTypes.Role,
-                        ClockSkew = TimeSpan.FromSeconds(30)
-                    };
-                });
+                options.TokenValidationParameters = new TokenValidationParameters
+                {
+                    ValidateIssuer = true,
+                    ValidIssuer = jwtIssuer,
+                    ValidateAudience = true,
+                    ValidAudience = jwtAudience,
+                    ValidateIssuerSigningKey = true,
+                    IssuerSigningKey = signingKey,
+                    ValidAlgorithms = [SecurityAlgorithms.HmacSha256],
+                    ValidateLifetime = true,
+                    RequireExpirationTime = true,
+                    RequireSignedTokens = true,
+                    RoleClaimType = ClaimTypes.Role,
+                    ClockSkew = TimeSpan.FromSeconds(30)
+                };
+            });
 
             builder.Services.AddAuthorization();
         }

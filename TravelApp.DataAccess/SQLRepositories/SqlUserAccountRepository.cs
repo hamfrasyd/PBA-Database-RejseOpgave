@@ -1,18 +1,21 @@
 ﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using TravelApp.BusinessLogic.DTOs.Accounts;
+using TravelApp.BusinessLogic.Exceptions.SpecificCustomException;
 using TravelApp.BusinessLogic.Interfaces;
 using TravelApp.BusinessLogic.Models.Users;
 using TravelApp.DataAccess.Auth;
-using TravelApp.DataAccess.SQLRepositories.EntityFramework;
 
 namespace TravelApp.DataAccess.SQLRepositories
 {
-    /// <summary>Stores and retrieves local login accounts in TravelDB.</summary>
-    public sealed class SqlUserAccountRepository(TravelAppContext context, IPasswordHasher<UserAccount> passwordHasher) : IUserAccountRepository
+    /// <summary>Creates local login accounts and their profiles in SQL Server.</summary>
+    public sealed class SqlUserAccountRepository(
+        AccountsDbContext context,
+        IPasswordHasher<UserAccount> passwordHasher) : IUserAccountRepository
     {
         /// <inheritdoc />
-        public async Task AddAsync(TravelUser profile, CreateUserAccountDto account)
+        public async Task<int> CreateAsync(TravelUser profile, int cityId, CreateUserAccountDto account)
         {
             string userName = account.UserName.Trim();
 
@@ -20,25 +23,41 @@ namespace TravelApp.DataAccess.SQLRepositories
             {
                 Profile = profile,
                 UserName = userName,
-                NormalizedUserName = NormalizeUserName(userName),
+                NormalizedUserName = userName.ToUpperInvariant(),
                 Role = "User"
             };
 
             entity.PasswordHash = passwordHasher.HashPassword(entity, account.Password);
-            await context.Set<UserAccount>().AddAsync(entity);
+
+            context.Add(profile).Property<int>("CityId").CurrentValue = cityId;
+            context.UserAccounts.Add(entity);
+
+            try
+            {
+                await context.SaveChangesAsync();
+            }
+            catch (DbUpdateException exception) when (IsDuplicateUserName(exception))
+            {
+                throw new TravelAppConflictException("Brugernavnet er allerede optaget.");
+            }
+
+            return profile.Id;
         }
 
-        /// <summary>Finds an account by its user name for login verification.</summary>
-        internal Task<UserAccount?> FindByUserNameAsync(string userName)
+        private static bool IsDuplicateUserName(DbUpdateException exception)
         {
-            string normalizedUserName = NormalizeUserName(userName);
+            if (exception.InnerException is not SqlException sqlException)
+            {
+                return false;
+            }
 
-            return context.Set<UserAccount>().AsNoTracking().SingleOrDefaultAsync(account => account.NormalizedUserName == normalizedUserName);
-        }
+            // SQL Server uses these error numbers for duplicate unique values.
+            bool isDuplicateValue = sqlException.Number == 2601 || sqlException.Number == 2627;
 
-        private static string NormalizeUserName(string userName)
-        {
-            return userName.Trim().ToUpperInvariant();
+            // Only translate conflicts involving the unique user name.
+            bool concernsUserName = sqlException.Message.Contains("UQ_UserAccount_NormalizedUserName", StringComparison.Ordinal);
+
+            return isDuplicateValue && concernsUserName;
         }
     }
 }

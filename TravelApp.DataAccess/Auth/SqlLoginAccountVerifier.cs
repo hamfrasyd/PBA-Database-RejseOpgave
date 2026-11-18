@@ -13,7 +13,7 @@ namespace TravelApp.DataAccess.Auth
         {
             string normalizedUserName = userName.Trim().ToUpperInvariant();
 
-            UserAccount? account = await context.UserAccounts.AsNoTracking().SingleOrDefaultAsync(item => item.NormalizedUserName == normalizedUserName);
+            UserAccount? account = await context.UserAccounts.AsNoTracking().SingleOrDefaultAsync(item => item.NormalizedUserName == normalizedUserName && item.IsActive);
 
             if (account is null || passwordHasher.VerifyHashedPassword(account, account.PasswordHash, password) == PasswordVerificationResult.Failed)
             {

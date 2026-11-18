@@ -1,12 +1,10 @@
 
-using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using TravelApp.BusinessLogic.Handlers.Locations.GetCountries;
 using TravelApp.BusinessLogic.Handlers.Users.GetUserProfile;
 using TravelApp.BusinessLogic.Handlers.Users.GetUserProfiles;
 using TravelApp.BusinessLogic.Interfaces;
 using TravelApp.BusinessLogic.Models.Users;
-using TravelApp.DataAccess.Auth;
 using TravelApp.DataAccess.SQLRepositories.EntityFramework;
 
 namespace TravelApp.DataAccess.SQLRepositories
@@ -15,15 +13,12 @@ namespace TravelApp.DataAccess.SQLRepositories
     public class SqlUserRepository : IUserRepository
     {
         private readonly TravelAppContext _context;
-        private readonly IPasswordHasher<UserAccount> _passwordHasher;
 
         /// <summary>Initializes a new instance of the <see cref="SqlUserRepository"/> class.</summary>
         /// <param name="context">The Entity Framework Core context connected to SQL Server.</param>
-        /// <param name="passwordHasher">The hasher used for local login accounts.</param>
-        public SqlUserRepository(TravelAppContext context, IPasswordHasher<UserAccount> passwordHasher)
+        public SqlUserRepository(TravelAppContext context)
         {
             _context = context;
-            _passwordHasher = passwordHasher;
         }
 
         #region Create - Users
@@ -32,23 +27,6 @@ namespace TravelApp.DataAccess.SQLRepositories
         public async Task AddAsync(TravelUser user)
         {
             await _context.TravelUserEntities.AddAsync(user);
-        }
-
-        /// <inheritdoc />
-        public async Task AddWithAccountAsync(TravelUser user, string userName, string password)
-        {
-            var account = new UserAccount
-            {
-                Profile = user,
-                UserName = userName,
-                NormalizedUserName = userName.ToUpperInvariant(),
-                Role = "User"
-            };
-
-            account.PasswordHash = _passwordHasher.HashPassword(account, password);
-
-            await AddAsync(user);
-            _context.Set<UserAccount>().Add(account);
         }
 
         #endregion

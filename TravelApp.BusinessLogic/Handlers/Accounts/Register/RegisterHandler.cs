@@ -8,7 +8,9 @@ using TravelApp.BusinessLogic.Models.Users;
 namespace TravelApp.BusinessLogic.Handlers.Accounts.Register
 {
     /// <summary>Validates registration and creates a local user account.</summary>
-    public sealed class RegisterHandler(IUnitOfWorkFactory unitOfWorkFactory)
+    public sealed class RegisterHandler(
+        IUnitOfWorkFactory unitOfWorkFactory,
+        IUserAccountRepository userAccountRepository)
     {
         /// <summary>Registers a user and returns the new profile ID.</summary>
         public async Task<int> RegisterAsync(RegisterRequest request)
@@ -41,19 +43,14 @@ namespace TravelApp.BusinessLogic.Handlers.Accounts.Register
                 LastName = request.LastName.Trim(),
                 Birthday = birthday,
                 IsPrivate = request.IsPrivate,
-                CreatedAt = now,
-                City = city
+                CreatedAt = now
             };
 
-            await unitOfWork.Users.AddAsync(profile);
-            await unitOfWork.UserAccounts.AddAsync(profile, new CreateUserAccountDto
+            return await userAccountRepository.CreateAsync(profile, request.CityId, new CreateUserAccountDto
             {
                 UserName = request.UserName,
                 Password = request.Password
             });
-            await unitOfWork.CommitAsync();
-
-            return profile.Id;
         }
     }
 }

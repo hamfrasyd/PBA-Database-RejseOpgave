@@ -1,9 +1,10 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
+using TravelApp.API.DatabaseSelection;
 using TravelApp.API.ExceptionFilters;
-using TravelApp.BusinessLogic.Exceptions.SpecificCustomException;
 using TravelApp.BusinessLogic.Auth;
+using TravelApp.BusinessLogic.Exceptions.SpecificCustomException;
 using TravelApp.BusinessLogic.Handlers.Accounts.Login;
 using TravelApp.BusinessLogic.Handlers.Accounts.Register;
 using TravelApp.BusinessLogic.Handlers.Users.GetUserProfile;
@@ -13,6 +14,7 @@ namespace TravelApp.API.Controllers
     /// <summary>Authenticates local accounts and exposes the current user's profile.</summary>
     [ApiController]
     [Route("api/auth")]
+    [UseSqlDatabase]
     public class AuthController : ControllerBase
     {
         private readonly ICurrentUser _currentUser;

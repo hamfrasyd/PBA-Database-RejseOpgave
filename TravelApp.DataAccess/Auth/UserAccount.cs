@@ -22,5 +22,8 @@ namespace TravelApp.DataAccess.Auth
 
         /// <summary>Gets or sets the application role assigned to the account.</summary>
         public string Role { get; set; } = string.Empty;
+
+        /// <summary>Gets or sets whether the account can sign in.</summary>
+        public bool IsActive { get; set; } = true;
     }
 }

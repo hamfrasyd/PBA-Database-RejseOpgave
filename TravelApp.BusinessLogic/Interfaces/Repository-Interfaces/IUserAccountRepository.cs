@@ -6,7 +6,7 @@ namespace TravelApp.BusinessLogic.Interfaces
     /// <summary>Defines operations for local login accounts.</summary>
     public interface IUserAccountRepository
     {
-        /// <summary>Stages a login account for the next commit.</summary>
-        Task AddAsync(TravelUser profile, CreateUserAccountDto account);
+        /// <summary>Creates a SQL user profile and its login account atomically.</summary>
+        Task<int> CreateAsync(TravelUser profile, int cityId, CreateUserAccountDto account);
     }
 }

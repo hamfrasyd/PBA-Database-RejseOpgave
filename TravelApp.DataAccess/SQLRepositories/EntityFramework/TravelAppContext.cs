@@ -1,5 +1,4 @@
 using Microsoft.EntityFrameworkCore;
-using TravelApp.DataAccess.Auth;
 using TravelApp.BusinessLogic.Models.Posts;
 using TravelApp.BusinessLogic.Models.Groups;
 using TravelApp.BusinessLogic.Models.Destinations;
@@ -414,18 +413,6 @@ namespace TravelApp.DataAccess.SQLRepositories.EntityFramework
 
             modelBuilder.Entity<GetUserProfileResponse>(entity => entity.HasNoKey().ToView("vw_UserProfile", "dbo"));
 
-            modelBuilder.Entity<UserAccount>(entity =>
-            {
-                entity.ToTable("UserAccount", "dbo");
-                entity.HasKey(account => account.TravelUserId);
-                entity.Property(account => account.TravelUserId).ValueGeneratedNever();
-                entity.Property(account => account.UserName).HasMaxLength(128);
-                entity.Property(account => account.NormalizedUserName).HasMaxLength(128);
-                entity.Property(account => account.PasswordHash).HasMaxLength(512);
-                entity.Property(account => account.Role).HasMaxLength(16);
-                entity.HasIndex(account => account.NormalizedUserName).IsUnique();
-                entity.HasOne(account => account.Profile).WithOne().HasForeignKey<UserAccount>(account => account.TravelUserId).OnDelete(DeleteBehavior.NoAction);
-            });
             modelBuilder.Entity<GetCityStatsResponse>(entity => entity.HasNoKey().ToView("vw_DestinationStats", "dbo"));
         }
     }

@@ -1,8 +1,9 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using TravelApp.BusinessLogic.Models.Users;
 
 namespace TravelApp.DataAccess.Auth
 {
-    /// <summary>Maps the local login accounts stored in SQL Server.</summary>
+    /// <summary>Maps local login accounts and the SQL profiles created during registration.</summary>
     public sealed class AccountsDbContext(DbContextOptions<AccountsDbContext> options) : DbContext(options)
     {
         /// <summary>Gets the local login accounts.</summary>
@@ -12,6 +13,26 @@ namespace TravelApp.DataAccess.Auth
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
+
+            modelBuilder.Entity<TravelUser>(entity =>
+            {
+                entity.ToTable("User", "dbo");
+                entity.HasKey(profile => profile.Id);
+                entity.Property(profile => profile.Id).ValueGeneratedOnAdd();
+                entity.Property(profile => profile.FirstName).HasMaxLength(128);
+                entity.Property(profile => profile.LastName).HasMaxLength(128);
+                entity.Property(profile => profile.Birthday).HasColumnType("date");
+                entity.Property<int>("CityId").HasColumnName("City_Id");
+
+                entity.Ignore(profile => profile.City);
+                entity.Ignore(profile => profile.TripParticipants);
+                entity.Ignore(profile => profile.Reviews);
+                entity.Ignore(profile => profile.Posts);
+                entity.Ignore(profile => profile.EarnedAchievements);
+                entity.Ignore(profile => profile.ReceivedInvites);
+                entity.Ignore(profile => profile.SentInvites);
+                entity.Ignore(profile => profile.GroupMemberships);
+            });
 
             modelBuilder.Entity<UserAccount>(entity =>
             {
@@ -24,8 +45,7 @@ namespace TravelApp.DataAccess.Auth
                 entity.Property(account => account.Role).HasMaxLength(16);
                 entity.HasIndex(account => account.NormalizedUserName).IsUnique();
 
-                // Login needs the profile ID from the account row.
-                entity.Ignore(account => account.Profile);
+                entity.HasOne(account => account.Profile).WithOne().HasForeignKey<UserAccount>(account => account.TravelUserId).OnDelete(DeleteBehavior.NoAction);
             });
         }
     }

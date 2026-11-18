@@ -1,10 +1,6 @@
-using Microsoft.AspNetCore.Identity;
-using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-using TravelApp.BusinessLogic.Exceptions.SpecificCustomException;
 using TravelApp.BusinessLogic.Interfaces;
-using TravelApp.DataAccess.Auth;
 using TravelApp.DataAccess.SQLRepositories;
 using TravelApp.DataAccess.SQLRepositories.EntityFramework;
 
@@ -34,8 +30,7 @@ namespace TravelApp.DataAccess.UnitOfWork
         /// </summary>
         /// <param name="connectionString">The connection string used to configure the SQL Server data context.</param>
         /// <param name="logger">The logger used to record unit-of-work activity and diagnostics.</param>
-        /// <param name="passwordHasher">The hasher used for local login accounts.</param>
-        public SqlUnitOfWork(string connectionString, ILogger<SqlUnitOfWork> logger, IPasswordHasher<UserAccount> passwordHasher)
+        public SqlUnitOfWork(string connectionString, ILogger<SqlUnitOfWork> logger)
         {
             _logger = logger;
 
@@ -46,7 +41,7 @@ namespace TravelApp.DataAccess.UnitOfWork
             Activities = new SqlActivitiesRepository(_context);
             Locations = new SqlLocationsRepository(_context);
             Trips = new SqlTripRepository(_context);
-            Users = new SqlUserRepository(_context, passwordHasher);
+            Users = new SqlUserRepository(_context);
             Posts = new SqlPostRepository(_context);
         }
 
@@ -65,14 +60,6 @@ namespace TravelApp.DataAccess.UnitOfWork
                 }
 
                 _logger.LogDebug("Committed {ChangedEntities} TravelDB entities.", changedEntities);
-            }
-            catch (DbUpdateException exception)
-                when (exception.InnerException is SqlException sqlException
-                      && (sqlException.Number is 2601 or 2627)
-                      && sqlException.Message.Contains(
-                          "UQ_UserAccount_NormalizedUserName", StringComparison.Ordinal))
-            {
-                throw new TravelAppConflictException("Brugernavnet er allerede optaget.");
             }
             catch (Exception exception)
             {

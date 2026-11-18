@@ -1,8 +1,6 @@
-
 using Microsoft.EntityFrameworkCore;
+using TravelApp.BusinessLogic.DTOs.Users;
 using TravelApp.BusinessLogic.Handlers.Locations.Data;
-using TravelApp.BusinessLogic.Handlers.Users.GetUserProfile;
-using TravelApp.BusinessLogic.Handlers.Users.GetUserProfiles;
 using TravelApp.BusinessLogic.Interfaces;
 using TravelApp.BusinessLogic.Models.Users;
 using TravelApp.DataAccess.SQLRepositories.EntityFramework;
@@ -34,22 +32,23 @@ namespace TravelApp.DataAccess.SQLRepositories
         #region Read - All Profiles & VisitedCountries
 
         /// <inheritdoc />
-        public async Task<List<GetUserProfilesResponse>> GetProfilesAsync(GetUserProfilesRequest request, int viewerUserId, bool includePrivate)
+        public async Task<List<UserProfileDetailsDTO>> GetProfilesAsync(UserProfileSearchDTO profileSearch)
         {
-            IQueryable<GetUserProfileResponse> profiles = _context.UserProfiles.AsNoTracking();
+            IQueryable<UserProfileDetailsDTO> profiles = _context.UserProfiles.AsNoTracking();
 
-            if (includePrivate is false)
+            if (profileSearch.IncludePrivateProfiles is false)
             {
-                profiles = profiles.Where(profile => profile.IsPrivate == false || profile.UserId == viewerUserId);
+                profiles = profiles.Where(profile => profile.IsPrivate == false || profile.UserId == profileSearch.CurrentUserId);
             }
 
-            if (string.IsNullOrWhiteSpace(request.Search) is false)
+            if (string.IsNullOrWhiteSpace(profileSearch.Search) is false)
             {
-                string search = request.Search.Trim();
+                string search = profileSearch.Search.Trim();
+
                 profiles = profiles.Where(profile => profile.FullName.Contains(search));
             }
 
-            if (request.Descending)
+            if (profileSearch.Descending)
             {
                 profiles = profiles.OrderByDescending(profile => profile.UserId);
             }
@@ -58,23 +57,7 @@ namespace TravelApp.DataAccess.SQLRepositories
                 profiles = profiles.OrderBy(profile => profile.UserId);
             }
 
-            IQueryable<GetUserProfilesResponse> userProfiles = profiles.Select(profile => new GetUserProfilesResponse
-            {
-                UserId = profile.UserId,
-                FullName = profile.FullName,
-                Age = profile.Age,
-                HomeCity = profile.HomeCity,
-                HomeCountry = profile.HomeCountry,
-                IsPrivate = profile.IsPrivate,
-                MemberSince = profile.MemberSince,
-                FriendCount = profile.FriendCount,
-                CompletedTrips = profile.CompletedTrips,
-                PlannedTrips = profile.PlannedTrips,
-                ReviewCount = profile.ReviewCount,
-                AchievementCount = profile.AchievementCount
-            });
-
-            List<GetUserProfilesResponse> result = await userProfiles.ToListAsync();
+            List<UserProfileDetailsDTO> result = await profiles.ToListAsync();
 
             return result;
         }
@@ -82,22 +65,18 @@ namespace TravelApp.DataAccess.SQLRepositories
         /// <inheritdoc />
         public async Task<List<VisitedCountryDto>> GetVisitedCountriesAsync(int userId)
         {
-            IQueryable<VisitedCountryDto> visitedCountries =
-                from participant in _context.TripParticipantEntities.AsNoTracking()
-                join stop in _context.TripStopEntities.AsNoTracking()
-                    on participant.Trip!.Id equals stop.Trip!.Id
-                where participant.User!.Id == userId && participant.Trip!.IsCompleted
-                select new VisitedCountryDto
+            // The ! only reassures the compiler. These links are always stored, and a missing one is skipped instead of crashing.
+            IQueryable<VisitedCountryDto> visitedCountries = _context.TripParticipantEntities.AsNoTracking()
+                .Where(participant => participant.User!.Id == userId && participant.Trip!.IsCompleted)
+                .SelectMany(participant => participant.Trip!.TripStops)
+                .Select(stop => new VisitedCountryDto
                 {
                     Id = stop.City!.Country!.Id,
                     ContinentId = stop.City.Country.Continent!.Id,
                     Name = stop.City.Country.Name
-                };
+                });
 
-            List<VisitedCountryDto> result = await visitedCountries
-                .Distinct()
-                .OrderBy(country => country.Name)
-                .ToListAsync();
+            List<VisitedCountryDto> result = await visitedCountries.Distinct().OrderBy(country => country.Name).ToListAsync();
 
             return result;
         }
@@ -107,20 +86,25 @@ namespace TravelApp.DataAccess.SQLRepositories
         #region Read - By ID
 
         /// <inheritdoc />
+        public async Task<bool> UserExistsAsync(int userId)
+        {
+            bool userExists = await _context.TravelUserEntities.AsNoTracking().AnyAsync(user => user.Id == userId);
+
+            return userExists;
+        }
+
+        /// <inheritdoc />
         public async Task<TravelUser?> GetByIdAsync(int userId)
         {
-            TravelUser? entity = await _context.TravelUserEntities
-                .FirstOrDefaultAsync(user => user.Id == userId);
+            TravelUser? entity = await _context.TravelUserEntities.FirstOrDefaultAsync(user => user.Id == userId);
 
             return entity;
         }
 
         /// <inheritdoc />
-        public async Task<GetUserProfileResponse?> GetProfileAsync(int userId)
+        public async Task<UserProfileDetailsDTO?> GetProfileAsync(int userId)
         {
-            GetUserProfileResponse? matchingProfile = await _context.UserProfiles
-                .AsNoTracking()
-                .FirstOrDefaultAsync(profile => profile.UserId == userId);
+            UserProfileDetailsDTO? matchingProfile = await _context.UserProfiles.AsNoTracking().FirstOrDefaultAsync(profile => profile.UserId == userId);
 
             return matchingProfile;
         }
@@ -130,10 +114,26 @@ namespace TravelApp.DataAccess.SQLRepositories
         #region Update - Users
 
         /// <inheritdoc />
-        public Task UpdateAsync(TravelUser user)
+        public async Task<bool> UpdateUserAsync(UserBasicInfoDto userToUpdate)
         {
-            // The handler updated an entity already tracked by this Unit of Work.
-            return Task.FromResult(true);
+            TravelUser? userInDb = await _context.TravelUserEntities.FirstOrDefaultAsync(user => user.Id == userToUpdate.Id);
+
+            if (userInDb is null)
+            {
+                return false;
+            }
+
+            userInDb.FirstName = userToUpdate.FirstName;
+            userInDb.LastName = userToUpdate.LastName;
+
+            if (userToUpdate.IsPrivate is not null)
+            {
+                userInDb.IsPrivate = userToUpdate.IsPrivate.Value;
+            }
+
+            _context.Entry(userInDb).Property("CityId").CurrentValue = userToUpdate.CityId;
+
+            return true;
         }
 
         #endregion
@@ -141,20 +141,14 @@ namespace TravelApp.DataAccess.SQLRepositories
         #region Delete - Users
 
         /// <inheritdoc />
-        public async Task<bool> DeleteAsync(int userId)
+        public async Task DeleteAsync(int userId)
         {
-            if (_context.Database.CurrentTransaction is null)
+            TravelUser? user = await _context.TravelUserEntities.FirstOrDefaultAsync(item => item.Id == userId);
+
+            if (user is not null)
             {
-                await _context.Database.BeginTransactionAsync();
+                _context.TravelUserEntities.Remove(user);
             }
-
-            int deletedRows = await _context.TravelUserEntities
-                .Where(user => user.Id == userId)
-                .ExecuteDeleteAsync();
-
-            bool wasDeleted = deletedRows > 0;
-
-            return wasDeleted;
         }
 
         #endregion

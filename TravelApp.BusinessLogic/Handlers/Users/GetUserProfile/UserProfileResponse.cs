@@ -1,7 +1,7 @@
 namespace TravelApp.BusinessLogic.Handlers.Users.GetUserProfile
 {
     /// <summary>Contains the result of get user profile.</summary>
-    public class GetUserProfileResponse
+    public class UserProfileResponse
     {
         /// <summary>Gets or sets the user id.</summary>
         public int UserId { get; set; }

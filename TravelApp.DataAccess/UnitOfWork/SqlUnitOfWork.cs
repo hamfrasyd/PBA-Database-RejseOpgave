@@ -27,6 +27,8 @@ namespace TravelApp.DataAccess.UnitOfWork
 
         /// <inheritdoc/>
         public IFriendshipRepository Friendships { get; }
+        /// <inheritdoc/>
+        public IInviteRepository Invitations { get; }
 
         /// <summary>
         /// Initializes a new instance of the SQL unit of work with the specified database connection and logger.
@@ -47,6 +49,7 @@ namespace TravelApp.DataAccess.UnitOfWork
             Users = new SqlUserRepository(_context);
             Posts = new SqlPostRepository(_context);
             Friendships = new SqlFriendshipRepository(_context);
+            Invitations = new SqlInviteRepository(_context);
         }
 
         /// <summary>Persists all pending EF Core changes as one atomic database save.</summary>

@@ -1,3 +1,4 @@
+using TravelApp.BusinessLogic.DTOs.Friendships;
 using TravelApp.BusinessLogic.Models.Friendships;
 
 namespace TravelApp.BusinessLogic.Interfaces
@@ -22,6 +23,13 @@ namespace TravelApp.BusinessLogic.Interfaces
         /// <param name="friendshipId">The friendship identifier.</param>
         /// <returns>The friendship, or <see langword="null"/> if it does not exist.</returns>
         Task<Friendship?> GetByIdAsync(int friendshipId);
+
+        /// <summary>Retrieves the friends of a user.</summary>
+        /// <param name="userId">The user identifier.</param>
+        /// <param name="viewerId">The current user's identifier.</param>
+        /// <param name="canSeePrivateFriends">Whether the viewer may see all private friends.</param>
+        /// <returns>The user's friendships that the viewer may see.</returns>
+        Task<List<FriendDTO>> GetFriendsAsync(int userId, int viewerId, bool canSeePrivateFriends);
 
         /// <summary>Checks whether two users are already friends in either direction.</summary>
         /// <param name="firstUserId">The first user's identifier.</param>

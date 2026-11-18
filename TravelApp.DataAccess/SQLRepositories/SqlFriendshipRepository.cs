@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using TravelApp.BusinessLogic.DTOs.Friendships;
 using TravelApp.BusinessLogic.Interfaces;
 using TravelApp.BusinessLogic.Models.Friendships;
 using TravelApp.DataAccess.SQLRepositories.EntityFramework;
@@ -41,6 +42,40 @@ namespace TravelApp.DataAccess.SQLRepositories
                 .FirstOrDefaultAsync(friendship => friendship.Id == friendshipId);
 
             return friendshipFromDb;
+        }
+
+        /// <inheritdoc/>
+        public async Task<List<FriendDTO>> GetFriendsAsync(int userId, int viewerId, bool canSeePrivateFriends)
+        {
+            IQueryable<Friendship> friendshipsQuery = _context.FriendshipEntities
+                .AsNoTracking()
+                .Where(friendship => friendship.UserA!.Id == userId || friendship.UserB!.Id == userId);
+
+            if (canSeePrivateFriends is false)
+            {
+                // Do not expose private users in another user's public friend list.
+                friendshipsQuery = friendshipsQuery.Where(friendship =>
+                    friendship.UserA!.Id == userId
+                        ? (friendship.UserB!.IsPrivate == false || friendship.UserB.Id == viewerId)
+                        : (friendship.UserA.IsPrivate == false || friendship.UserA.Id == viewerId));
+            }
+
+            IQueryable<FriendDTO> friendsQuery = friendshipsQuery.Select(friendship => new FriendDTO
+                {
+                    FriendshipId = friendship.Id,
+                    UserId = friendship.UserA!.Id == userId ? friendship.UserB!.Id : friendship.UserA.Id,
+                    FirstName = friendship.UserA.Id == userId ? friendship.UserB!.FirstName : friendship.UserA.FirstName,
+                    LastName = friendship.UserA.Id == userId ? friendship.UserB!.LastName : friendship.UserA.LastName,
+                    StartDate = friendship.StartDate
+                });
+
+            List<FriendDTO> friendsFromDb = await friendsQuery
+                .OrderBy(friend => friend.FirstName)
+                .ThenBy(friend => friend.LastName)
+                .ThenBy(friend => friend.UserId)
+                .ToListAsync();
+
+            return friendsFromDb;
         }
 
         /// <inheritdoc/>

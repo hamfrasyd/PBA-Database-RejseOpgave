@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using TravelApp.API.ExceptionFilters;
 using TravelApp.BusinessLogic.Handlers.Friendships.AddFriend;
 using TravelApp.BusinessLogic.Handlers.Friendships.GetFriendship;
+using TravelApp.BusinessLogic.Handlers.Friendships.GetFriends;
 
 namespace TravelApp.API.Controllers
 {
@@ -12,6 +13,28 @@ namespace TravelApp.API.Controllers
     [Route("api/friendships")]
     public class FriendshipsController : ControllerBase
     {
+        #region GET - Friends By User
+
+        /// <summary>Lists a user's friends when their profile is visible.</summary>
+        /// <param name="userId">The user identifier.</param>
+        /// <param name="getFriendsHandler">The handler that retrieves the friends.</param>
+        /// <returns>The user's friends.</returns>
+        // GET api/friendships/users/{userId}
+        [HttpGet("users/{userId:int}")]
+        [ProducesResponseType(typeof(List<GetFriendsResponse>), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status404NotFound)]
+        [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status500InternalServerError)]
+        public async Task<ActionResult<List<GetFriendsResponse>>> GetFriends([FromRoute] int userId, [FromServices] GetFriendsHandler getFriendsHandler)
+        {
+            List<GetFriendsResponse> response = await getFriendsHandler.GetFriendsAsync(userId);
+
+            return Ok(response);
+        }
+
+        #endregion
+
         #region GET - Friendship By ID
 
         /// <summary>Retrieves a friendship for one of its members.</summary>

@@ -36,6 +36,7 @@ using TravelApp.BusinessLogic.Handlers.Activities.GetAllActivitiesByCity;
 
 using TravelApp.BusinessLogic.Handlers.Friendships.AddFriend;
 using TravelApp.BusinessLogic.Handlers.Friendships.GetFriendship;
+using TravelApp.BusinessLogic.Handlers.Friendships.GetFriends;
 
 namespace TravelApp.BusinessLogic.DependencyInjection
 {
@@ -126,6 +127,7 @@ namespace TravelApp.BusinessLogic.DependencyInjection
         }
         private static void RegisterFriendships(IServiceCollection services)
         {
+            services.AddScoped<GetFriendsHandler>();
             services.AddScoped<GetFriendshipHandler>();
             services.AddScoped<AddFriendHandler>();
         }

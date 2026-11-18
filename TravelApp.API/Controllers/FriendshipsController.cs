@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using TravelApp.API.ExceptionFilters;
 using TravelApp.BusinessLogic.Handlers.Friendships.AddFriend;
+using TravelApp.BusinessLogic.Handlers.Friendships.GetFriendship;
 
 namespace TravelApp.API.Controllers
 {
@@ -11,6 +12,28 @@ namespace TravelApp.API.Controllers
     [Route("api/friendships")]
     public class FriendshipsController : ControllerBase
     {
+        #region GET - Friendship By ID
+
+        /// <summary>Retrieves a friendship for one of its members.</summary>
+        /// <param name="friendshipId">The friendship identifier.</param>
+        /// <param name="getFriendshipHandler">The handler that retrieves the friendship.</param>
+        /// <returns>The friendship details.</returns>
+        // GET api/friendships/{friendshipId}
+        [HttpGet("{friendshipId:int}")]
+        [ProducesResponseType(typeof(GetFriendshipResponse), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status404NotFound)]
+        [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status500InternalServerError)]
+        public async Task<ActionResult<GetFriendshipResponse>> GetFriendship([FromRoute] int friendshipId, [FromServices] GetFriendshipHandler getFriendshipHandler)
+        {
+            GetFriendshipResponse response = await getFriendshipHandler.GetFriendshipAsync(friendshipId);
+
+            return Ok(response);
+        }
+
+        #endregion
+
         #region POST - Add Friend
 
         /// <summary>Adds an existing user as a friend.</summary>

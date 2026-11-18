@@ -18,6 +18,11 @@ namespace TravelApp.BusinessLogic.Interfaces
 
         #region Read - Friendships
 
+        /// <summary>Retrieves a friendship by its identifier.</summary>
+        /// <param name="friendshipId">The friendship identifier.</param>
+        /// <returns>The friendship, or <see langword="null"/> if it does not exist.</returns>
+        Task<Friendship?> GetByIdAsync(int friendshipId);
+
         /// <summary>Checks whether two users are already friends in either direction.</summary>
         /// <param name="firstUserId">The first user's identifier.</param>
         /// <param name="secondUserId">The second user's identifier.</param>

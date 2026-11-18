@@ -33,6 +33,17 @@ namespace TravelApp.DataAccess.SQLRepositories
         #region Read - Friendships
 
         /// <inheritdoc/>
+        public async Task<Friendship?> GetByIdAsync(int friendshipId)
+        {
+            Friendship? friendshipFromDb = await _context.FriendshipEntities
+                .Include(friendship => friendship.UserA)
+                .Include(friendship => friendship.UserB)
+                .FirstOrDefaultAsync(friendship => friendship.Id == friendshipId);
+
+            return friendshipFromDb;
+        }
+
+        /// <inheritdoc/>
         public async Task<bool> FriendshipExistsAsync(int firstUserId, int secondUserId)
         {
             bool friendshipExists = await _context.FriendshipEntities.AsNoTracking().AnyAsync(friendship =>

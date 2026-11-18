@@ -135,9 +135,9 @@ namespace TravelApp.DataAccess.SQLRepositories
         }
 
         /// <inheritdoc />
-        public async Task<CityStatsDTO?> GetCityStatsAsync(int cityId)
+        public async Task<DestinationStatsView?> GetCityStatsAsync(int cityId)
         {
-            CityStatsDTO? cityStats = await _context.DestinationStatistics
+            DestinationStatsView? cityStats = await _context.DestinationStatsViews
                 .AsNoTracking()
                 .FirstOrDefaultAsync(item => item.CityId == cityId);
 

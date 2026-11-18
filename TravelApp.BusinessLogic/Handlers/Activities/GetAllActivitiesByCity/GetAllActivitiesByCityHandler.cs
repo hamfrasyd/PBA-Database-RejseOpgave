@@ -1,7 +1,7 @@
 using TravelApp.BusinessLogic.DTOs.Activities;
 using TravelApp.BusinessLogic.Interfaces;
 
-namespace TravelApp.BusinessLogic.Handlers.Activities.GetActivitiesByCity
+namespace TravelApp.BusinessLogic.Handlers.Activities.GetAllActivitiesByCity
 {
     /// <summary>Handles the get city activities use case.</summary>
     public class GetAllActivitiesByCityHandler

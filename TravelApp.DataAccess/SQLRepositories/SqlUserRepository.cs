@@ -32,9 +32,9 @@ namespace TravelApp.DataAccess.SQLRepositories
         #region Read - All Profiles & VisitedCountries
 
         /// <inheritdoc />
-        public async Task<List<UserProfileDetailsDTO>> GetProfilesAsync(UserProfileSearchDTO profileSearch)
+        public async Task<List<UserProfileView>> GetProfilesAsync(UserProfileSearchDTO profileSearch)
         {
-            IQueryable<UserProfileDetailsDTO> profiles = _context.UserProfiles.AsNoTracking();
+            IQueryable<UserProfileView> profiles = _context.UserProfileViews.AsNoTracking();
 
             if (profileSearch.IncludePrivateProfiles is false)
             {
@@ -57,7 +57,7 @@ namespace TravelApp.DataAccess.SQLRepositories
                 profiles = profiles.OrderBy(profile => profile.UserId);
             }
 
-            List<UserProfileDetailsDTO> result = await profiles.ToListAsync();
+            List<UserProfileView> result = await profiles.ToListAsync();
 
             return result;
         }
@@ -102,9 +102,9 @@ namespace TravelApp.DataAccess.SQLRepositories
         }
 
         /// <inheritdoc />
-        public async Task<UserProfileDetailsDTO?> GetProfileAsync(int userId)
+        public async Task<UserProfileView?> GetProfileAsync(int userId)
         {
-            UserProfileDetailsDTO? matchingProfile = await _context.UserProfiles.AsNoTracking().FirstOrDefaultAsync(profile => profile.UserId == userId);
+            UserProfileView? matchingProfile = await _context.UserProfileViews.AsNoTracking().FirstOrDefaultAsync(profile => profile.UserId == userId);
 
             return matchingProfile;
         }

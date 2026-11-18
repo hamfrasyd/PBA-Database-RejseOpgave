@@ -33,6 +33,16 @@ using TravelApp.BusinessLogic.Handlers.Posts.GetPosts;
 using TravelApp.BusinessLogic.Handlers.Posts.GetPost;
 using TravelApp.BusinessLogic.Handlers.Posts.DeletePost;
 using TravelApp.BusinessLogic.Handlers.Activities.GetAllActivitiesByCity;
+using TravelApp.BusinessLogic.Handlers.Posts;
+using TravelApp.BusinessLogic.Handlers.Groups;
+using TravelApp.BusinessLogic.Handlers.Group;
+using TravelApp.BusinessLogic.Handlers.Groups.CreateGroup;
+using TravelApp.BusinessLogic.Handlers.Groups.AddGroupMembers;
+using TravelApp.BusinessLogic.Handlers.Groups.AddGroupTrips;
+using TravelApp.BusinessLogic.Handlers.Groups.DeleteGroup;
+using TravelApp.BusinessLogic.Handlers.Groups.UpdateGroup;
+using TravelApp.BusinessLogic.Handlers.Groups.UpdateGroupMember;
+using TravelApp.BusinessLogic.Handlers.Groups.RemoveGroupTrips;
 
 namespace TravelApp.BusinessLogic.DependencyInjection
 {
@@ -52,6 +62,7 @@ namespace TravelApp.BusinessLogic.DependencyInjection
             RegisterUsers(services);
             RegisterTrips(services);
             RegisterPosts(services);
+            RegisterGroups(services);
 
             return services;
         }
@@ -119,6 +130,19 @@ namespace TravelApp.BusinessLogic.DependencyInjection
             services.AddScoped<CreatePostHandler>();
             services.AddScoped<DeletePostHandler>();
             services.AddScoped<UpdatePostHandler>();
+        }
+
+        private static void RegisterGroups(IServiceCollection services)
+        {
+            services.AddScoped<GetGroupsHandler>();
+            services.AddScoped<GetGroupHandler>();
+            services.AddScoped<CreateGroupHandler>();
+            services.AddScoped<AddGroupMembersHandler>();
+            services.AddScoped<AddGroupTripsHandler>();
+            services.AddScoped<DeleteGroupHandler>();
+            services.AddScoped<UpdateGroupHandler>();
+            services.AddScoped<RemoveGroupMembersHandler>();
+            services.AddScoped<RemoveGroupTripsHandler>();
         }
     }
 }

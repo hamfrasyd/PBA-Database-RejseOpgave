@@ -33,6 +33,7 @@ using TravelApp.BusinessLogic.Handlers.Posts.GetPosts;
 using TravelApp.BusinessLogic.Handlers.Posts.GetPost;
 using TravelApp.BusinessLogic.Handlers.Posts.DeletePost;
 using TravelApp.BusinessLogic.Handlers.Activities.GetAllActivitiesByCity;
+using TravelApp.BusinessLogic.Handlers.Friendships.AddFriend;
 
 namespace TravelApp.BusinessLogic.DependencyInjection
 {
@@ -52,6 +53,7 @@ namespace TravelApp.BusinessLogic.DependencyInjection
             RegisterUsers(services);
             RegisterTrips(services);
             RegisterPosts(services);
+            RegisterFriendships(services);
 
             return services;
         }
@@ -119,6 +121,10 @@ namespace TravelApp.BusinessLogic.DependencyInjection
             services.AddScoped<CreatePostHandler>();
             services.AddScoped<DeletePostHandler>();
             services.AddScoped<UpdatePostHandler>();
+        }
+        private static void RegisterFriendships(IServiceCollection services)
+        {
+            services.AddScoped<AddFriendHandler>();
         }
     }
 }

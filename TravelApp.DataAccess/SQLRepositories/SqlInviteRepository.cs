@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using TravelApp.BusinessLogic.DTOs.Invitations;
 using TravelApp.BusinessLogic.Interfaces;
 using TravelApp.BusinessLogic.Models.Invitations;
 using TravelApp.DataAccess.SQLRepositories.EntityFramework;
@@ -45,6 +46,40 @@ namespace TravelApp.DataAccess.SQLRepositories
                 .FirstOrDefaultAsync(invitation => invitation.Id == invitationId);
 
             return invitationFromDb;
+        }
+
+        /// <inheritdoc/>
+        public async Task<List<InvitationDTO>> GetForUserAsync(int userId, bool sentByUser)
+        {
+            IQueryable<Invite> invitationsQuery = _context.InviteEntities.AsNoTracking();
+
+            if (sentByUser is true)
+            {
+                invitationsQuery = invitationsQuery.Where(invitation => invitation.Sender!.Id == userId);
+            }
+            else
+            {
+                invitationsQuery = invitationsQuery.Where(invitation => invitation.Receiver!.Id == userId);
+            }
+
+            IQueryable<InvitationDTO> invitationDetailsQuery = invitationsQuery.Select(invitation => new InvitationDTO
+            {
+                Id = invitation.Id,
+                TripId = invitation.Trip!.Id,
+                SenderId = invitation.Sender!.Id,
+                SenderName = invitation.Sender.FirstName + " " + invitation.Sender.LastName,
+                ReceiverId = invitation.Receiver!.Id,
+                ReceiverName = invitation.Receiver.FirstName + " " + invitation.Receiver.LastName,
+                Status = invitation.InvitationStatus!.StatusName,
+                SendDate = invitation.SendDate
+            });
+
+            List<InvitationDTO> invitationsFromDb = await invitationDetailsQuery
+                .OrderByDescending(invitation => invitation.SendDate)
+                .ThenByDescending(invitation => invitation.Id)
+                .ToListAsync();
+
+            return invitationsFromDb;
         }
 
         /// <inheritdoc/>

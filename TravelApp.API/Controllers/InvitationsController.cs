@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using TravelApp.API.ExceptionFilters;
 using TravelApp.BusinessLogic.Handlers.Invitations.CreateInvitation;
 using TravelApp.BusinessLogic.Handlers.Invitations.GetInvitation;
+using TravelApp.BusinessLogic.Handlers.Invitations.GetInvitations;
 
 namespace TravelApp.API.Controllers
 {
@@ -12,6 +13,44 @@ namespace TravelApp.API.Controllers
     [Route("api/invitations")]
     public class InvitationsController : ControllerBase
     {
+        #region GET - Received Invitations
+
+        /// <summary>Lists invitations received by the current user.</summary>
+        /// <param name="getInvitationsHandler">The handler that retrieves the invitations.</param>
+        /// <returns>The received invitations.</returns>
+        // GET api/invitations/received
+        [HttpGet("received")]
+        [ProducesResponseType(typeof(List<GetInvitationsResponse>), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status500InternalServerError)]
+        public async Task<ActionResult<List<GetInvitationsResponse>>> GetReceivedInvitations([FromServices] GetInvitationsHandler getInvitationsHandler)
+        {
+            List<GetInvitationsResponse> response = await getInvitationsHandler.GetInvitationsAsync(false);
+
+            return Ok(response);
+        }
+
+        #endregion
+
+        #region GET - Sent Invitations
+
+        /// <summary>Lists invitations sent by the current user.</summary>
+        /// <param name="getInvitationsHandler">The handler that retrieves the invitations.</param>
+        /// <returns>The sent invitations.</returns>
+        // GET api/invitations/sent
+        [HttpGet("sent")]
+        [ProducesResponseType(typeof(List<GetInvitationsResponse>), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status500InternalServerError)]
+        public async Task<ActionResult<List<GetInvitationsResponse>>> GetSentInvitations([FromServices] GetInvitationsHandler getInvitationsHandler)
+        {
+            List<GetInvitationsResponse> response = await getInvitationsHandler.GetInvitationsAsync(true);
+
+            return Ok(response);
+        }
+
+        #endregion
+
         #region GET - Invitation By ID
 
         /// <summary>Retrieves an invitation for its sender or receiver.</summary>

@@ -1,3 +1,4 @@
+using TravelApp.BusinessLogic.DTOs.Invitations;
 using TravelApp.BusinessLogic.Models.Invitations;
 
 namespace TravelApp.BusinessLogic.Interfaces
@@ -24,6 +25,12 @@ namespace TravelApp.BusinessLogic.Interfaces
         /// <param name="invitationId">The invitation identifier.</param>
         /// <returns>The invitation, or <see langword="null"/> if it does not exist.</returns>
         Task<Invite?> GetByIdAsync(int invitationId);
+
+        /// <summary>Retrieves invitations sent by or received by a user.</summary>
+        /// <param name="userId">The user identifier.</param>
+        /// <param name="sentByUser">Whether to retrieve sent rather than received invitations.</param>
+        /// <returns>The matching invitations.</returns>
+        Task<List<InvitationDTO>> GetForUserAsync(int userId, bool sentByUser);
 
         /// <summary>Retrieves the identifier of a named invitation status.</summary>
         /// <param name="statusName">The status name.</param>

@@ -104,7 +104,7 @@ namespace TravelApp.DataAccess.SQLRepositories
             {
                 activityInDb.Description = activityToUpdate.Description.Trim();
             }
-  
+
             activityInDb.Description = activityToUpdate.Description;
             _context.Entry(activityInDb).Property("CityId").CurrentValue = activityToUpdate.CityId;
 
@@ -118,12 +118,14 @@ namespace TravelApp.DataAccess.SQLRepositories
         /// <inheritdoc />
         public async Task DeleteAsync(int activityId)
         {
-            Activity? activity = await _context.ActivityEntities.FirstOrDefaultAsync(item => item.Id == activityId);
+            Activity? activity = await _context.ActivityEntities.FirstOrDefaultAsync(a => a.Id == activityId);
 
-            if (activity is not null)
+            if (activity is null)
             {
-                _context.ActivityEntities.Remove(activity);
+                throw new InvalidOperationException($"Activity with ID {activityId} was not found.");
             }
+
+            _context.ActivityEntities.Remove(activity);
         }
 
         #endregion

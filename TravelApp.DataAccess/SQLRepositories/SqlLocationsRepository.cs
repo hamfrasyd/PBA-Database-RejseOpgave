@@ -1,7 +1,7 @@
 using Microsoft.EntityFrameworkCore;
-using TravelApp.BusinessLogic.Handlers.Locations.Data;
+using TravelApp.BusinessLogic.DTOs.Locations;
 using TravelApp.BusinessLogic.Interfaces;
-using TravelApp.BusinessLogic.Models.Destinations;
+using TravelApp.BusinessLogic.Models.Locations;
 using TravelApp.DataAccess.SQLRepositories.EntityFramework;
 
 namespace TravelApp.DataAccess.SQLRepositories
@@ -10,7 +10,6 @@ namespace TravelApp.DataAccess.SQLRepositories
     public class SqlLocationsRepository : ILocationsRepository
     {
         private readonly TravelAppContext _context;
-        private City? _addedCity;
 
         /// <summary>Initializes a new instance of the <see cref="SqlLocationsRepository"/> class.</summary>
         /// <param name="context">The Entity Framework Core context connected to SQL Server.</param>
@@ -22,51 +21,10 @@ namespace TravelApp.DataAccess.SQLRepositories
         #region Create - Cities
 
         /// <inheritdoc />
-        public async Task<CityDto?> CreateCityAsync(CreateCityDto cityToCreate)
+        public async Task CreateCityAsync(City city, int countryId)
         {
-            _addedCity = new City
-            {
-                Name = cityToCreate.Name
-            };
-
-            await _context.CityEntities.AddAsync(_addedCity);
-            _context.Entry(_addedCity).Property("CountryId").CurrentValue = cityToCreate.CountryId;
-            
-            int countryId = _context.Entry(_addedCity).Property<int>("CountryId").CurrentValue;
-
-            if (_addedCity.Id <= 0)
-            {
-                return null;
-            }
-
-            CityDto createdCity = new CityDto
-            {
-                Id = _addedCity.Id,
-                Name = _addedCity.Name,
-                CountryId = countryId
-            };
-
-            return createdCity;
-        }
-
-        /// <inheritdoc />
-        public CityDto GetCreatedCity()
-        {
-            if (_addedCity is null)
-            {
-                throw new InvalidOperationException("CreateCityAsync must be called before GetCreatedCity.");
-            }
-
-            int countryId = _context.Entry(_addedCity).Property<int>("CountryId").CurrentValue;
-
-            CityDto createdCity = new CityDto
-            {
-                Id = _addedCity.Id,
-                Name = _addedCity.Name,
-                CountryId = countryId
-            };
-
-            return createdCity;
+            await _context.CityEntities.AddAsync(city);
+            _context.Entry(city).Property("CountryId").CurrentValue = countryId;
         }
 
         #endregion
@@ -74,7 +32,7 @@ namespace TravelApp.DataAccess.SQLRepositories
         #region Read - All Cities, Countries & Continents
 
         /// <inheritdoc />
-        public async Task<List<CityDto>> GetCitiesAsync(GetCitiesFilterDto filter)
+        public async Task<List<CityDTO>> GetCitiesAsync(GetCitiesFilterDTO filter)
         {
             IQueryable<City> cities = _context.CityEntities.AsNoTracking();
 
@@ -94,20 +52,19 @@ namespace TravelApp.DataAccess.SQLRepositories
                 ? cities.OrderByDescending(city => city.Name).ThenBy(city => city.Id)
                 : cities.OrderBy(city => city.Name).ThenBy(city => city.Id);
 
-            List<CityDto> result = await orderedCities
-                                        .Select(city => new CityDto
-                                        {
-                                            Id = city.Id,
-                                            Name = city.Name,
-                                            CountryId = EF.Property<int>(city, "CountryId")
-                                        })
-                                        .ToListAsync();
+            List<CityDTO> result = await orderedCities.Select(city => new CityDTO
+            {
+                Id = city.Id,
+                Name = city.Name,
+                CountryId = EF.Property<int>(city, "CountryId")
+                })
+                .ToListAsync();
 
             return result;
         }
 
         /// <inheritdoc />
-        public async Task<List<CountryDto>> GetCountriesAsync(int? continentId)
+        public async Task<List<CountryDTO>> GetCountriesAsync(int? continentId)
         {
             IQueryable<Country> countries = _context.CountryEntities.AsNoTracking();
 
@@ -117,9 +74,9 @@ namespace TravelApp.DataAccess.SQLRepositories
                 countries = countries.Where(country => EF.Property<int>(country, "ContinentId") == selectedContinentId);
             }
 
-            List<CountryDto> result = await countries
+            List<CountryDTO> result = await countries
                 .OrderBy(country => country.Name)
-                .Select(country => new CountryDto
+                .Select(country => new CountryDTO
                 {
                     Id = country.Id,
                     Name = country.Name,
@@ -131,12 +88,12 @@ namespace TravelApp.DataAccess.SQLRepositories
         }
 
         /// <inheritdoc />
-        public async Task<List<ContinentDto>> GetContinentsAsync()
+        public async Task<List<ContinentDTO>> GetContinentsAsync()
         {
-            List<ContinentDto> result = await _context.ContinentEntities
+            List<ContinentDTO> result = await _context.ContinentEntities
                 .AsNoTracking()
                 .OrderBy(continent => continent.Name)
-                .Select(continent => new ContinentDto
+                .Select(continent => new ContinentDTO
                 {
                     Id = continent.Id,
                     Name = continent.Name
@@ -151,12 +108,12 @@ namespace TravelApp.DataAccess.SQLRepositories
         #region Read - By-ID Cities & Stats
 
         /// <inheritdoc />
-        public async Task<CityDto?> GetCityAsync(int cityId)
+        public async Task<CityDTO?> GetCityAsync(int cityId)
         {
-            CityDto? cityData = await _context.CityEntities
+            CityDTO? cityData = await _context.CityEntities
                 .AsNoTracking()
                 .Where(city => city.Id == cityId)
-                .Select(city => new CityDto
+                .Select(city => new CityDTO
                 {
                     Id = city.Id,
                     Name = city.Name,
@@ -178,9 +135,9 @@ namespace TravelApp.DataAccess.SQLRepositories
         }
 
         /// <inheritdoc />
-        public async Task<CityStatsDto?> GetCityStatsAsync(int cityId)
+        public async Task<DestinationStatsView?> GetCityStatsAsync(int cityId)
         {
-            CityStatsDto? cityStats = await _context.DestinationStatistics
+            DestinationStatsView? cityStats = await _context.DestinationStatsViews
                 .AsNoTracking()
                 .FirstOrDefaultAsync(item => item.CityId == cityId);
 
@@ -189,7 +146,15 @@ namespace TravelApp.DataAccess.SQLRepositories
 
         #endregion
 
-        #region Validation - Countries
+        #region Validation - Cities & Countries
+
+        /// <inheritdoc />
+        public async Task<bool> CityExistsAsync(int cityId)
+        {
+            bool cityExists = await _context.CityEntities.AnyAsync(city => city.Id == cityId);
+
+            return cityExists;
+        }
 
         /// <inheritdoc />
         public async Task<bool> CountryExistsAsync(int countryId)

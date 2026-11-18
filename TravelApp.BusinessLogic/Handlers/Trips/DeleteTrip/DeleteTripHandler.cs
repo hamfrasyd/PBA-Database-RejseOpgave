@@ -1,9 +1,9 @@
 ﻿using TravelApp.BusinessLogic.Auth;
-using TravelApp.BusinessLogic.DTOs.Trips;
 using TravelApp.BusinessLogic.Exceptions.SpecificCustomException;
+using TravelApp.BusinessLogic.Handlers.Trips.ManageTripRelations;
 using TravelApp.BusinessLogic.Interfaces;
 
-namespace TravelApp.BusinessLogic.Handlers.Trips
+namespace TravelApp.BusinessLogic.Handlers.Trips.DeleteTrip
 {
     /// <summary>Deletes a trip the current user is allowed to remove.</summary>
     public class DeleteTripHandler
@@ -28,17 +28,7 @@ namespace TravelApp.BusinessLogic.Handlers.Trips
         {
             await using IUnitOfWork unitOfWork =  _unitOfWorkFactory.Create();
 
-            TripAccessInfoDTO? access = await unitOfWork.Trips.GetAccessInfoAsync(tripId, _currentUser.UserId);
-
-            if (access is null)
-            {
-                throw new TravelAppNotFoundException($"Trip {tripId} was not found.");
-            }
-
-            if (!access.IsParticipant && !_currentUser.IsAdmin)
-            {
-                throw new TravelAppForbiddenException("You cannot delete this trip.");
-            }
+            await TripAccessHelper.EnsureCanModifyAsync(unitOfWork, tripId, _currentUser);
 
             await unitOfWork.Trips.DeleteAsync(tripId);
             await unitOfWork.CommitAsync();

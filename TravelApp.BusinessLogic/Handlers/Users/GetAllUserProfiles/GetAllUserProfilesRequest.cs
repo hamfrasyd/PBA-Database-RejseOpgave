@@ -1,7 +1,7 @@
-namespace TravelApp.BusinessLogic.Handlers.Users.GetUserProfiles
+namespace TravelApp.BusinessLogic.Handlers.Users.GetAllUserProfiles
 {
-    /// <summary>Contains the information needed to get user profiles.</summary>
-    public class GetUserProfilesRequest
+    /// <summary>Contains the information needed to get all user profiles.</summary>
+    public class GetAllUserProfilesRequest
     {
         /// <summary>Gets or sets the search.</summary>
         public string? Search { get; set; }

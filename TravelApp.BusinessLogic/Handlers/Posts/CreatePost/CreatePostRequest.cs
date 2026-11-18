@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace TravelApp.BusinessLogic.Handlers.Posts
+namespace TravelApp.BusinessLogic.Handlers.Posts.CreatePost
 {
     /// <summary>Contains the data required to create a new post.</summary>
     public class CreatePostRequest

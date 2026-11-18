@@ -1,8 +1,8 @@
 using TravelApp.BusinessLogic.Auth;
+using TravelApp.BusinessLogic.DTOs.Locations;
 using TravelApp.BusinessLogic.Exceptions.SpecificCustomException;
-using TravelApp.BusinessLogic.Handlers.Locations.Data;
-using TravelApp.BusinessLogic.Handlers.Users.GetUserProfile;
 using TravelApp.BusinessLogic.Interfaces;
+using TravelApp.BusinessLogic.Models.Users;
 
 namespace TravelApp.BusinessLogic.Handlers.Locations.GetVisitedCountries
 {
@@ -24,37 +24,29 @@ namespace TravelApp.BusinessLogic.Handlers.Locations.GetVisitedCountries
         /// <summary>Retrieves visited countries.</summary>
         /// <param name="userId">The user identifier.</param>
         /// <returns>The countries visited on completed trips.</returns>
-        /// <exception cref="TravelAppNotFoundException">Thrown when the user does not exist or the profile is private.</exception>
+        /// <exception cref="TravelAppNotFoundException">Thrown when the user does not exist.</exception>
+        /// <exception cref="TravelAppForbiddenException">Thrown when the profile is private and the current user is neither the owner nor an administrator.</exception>
         public async Task<List<GetVisitedCountriesResponse>> GetVisitedCountriesAsync(int userId)
         {
             await using IUnitOfWork unitOfWork = _unitOfWorkFactory.Create();
 
-            GetUserProfileResponse? profileFromDb = await unitOfWork.Users.GetProfileAsync(userId);
+            UserProfileView? profileFromDb = await unitOfWork.Users.GetProfileAsync(userId);
 
-            bool profileIsMissing = profileFromDb is null;
-            bool profileIsPrivate = profileFromDb is not null && profileFromDb.IsPrivate;
-            bool currentUserIsAdmin = _currentUser.IsAdmin;
-            bool currentUserOwnsProfile = _currentUser.UserId == userId;
-            bool privateProfileIsHidden = profileIsPrivate && currentUserIsAdmin is false && currentUserOwnsProfile is false;
-
-            if (profileIsMissing || privateProfileIsHidden)
+            if (profileFromDb is null)
             {
-                throw new TravelAppNotFoundException($"User {userId} was not found.");
+                throw new TravelAppNotFoundException($"User with ID {userId} was not found.");
             }
 
-            List<VisitedCountryDto> countriesFromDb = await unitOfWork.Users.GetVisitedCountriesAsync(userId);
+            AccessRules.RequirePublicOrOwnerOrAdmin(_currentUser, userId, profileFromDb.IsPrivate);
 
-            List<GetVisitedCountriesResponse> visitedCountriesResponse = new List<GetVisitedCountriesResponse>();
+            List<VisitedCountryDTO> countriesFromDb = await unitOfWork.Users.GetVisitedCountriesAsync(userId);
 
-            foreach (VisitedCountryDto country in countriesFromDb)
+            List<GetVisitedCountriesResponse> visitedCountriesResponse = countriesFromDb.Select(country => new GetVisitedCountriesResponse
             {
-                visitedCountriesResponse.Add(new GetVisitedCountriesResponse
-                {
-                    Id = country.Id,
-                    ContinentId = country.ContinentId,
-                    Name = country.Name
-                });
-            }
+                Id = country.Id,
+                ContinentId = country.ContinentId,
+                Name = country.Name
+            }).ToList();
 
             return visitedCountriesResponse;
         }

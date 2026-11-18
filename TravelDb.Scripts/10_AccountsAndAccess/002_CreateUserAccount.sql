@@ -9,6 +9,7 @@ BEGIN
         NormalizedUserName NVARCHAR(128) NOT NULL,
         PasswordHash NVARCHAR(512) NOT NULL,
         Role NVARCHAR(16) NOT NULL,
+        IsActive BIT NOT NULL CONSTRAINT DF_UserAccount_IsActive DEFAULT (1),
 
         CONSTRAINT PK_UserAccount PRIMARY KEY (TravelUserId),
         CONSTRAINT UQ_UserAccount_NormalizedUserName UNIQUE (NormalizedUserName),

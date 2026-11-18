@@ -5,6 +5,7 @@ using TravelApp.BusinessLogic.Exceptions.SpecificCustomException;
 using TravelApp.BusinessLogic.Handlers.Achievements.GetAchievementDefinitions;
 using TravelApp.BusinessLogic.Handlers.Achievements.GetEarnedAchievements;
 
+
 namespace TravelApp.API.Controllers
 {
     /// <summary>Exposes HTTP endpoints for achievements.</summary>

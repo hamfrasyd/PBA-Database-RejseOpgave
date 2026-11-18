@@ -1,13 +1,12 @@
 using Microsoft.Extensions.DependencyInjection;
 using TravelApp.BusinessLogic.DatabaseSelection;
-using TravelApp.BusinessLogic.Handlers.Trips;
 using TravelApp.BusinessLogic.Handlers.Trips.GetTrip;
 using TravelApp.BusinessLogic.Handlers.Accounts.Login;
+using TravelApp.BusinessLogic.Handlers.Accounts.Register;
 using TravelApp.BusinessLogic.Handlers.Achievements.GetAchievementDefinitions;
 using TravelApp.BusinessLogic.Handlers.Achievements.GetEarnedAchievements;
 using TravelApp.BusinessLogic.Handlers.Activities.CreateActivity;
 using TravelApp.BusinessLogic.Handlers.Activities.DeleteActivity;
-using TravelApp.BusinessLogic.Handlers.Activities.GetActivitiesByCity;
 using TravelApp.BusinessLogic.Handlers.Activities.GetActivity;
 using TravelApp.BusinessLogic.Handlers.Activities.UpdateActivity;
 using TravelApp.BusinessLogic.Handlers.DatabaseSelection.GetDatabaseProviders;
@@ -20,8 +19,20 @@ using TravelApp.BusinessLogic.Handlers.Locations.GetCityStats;
 using TravelApp.BusinessLogic.Handlers.Locations.GetVisitedCountries;
 using TravelApp.BusinessLogic.Handlers.Users.DeleteUser;
 using TravelApp.BusinessLogic.Handlers.Users.GetUserProfile;
-using TravelApp.BusinessLogic.Handlers.Users.GetUserProfiles;
+using TravelApp.BusinessLogic.Handlers.Users.GetAllUserProfiles;
 using TravelApp.BusinessLogic.Handlers.Users.UpdateUser;
+using TravelApp.BusinessLogic.Handlers.Trips.TripCity;
+using TravelApp.BusinessLogic.Handlers.Trips.TripParticipants;
+using TravelApp.BusinessLogic.Handlers.Trips.CreateTrip;
+using TravelApp.BusinessLogic.Handlers.Trips.DeleteTrip;
+using TravelApp.BusinessLogic.Handlers.Trips.UpdateTrip;
+using TravelApp.BusinessLogic.Handlers.Trips.TripActivities;
+using TravelApp.BusinessLogic.Handlers.Posts.UpdatePost;
+using TravelApp.BusinessLogic.Handlers.Posts.CreatePost;
+using TravelApp.BusinessLogic.Handlers.Posts.GetPosts;
+using TravelApp.BusinessLogic.Handlers.Posts.GetPost;
+using TravelApp.BusinessLogic.Handlers.Posts.DeletePost;
+using TravelApp.BusinessLogic.Handlers.Activities.GetAllActivitiesByCity;
 using TravelApp.BusinessLogic.Handlers.Posts;
 using TravelApp.BusinessLogic.Handlers.Groups;
 using TravelApp.BusinessLogic.Handlers.Group;
@@ -65,6 +76,7 @@ namespace TravelApp.BusinessLogic.DependencyInjection
         private static void RegisterAccounts(IServiceCollection services)
         {
             services.AddScoped<LoginHandler>();
+            services.AddScoped<RegisterHandler>();
         }
 
         private static void RegisterAchievements(IServiceCollection services)
@@ -77,7 +89,7 @@ namespace TravelApp.BusinessLogic.DependencyInjection
             services.AddScoped<CreateActivityHandler>();
             services.AddScoped<DeleteActivityHandler>();
             services.AddScoped<GetActivityHandler>();
-            services.AddScoped<GetActivitiesByCityHandler>();
+            services.AddScoped<GetAllActivitiesByCityHandler>();
             services.AddScoped<UpdateActivityHandler>();
         }
 
@@ -95,7 +107,7 @@ namespace TravelApp.BusinessLogic.DependencyInjection
         {
             services.AddScoped<DeleteUserHandler>();
             services.AddScoped<GetUserProfileHandler>();
-            services.AddScoped<GetUserProfilesHandler>();
+            services.AddScoped<GetAllUserProfilesHandler>();
             services.AddScoped<UpdateUserHandler>();
         }
 
@@ -106,10 +118,9 @@ namespace TravelApp.BusinessLogic.DependencyInjection
             services.AddScoped<GetTripsHandler>();
             services.AddScoped<UpdateTripHandler>();
             services.AddScoped<DeleteTripHandler>();
-            services.AddScoped<ManageTripRelationsHandler>();
-
-            services.AddScoped<GetTripActivitiesHandler>();
-            services.AddScoped<GetTripParticipantsHandler>();
+            services.AddScoped<TripActivitiesHandler>();
+            services.AddScoped<TripCityHandler>();
+            services.AddScoped<TripParticipantsHandler>();
         }
 
         private static void RegisterPosts(IServiceCollection services)

@@ -1,4 +1,4 @@
-using TravelApp.BusinessLogic.Models.Destinations;
+using TravelApp.BusinessLogic.Models.Activities;
 
 namespace TravelApp.BusinessLogic.Models.Trips
 {

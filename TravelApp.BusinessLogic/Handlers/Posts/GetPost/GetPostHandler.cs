@@ -1,10 +1,8 @@
 ﻿using TravelApp.BusinessLogic.Exceptions.SpecificCustomException;
-using TravelApp.BusinessLogic.Handlers.Posts;
 using TravelApp.BusinessLogic.Interfaces;
-using TravelApp.BusinessLogic.Models;
 using TravelApp.BusinessLogic.Models.Posts;
 
-namespace TravelApp.BusinessLogic.Handlers.Posts
+namespace TravelApp.BusinessLogic.Handlers.Posts.GetPost
 {
     /// <summary>Handles the get post operation.</summary>
     public class GetPostHandler

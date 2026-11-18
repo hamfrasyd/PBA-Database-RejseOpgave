@@ -19,22 +19,24 @@ namespace TravelApp.BusinessLogic.Handlers.Users.DeleteUser
             _currentUser = currentUser;
         }
 
-        /// <summary>Deletes user.</summary>
+        /// <summary>Deletes the user with the specified identifier.</summary>
         /// <param name="userId">The user identifier.</param>
         /// <exception cref="TravelAppForbiddenException">Thrown when the current user cannot delete the user.</exception>
         /// <exception cref="TravelAppNotFoundException">Thrown when the user does not exist.</exception>
         public async Task DeleteUserAsync(int userId)
         {
             AccessRules.RequireOwnerOrAdmin(_currentUser, userId);
+
             await using IUnitOfWork unitOfWork = _unitOfWorkFactory.Create();
 
-            bool wasDeleted = await unitOfWork.Users.DeleteAsync(userId);
+            bool userWasFound = await unitOfWork.Users.UserExistsAsync(userId);
 
-            if (wasDeleted is false)
+            if (userWasFound is false)
             {
-                throw new TravelAppNotFoundException($"User {userId} was not found.");
+                throw new TravelAppNotFoundException($"User with ID {userId} was not found.");
             }
 
+            await unitOfWork.Users.DeleteAsync(userId);
             await unitOfWork.CommitAsync();
         }
     }

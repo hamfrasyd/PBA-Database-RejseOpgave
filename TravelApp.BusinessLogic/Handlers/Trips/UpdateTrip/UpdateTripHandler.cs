@@ -1,9 +1,10 @@
 ﻿using TravelApp.BusinessLogic.Auth;
+using TravelApp.BusinessLogic.DTOs.Trips;
 using TravelApp.BusinessLogic.Exceptions.SpecificCustomException;
+using TravelApp.BusinessLogic.Handlers.Trips.ManageTripRelations;
 using TravelApp.BusinessLogic.Interfaces;
-using TravelApp.BusinessLogic.Models.Trips;
 
-namespace TravelApp.BusinessLogic.Handlers.Trips
+namespace TravelApp.BusinessLogic.Handlers.Trips.UpdateTrip
 {
     /// <summary>Updates the details of a trip.</summary>
     public class UpdateTripHandler
@@ -34,27 +35,19 @@ namespace TravelApp.BusinessLogic.Handlers.Trips
 
             await using IUnitOfWork unitOfWork = _unitOfWorkFactory.Create();
 
-            Trip? trip = await unitOfWork.Trips.GetByIdAsync(request.TripId);
+            await TripAccessHelper.EnsureCanModifyAsync(unitOfWork, request.TripId, _currentUser);
 
-            if (trip is null)
+            UpdateTripDTO update = new UpdateTripDTO
             {
-                throw new TravelAppNotFoundException($"Trip {request.TripId} was not found.");
-            }
+                StartDate = request.StartDate,
+                EndDate = request.EndDate,
+                IsCompleted = request.IsCompleted,
+                PlanNotes = request.PlanNotes,
+                ExperienceNotes = request.ExperienceNotes
+            };
 
-            bool isParticipant = trip.TripParticipants.Any(p => p.User?.Id == _currentUser.UserId);
+            await unitOfWork.Trips.UpdateAsync(request.TripId, update);
 
-            if (!isParticipant && !_currentUser.IsAdmin)
-            {
-                throw new TravelAppForbiddenException("You cannot update this trip.");
-            }
-
-            trip.StartDate = request.StartDate;
-            trip.EndDate = request.EndDate;
-            trip.IsCompleted = request.IsCompleted;
-            trip.PlanNotes = request.PlanNotes;
-            trip.ExperienceNotes = request.ExperienceNotes;
-
-            unitOfWork.Trips.Update(trip);
             await unitOfWork.CommitAsync();
         }
     }

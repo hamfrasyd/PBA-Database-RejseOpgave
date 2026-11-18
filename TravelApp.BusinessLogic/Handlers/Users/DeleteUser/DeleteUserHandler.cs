@@ -25,7 +25,7 @@ namespace TravelApp.BusinessLogic.Handlers.Users.DeleteUser
         /// <exception cref="TravelAppNotFoundException">Thrown when the user does not exist.</exception>
         public async Task DeleteUserAsync(int userId)
         {
-            AccessRules.RequireOwnerOrAdmin(_currentUser, userId);
+            AccessRules.RequireCurrentUserIsOwnerOrAdmin(_currentUser, userId);
 
             await using IUnitOfWork unitOfWork = _unitOfWorkFactory.Create();
 

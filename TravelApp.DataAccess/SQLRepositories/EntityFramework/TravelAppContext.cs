@@ -1,14 +1,15 @@
 using Microsoft.EntityFrameworkCore;
-using TravelApp.BusinessLogic.Models.Posts;
-using TravelApp.BusinessLogic.Models.Groups;
-using TravelApp.BusinessLogic.Models.Reviews;
-using TravelApp.BusinessLogic.Models.Friendships;
 using TravelApp.BusinessLogic.Models.Achievements;
-using TravelApp.BusinessLogic.Models.Trips;
-using TravelApp.BusinessLogic.Models.Invitations;
-using TravelApp.BusinessLogic.Models.Users;
 using TravelApp.BusinessLogic.Models.Activities;
+using TravelApp.BusinessLogic.Models.Friendships;
+using TravelApp.BusinessLogic.Models.Groups;
+using TravelApp.BusinessLogic.Models.Invitations;
 using TravelApp.BusinessLogic.Models.Locations;
+using TravelApp.BusinessLogic.Models.Posts;
+using TravelApp.BusinessLogic.Models.Reviews;
+using TravelApp.BusinessLogic.Models.Trips;
+using TravelApp.BusinessLogic.Models.Users;
+using TravelApp.DataAccess.Audit;
 
 namespace TravelApp.DataAccess.SQLRepositories.EntityFramework
 {
@@ -530,7 +531,7 @@ namespace TravelApp.DataAccess.SQLRepositories.EntityFramework
                 entity.Property(item => item.NewStars).HasColumnType("tinyint");
             });
 
-            modelBuilder.Entity<GetCityStatsResponse>(entity => entity.HasNoKey().ToView("vw_DestinationStats", "dbo"));
+            modelBuilder.Entity<DestinationStatsView>(entity => entity.HasNoKey().ToView("vw_DestinationStats", "dbo"));
         }
     }
 }

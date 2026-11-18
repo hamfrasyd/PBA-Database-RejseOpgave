@@ -29,7 +29,7 @@ namespace TravelApp.BusinessLogic.Handlers.Users.UpdateUser
         /// <exception cref="TravelAppValidationException">Thrown when the home city does not exist.</exception>
         public async Task<UpdateUserResponse> UpdateUserAsync(int userId, UpdateUserRequest request)
         {
-            AccessRules.RequireOwnerOrAdmin(_currentUser, userId);
+            AccessRules.RequireCurrentUserIsOwnerOrAdmin(_currentUser, userId);
 
             await using IUnitOfWork unitOfWork = _unitOfWorkFactory.Create();
 

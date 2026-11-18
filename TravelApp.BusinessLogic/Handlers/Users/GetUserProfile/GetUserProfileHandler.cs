@@ -36,7 +36,7 @@ namespace TravelApp.BusinessLogic.Handlers.Users.GetUserProfile
                 throw new TravelAppNotFoundException($"User with ID {userId} was not found.");
             }
 
-            AccessRules.RequirePublicOrOwnerOrAdmin(_currentUser, userId, existingProfile.IsPrivate);
+            AccessRules.RequireCurrentUserIsOwnerOrAdminWhenProfileIsPrivate(_currentUser, userId, existingProfile.IsPrivate);
 
             UserProfileResponse response = new UserProfileResponse
             {

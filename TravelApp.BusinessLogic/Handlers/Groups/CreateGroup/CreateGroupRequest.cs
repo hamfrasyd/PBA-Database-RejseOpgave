@@ -8,7 +8,7 @@ namespace TravelApp.BusinessLogic.Handlers.Groups.CreateGroup
     public class CreateGroupRequest
     {
         ///<summary>The name of the travel group to be created.</summary>
-        public string Name { get; set; }
+        public string? Name { get; set; }
         ///<summary>An optional description of the travel group to be created.</summary>
         public string? Description { get; set; }
     }

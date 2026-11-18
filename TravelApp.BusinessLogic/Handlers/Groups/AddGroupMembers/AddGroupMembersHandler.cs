@@ -24,9 +24,14 @@ namespace TravelApp.BusinessLogic.Handlers.Groups.AddGroupMembers
         /// <summary>Adds the given users as members of a group.</summary>
         public async Task AddGroupMembersAsync(int groupId, AddGroupMembersRequest request)
         {
-            if (groupId <= 0 || request.ToBeAddedMembers.Count <= 0)
+            if (groupId <= 0)
             {
-                throw new TravelAppValidationException("Group id or members are empty");
+                throw new TravelAppValidationException("Group id is empty");
+            }
+
+            if (request.ToBeAddedMembers?.Count <= 0 || request.ToBeAddedMembers is null)
+            {
+                throw new TravelAppNotFoundException("The list of memebers to be added are empty or null");
             }
 
             await using IUnitOfWork unitOfWork = _unitOfWorkFactory.Create();

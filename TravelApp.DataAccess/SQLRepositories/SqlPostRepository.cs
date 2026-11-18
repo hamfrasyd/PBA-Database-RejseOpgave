@@ -48,7 +48,7 @@ namespace TravelApp.DataAccess.SQLRepositories
         /// <inheritdoc/>
         public async Task DeletePostAsync(int postId)
         {
-            Post toBeDeletedPost = await _context.PostEntities.FirstOrDefaultAsync(post => post.Id == postId);
+            Post? toBeDeletedPost = await _context.PostEntities.FirstOrDefaultAsync(post => post.Id == postId);
 
             if (toBeDeletedPost is null)
             {

@@ -2,7 +2,7 @@
 using TravelApp.BusinessLogic.DTOs.Accounts;
 using TravelApp.BusinessLogic.Exceptions.SpecificCustomException;
 using TravelApp.BusinessLogic.Interfaces;
-using TravelApp.BusinessLogic.Models.Destinations;
+using TravelApp.BusinessLogic.Models.Locations;
 using TravelApp.BusinessLogic.Models.Users;
 
 namespace TravelApp.BusinessLogic.Handlers.Accounts.Register

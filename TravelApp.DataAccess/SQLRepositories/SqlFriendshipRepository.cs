@@ -89,5 +89,24 @@ namespace TravelApp.DataAccess.SQLRepositories
         }
 
         #endregion
+
+        #region Delete - Friendships
+
+        /// <inheritdoc/>
+        public async Task<bool> DeleteAsync(int friendshipId)
+        {
+            // FindAsync uses the tracked entity from GetByIdAsync without another query.
+            Friendship? friendshipFromDb = await _context.FriendshipEntities.FindAsync(friendshipId);
+            if (friendshipFromDb is null)
+            {
+                return false;
+            }
+
+            _context.FriendshipEntities.Remove(friendshipFromDb);
+
+            return true;
+        }
+
+        #endregion
     }
 }

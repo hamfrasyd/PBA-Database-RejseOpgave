@@ -4,6 +4,7 @@ using TravelApp.API.ExceptionFilters;
 using TravelApp.BusinessLogic.Handlers.Friendships.AddFriend;
 using TravelApp.BusinessLogic.Handlers.Friendships.GetFriendship;
 using TravelApp.BusinessLogic.Handlers.Friendships.GetFriends;
+using TravelApp.BusinessLogic.Handlers.Friendships.RemoveFriend;
 
 namespace TravelApp.API.Controllers
 {
@@ -75,6 +76,28 @@ namespace TravelApp.API.Controllers
             AddFriendResponse response = await addFriendHandler.AddFriendAsync(friendUserId);
 
             return Created($"/api/friendships/{response.Id}", response);
+        }
+
+        #endregion
+
+        #region DELETE - Remove Friend
+
+        /// <summary>Removes a friendship for one of its members.</summary>
+        /// <param name="friendshipId">The friendship identifier.</param>
+        /// <param name="removeFriendHandler">The handler that removes the friendship.</param>
+        /// <returns>An empty response when the friendship is removed.</returns>
+        // DELETE api/friendships/{friendshipId}
+        [HttpDelete("{friendshipId:int}")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status404NotFound)]
+        [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status500InternalServerError)]
+        public async Task<IActionResult> RemoveFriend([FromRoute] int friendshipId, [FromServices] RemoveFriendHandler removeFriendHandler)
+        {
+            await removeFriendHandler.RemoveFriendAsync(friendshipId);
+
+            return NoContent();
         }
 
         #endregion

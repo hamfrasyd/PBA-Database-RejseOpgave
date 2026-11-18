@@ -38,5 +38,14 @@ namespace TravelApp.BusinessLogic.Interfaces
         Task<bool> FriendshipExistsAsync(int firstUserId, int secondUserId);
 
         #endregion
+
+        #region Delete - Friendships
+
+        /// <summary>Stages deletion of a friendship by its identifier.</summary>
+        /// <param name="friendshipId">The friendship identifier.</param>
+        /// <returns><see langword="true"/> if the friendship was found; otherwise, <see langword="false"/>.</returns>
+        Task<bool> DeleteAsync(int friendshipId);
+
+        #endregion
     }
 }

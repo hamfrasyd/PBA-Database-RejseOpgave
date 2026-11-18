@@ -35,6 +35,19 @@ namespace TravelApp.DataAccess.SQLRepositories
         #region Read - Invitations
 
         /// <inheritdoc/>
+        public async Task<Invite?> GetByIdAsync(int invitationId)
+        {
+            Invite? invitationFromDb = await _context.InviteEntities
+                .Include(invitation => invitation.Trip)
+                .Include(invitation => invitation.Sender)
+                .Include(invitation => invitation.Receiver)
+                .Include(invitation => invitation.InvitationStatus)
+                .FirstOrDefaultAsync(invitation => invitation.Id == invitationId);
+
+            return invitationFromDb;
+        }
+
+        /// <inheritdoc/>
         public async Task<int?> GetStatusIdAsync(string statusName)
         {
             int? statusId = await _context.InvitationStatusEntities

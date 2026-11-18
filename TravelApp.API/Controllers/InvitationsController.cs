@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using TravelApp.API.ExceptionFilters;
 using TravelApp.BusinessLogic.Handlers.Invitations.CreateInvitation;
+using TravelApp.BusinessLogic.Handlers.Invitations.GetInvitation;
 
 namespace TravelApp.API.Controllers
 {
@@ -11,6 +12,28 @@ namespace TravelApp.API.Controllers
     [Route("api/invitations")]
     public class InvitationsController : ControllerBase
     {
+        #region GET - Invitation By ID
+
+        /// <summary>Retrieves an invitation for its sender or receiver.</summary>
+        /// <param name="invitationId">The invitation identifier.</param>
+        /// <param name="getInvitationHandler">The handler that retrieves the invitation.</param>
+        /// <returns>The invitation details.</returns>
+        // GET api/invitations/{invitationId}
+        [HttpGet("{invitationId:int}")]
+        [ProducesResponseType(typeof(GetInvitationResponse), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status404NotFound)]
+        [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status500InternalServerError)]
+        public async Task<ActionResult<GetInvitationResponse>> GetInvitation([FromRoute] int invitationId, [FromServices] GetInvitationHandler getInvitationHandler)
+        {
+            GetInvitationResponse response = await getInvitationHandler.GetInvitationAsync(invitationId);
+
+            return Ok(response);
+        }
+
+        #endregion
+
         #region POST - Create Invitation
 
         /// <summary>Invites an existing user to a trip.</summary>

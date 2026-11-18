@@ -39,6 +39,7 @@ using TravelApp.BusinessLogic.Handlers.Friendships.GetFriendship;
 using TravelApp.BusinessLogic.Handlers.Friendships.GetFriends;
 using TravelApp.BusinessLogic.Handlers.Friendships.RemoveFriend;
 using TravelApp.BusinessLogic.Handlers.Invitations.CreateInvitation;
+using TravelApp.BusinessLogic.Handlers.Invitations.GetInvitation;
 
 namespace TravelApp.BusinessLogic.DependencyInjection
 {
@@ -138,6 +139,7 @@ namespace TravelApp.BusinessLogic.DependencyInjection
 
         private static void RegisterInvitations(IServiceCollection services)
         {
+            services.AddScoped<GetInvitationHandler>();
             services.AddScoped<CreateInvitationHandler>();
         }
     }

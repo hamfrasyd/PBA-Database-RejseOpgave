@@ -20,6 +20,11 @@ namespace TravelApp.BusinessLogic.Interfaces
 
         #region Read - Invitations
 
+        /// <summary>Retrieves an invitation and its related users and status.</summary>
+        /// <param name="invitationId">The invitation identifier.</param>
+        /// <returns>The invitation, or <see langword="null"/> if it does not exist.</returns>
+        Task<Invite?> GetByIdAsync(int invitationId);
+
         /// <summary>Retrieves the identifier of a named invitation status.</summary>
         /// <param name="statusName">The status name.</param>
         /// <returns>The status identifier, or <see langword="null"/> if it does not exist.</returns>

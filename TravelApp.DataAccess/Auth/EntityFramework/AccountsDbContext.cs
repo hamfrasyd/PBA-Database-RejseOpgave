@@ -4,8 +4,13 @@ using TravelApp.BusinessLogic.Models.Users;
 namespace TravelApp.DataAccess.Auth
 {
     /// <summary>Maps local login accounts and the SQL profiles created during registration.</summary>
-    public sealed class AccountsDbContext(DbContextOptions<AccountsDbContext> options) : DbContext(options)
+    public sealed class AccountsDbContext : DbContext
     {
+        /// <summary> Initializes a new instance of the <see cref="AccountsDbContext"/> class. </summary>
+        public AccountsDbContext(DbContextOptions<AccountsDbContext> options) : base(options)
+        {
+        }
+    
         /// <summary>Gets the local login accounts.</summary>
         public DbSet<UserAccount> UserAccounts => Set<UserAccount>();
 

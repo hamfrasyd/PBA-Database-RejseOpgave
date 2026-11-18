@@ -10,10 +10,18 @@ using TravelApp.DataAccess.Auth;
 namespace TravelApp.DataAccess.SQLRepositories
 {
     /// <summary>Creates local login accounts and their profiles in SQL Server.</summary>
-    public sealed class SqlUserAccountRepository(
-        AccountsDbContext context,
-        IPasswordHasher<UserAccount> passwordHasher) : IUserAccountRepository
+    public sealed class SqlUserAccountRepository : IUserAccountRepository
     {
+        private readonly AccountsDbContext _context;
+        private readonly IPasswordHasher<UserAccount> _passwordHasher;
+
+        /// <summary> Initializes a new instance of the <see cref="SqlUserAccountRepository"/> class. </summary>
+        public SqlUserAccountRepository(AccountsDbContext context,IPasswordHasher<UserAccount> passwordHasher)
+        {
+            _context = context;
+            _passwordHasher = passwordHasher;
+        }
+   
         /// <inheritdoc />
         public async Task<int> CreateAsync(TravelUser profile, int cityId, CreateUserAccountDto account)
         {
@@ -27,14 +35,14 @@ namespace TravelApp.DataAccess.SQLRepositories
                 Role = "User"
             };
 
-            entity.PasswordHash = passwordHasher.HashPassword(entity, account.Password);
+            entity.PasswordHash = _passwordHasher.HashPassword(entity, account.Password);
 
-            context.Add(profile).Property<int>("CityId").CurrentValue = cityId;
-            context.UserAccounts.Add(entity);
+            _context.Add(profile).Property<int>("CityId").CurrentValue = cityId;
+            _context.UserAccounts.Add(entity);
 
             try
             {
-                await context.SaveChangesAsync();
+                await _context.SaveChangesAsync();
             }
             catch (DbUpdateException exception) when (IsDuplicateUserName(exception))
             {

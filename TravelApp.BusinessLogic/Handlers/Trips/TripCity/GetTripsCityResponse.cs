@@ -1,4 +1,4 @@
-﻿namespace TravelApp.BusinessLogic.Handlers.Trips.GetTrip
+﻿namespace TravelApp.BusinessLogic.Handlers.Trips.TripCity
 {
     /// <summary>Summarizes a city in a trip list response.</summary>
     public class GetTripsCityResponse

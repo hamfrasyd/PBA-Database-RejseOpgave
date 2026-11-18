@@ -1,8 +1,8 @@
 
 using Microsoft.EntityFrameworkCore;
-using TravelApp.BusinessLogic.Handlers.Activities.UpdateActivity;
+using TravelApp.BusinessLogic.DTOs.Activities;
 using TravelApp.BusinessLogic.Interfaces;
-using TravelApp.BusinessLogic.Models.Destinations;
+using TravelApp.BusinessLogic.Models.Activities;
 using TravelApp.DataAccess.SQLRepositories.EntityFramework;
 
 namespace TravelApp.DataAccess.SQLRepositories
@@ -22,9 +22,10 @@ namespace TravelApp.DataAccess.SQLRepositories
         #region Create - Activities
 
         /// <inheritdoc />
-        public async Task AddActivityAsync(Activity activity)
+        public async Task CreateActivityAsync(Activity activity, int cityId)
         {
             await _context.ActivityEntities.AddAsync(activity);
+            _context.Entry(activity).Property("CityId").CurrentValue = cityId;
         }
 
         #endregion
@@ -32,20 +33,26 @@ namespace TravelApp.DataAccess.SQLRepositories
         #region Read - All Activities
 
         /// <inheritdoc />
-        public async Task<List<Activity>> GetActivitiesAsync(int? cityId)
+        public async Task<List<ActivityDTO>> GetActivitiesAsync(int? cityId)
         {
-            IQueryable<Activity> activities = _context.ActivityEntities
-                .AsNoTracking()
-                .Include(activity => activity.City);
+            IQueryable<Activity> activities = _context.ActivityEntities.AsNoTracking();
 
             if (cityId.HasValue)
             {
-                activities = activities.Where(activity => activity.City!.Id == cityId.Value);
+                int filterCityId = cityId.Value;
+                activities = activities.Where(activity => EF.Property<int>(activity, "CityId") == filterCityId);
             }
 
-            List<Activity> result = await activities
+            List<ActivityDTO> result = await activities
                 .OrderBy(activity => activity.Name)
                 .ThenBy(activity => activity.Id)
+                .Select(activity => new ActivityDTO
+                {
+                    Id = activity.Id,
+                    CityId = EF.Property<int>(activity, "CityId"),
+                    Name = activity.Name,
+                    Description = activity.Description
+                })
                 .ToListAsync();
 
             return result;
@@ -56,13 +63,21 @@ namespace TravelApp.DataAccess.SQLRepositories
         #region Read - By-ID Activities
 
         /// <inheritdoc />
-        public async Task<Activity?> GetActivityByIdAsync(int activityId)
+        public async Task<ActivityDTO?> GetActivityByIdAsync(int activityId)
         {
-            Activity? matchingActivity = await _context.ActivityEntities
-                .Include(activity => activity.City)
-                .FirstOrDefaultAsync(activity => activity.Id == activityId);
+            ActivityDTO? activityData = await _context.ActivityEntities
+                .AsNoTracking()
+                .Where(activity => activity.Id == activityId)
+                .Select(activity => new ActivityDTO
+                {
+                    Id = activity.Id,
+                    CityId = EF.Property<int>(activity, "CityId"),
+                    Name = activity.Name,
+                    Description = activity.Description
+                })
+                .FirstOrDefaultAsync();
 
-            return matchingActivity;
+            return activityData;
         }
 
         #endregion
@@ -70,10 +85,20 @@ namespace TravelApp.DataAccess.SQLRepositories
         #region Update - Activities
 
         /// <inheritdoc />
-        public Task UpdateActivityAsync(int activityId, UpdateActivityRequest request)
+        public async Task<bool> UpdateActivityAsync(ActivityDTO activityToUpdate)
         {
-            // The handler updated an entity already tracked by this Unit of Work.
-            return Task.CompletedTask;
+            Activity? activityInDb = await _context.ActivityEntities.FirstOrDefaultAsync(activity => activity.Id == activityToUpdate.Id);
+
+            if (activityInDb is null)
+            {
+                return false;
+            }
+
+            activityInDb.Name = activityToUpdate.Name;
+            activityInDb.Description = activityToUpdate.Description;
+            _context.Entry(activityInDb).Property("CityId").CurrentValue = activityToUpdate.CityId;
+
+            return true;
         }
 
         #endregion
@@ -81,33 +106,14 @@ namespace TravelApp.DataAccess.SQLRepositories
         #region Delete - Activities
 
         /// <inheritdoc />
-        public async Task<bool> DeleteActivityAsync(int activityId)
+        public async Task DeleteAsync(int activityId)
         {
-            if (_context.Database.CurrentTransaction is null)
+            Activity? activity = await _context.ActivityEntities.FirstOrDefaultAsync(item => item.Id == activityId);
+
+            if (activity is not null)
             {
-                await _context.Database.BeginTransactionAsync();
+                _context.ActivityEntities.Remove(activity);
             }
-
-            int deletedRows = await _context.ActivityEntities
-                .Where(activity => activity.Id == activityId)
-                .ExecuteDeleteAsync();
-
-            bool wasDeleted = deletedRows > 0;
-
-            return wasDeleted;
-        }
-
-        #endregion
-
-        #region Validation - Activities
-
-        /// <inheritdoc />
-        public async Task<bool> ActivityBelongsToCityAsync(int activityId, int cityId)
-        {
-            bool activityBelongsToCity = await _context.ActivityEntities
-                .AnyAsync(activity => activity.Id == activityId && activity.City!.Id == cityId);
-
-            return activityBelongsToCity;
         }
 
         #endregion

@@ -1,9 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using TravelApp.BusinessLogic.Exceptions.BaseCustomException;
 using TravelApp.BusinessLogic.Exceptions.SpecificCustomException;
 using TravelApp.BusinessLogic.Interfaces;
 using TravelApp.BusinessLogic.Models.Posts;
-using TravelApp.BusinessLogic.Models.Trips;
 using TravelApp.DataAccess.SQLRepositories.EntityFramework;
 
 namespace TravelApp.DataAccess.SQLRepositories

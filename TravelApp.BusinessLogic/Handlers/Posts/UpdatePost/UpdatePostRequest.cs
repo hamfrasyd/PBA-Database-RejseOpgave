@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace TravelApp.BusinessLogic.Handlers.Posts
+﻿namespace TravelApp.BusinessLogic.Handlers.Posts.UpdatePost
 {
     ///<summary>Represents the request to update a post.</summary>
     public class UpdatePostRequest

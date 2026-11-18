@@ -1,11 +1,10 @@
 ﻿using TravelApp.BusinessLogic.Auth;
 using TravelApp.BusinessLogic.Exceptions.SpecificCustomException;
-using TravelApp.BusinessLogic.Handlers.Trips.CreateTrip;
 using TravelApp.BusinessLogic.Interfaces;
 using TravelApp.BusinessLogic.Models.Trips;
 using TravelApp.BusinessLogic.Models.Users;
 
-namespace TravelApp.BusinessLogic.Handlers.Trips
+namespace TravelApp.BusinessLogic.Handlers.Trips.CreateTrip
 {
     /// <summary>Creates a trip for the current user.</summary>
     public class CreateTripHandler
@@ -50,7 +49,7 @@ namespace TravelApp.BusinessLogic.Handlers.Trips
                 IsCompleted = false
             };
 
-            await unitOfWork.Trips.AddForUserAsync(trip, user.Id);
+            await unitOfWork.Trips.CreateTripForUserAsync(trip, user.Id);
 
             await unitOfWork.CommitAsync();
 

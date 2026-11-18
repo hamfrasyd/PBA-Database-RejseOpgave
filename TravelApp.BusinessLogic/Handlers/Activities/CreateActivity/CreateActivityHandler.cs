@@ -1,6 +1,6 @@
 using TravelApp.BusinessLogic.Exceptions.SpecificCustomException;
 using TravelApp.BusinessLogic.Interfaces;
-using TravelApp.BusinessLogic.Models.Destinations;
+using TravelApp.BusinessLogic.Models.Activities;
 
 namespace TravelApp.BusinessLogic.Handlers.Activities.CreateActivity
 {
@@ -16,38 +16,39 @@ namespace TravelApp.BusinessLogic.Handlers.Activities.CreateActivity
             _unitOfWorkFactory = unitOfWorkFactory;
         }
 
-        /// <summary>Creates activity.</summary>
+        /// <summary>Creates an activity and returns the persisted result.</summary>
         /// <param name="request">The activity to create.</param>
-        /// <returns>The identifier of the created activity.</returns>
-        /// <exception cref="TravelAppValidationException">Thrown when the name is missing or the city does not exist.</exception>
-        public async Task<int> CreateActivityAsync(CreateActivityRequest request)
+        /// <returns>The created activity.</returns>
+        /// <exception cref="TravelAppValidationException">Thrown when the city does not exist.</exception>
+        public async Task<CreateActivityResponse> CreateActivityAsync(CreateActivityRequest request)
         {
-            if (string.IsNullOrWhiteSpace(request.Name))
-            {
-                throw new TravelAppValidationException("Activity name is required.");
-            }
-
             await using IUnitOfWork unitOfWork = _unitOfWorkFactory.Create();
 
-            City? cityFromDb = await unitOfWork.Locations.GetCityByIdAsync(request.CityId);
-
-            if (cityFromDb is null)
+            bool cityExists = await unitOfWork.Locations.CityExistsAsync(request.CityId);
+            if (cityExists is false)
             {
-                throw new TravelAppValidationException("The parent destination does not exist.");
+                throw new TravelAppValidationException($"City with ID {request.CityId} does not exist.");
             }
 
-            Activity createdActivity = new Activity
+            Activity activity = new Activity
             {
                 Name = request.Name.Trim(),
-                City = cityFromDb,
                 Description = request.Description
             };
 
-            await unitOfWork.Activities.AddActivityAsync(createdActivity);
+            await unitOfWork.Activities.CreateActivityAsync(activity, request.CityId);
 
             await unitOfWork.CommitAsync();
 
-            return createdActivity.Id;
+            CreateActivityResponse response = new CreateActivityResponse
+            {
+                Id = activity.Id,
+                CityId = request.CityId,
+                Name = activity.Name,
+                Description = activity.Description
+            };
+
+            return response;
         }
     }
 }

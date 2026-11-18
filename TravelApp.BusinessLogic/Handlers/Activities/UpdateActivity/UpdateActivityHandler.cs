@@ -1,6 +1,6 @@
+using TravelApp.BusinessLogic.DTOs.Activities;
 using TravelApp.BusinessLogic.Exceptions.SpecificCustomException;
 using TravelApp.BusinessLogic.Interfaces;
-using TravelApp.BusinessLogic.Models.Destinations;
 
 namespace TravelApp.BusinessLogic.Handlers.Activities.UpdateActivity
 {
@@ -16,41 +16,47 @@ namespace TravelApp.BusinessLogic.Handlers.Activities.UpdateActivity
             _unitOfWorkFactory = unitOfWorkFactory;
         }
 
-        /// <summary>Updates activity.</summary>
+        /// <summary>Updates an activity and returns the persisted result.</summary>
         /// <param name="activityId">The activity identifier.</param>
         /// <param name="request">The updated activity details.</param>
+        /// <returns>The updated activity.</returns>
         /// <exception cref="TravelAppNotFoundException">Thrown when the activity does not exist.</exception>
-        /// <exception cref="TravelAppValidationException">Thrown when the name is missing or the city does not exist.</exception>
-        public async Task UpdateActivityAsync(int activityId, UpdateActivityRequest request)
+        /// <exception cref="TravelAppValidationException">Thrown when the city does not exist.</exception>
+        public async Task<UpdateActivityResponse> UpdateActivityAsync(int activityId, UpdateActivityRequest request)
         {
             await using IUnitOfWork unitOfWork = _unitOfWorkFactory.Create();
+            
+            bool cityExists = await unitOfWork.Locations.CityExistsAsync(request.CityId);
+            if (cityExists is false)
+            {
+                throw new TravelAppValidationException($"City with ID {request.CityId} does not exist.");
+            }
 
-            Activity? activityromDbToUpdate = await unitOfWork.Activities.GetActivityByIdAsync(activityId);
+            ActivityDTO activityToUpdate = new ActivityDTO
+            {
+                Id = activityId,
+                CityId = request.CityId,
+                Name = request.Name.Trim(),
+                Description = request.Description
+            };
 
-            if (activityromDbToUpdate is null)
+            bool activityWasFound = await unitOfWork.Activities.UpdateActivityAsync(activityToUpdate);
+            if (activityWasFound is false)
             {
                 throw new TravelAppNotFoundException($"Activity with ID {activityId} was not found.");
             }
 
-            if (string.IsNullOrWhiteSpace(request.Name))
-            {
-                throw new TravelAppValidationException("Activity name is required.");
-            }
-
-            City? cityFromDb = await unitOfWork.Locations.GetCityByIdAsync(request.CityId);
-
-            if (cityFromDb is null)
-            {
-                throw new TravelAppValidationException("The parent destination does not exist.");
-            }
-
-            activityromDbToUpdate.Name = request.Name.Trim();
-            activityromDbToUpdate.City = cityFromDb;
-            activityromDbToUpdate.Description = request.Description;
-
-            await unitOfWork.Activities.UpdateActivityAsync(activityId, request);
-
             await unitOfWork.CommitAsync();
+
+            UpdateActivityResponse response = new UpdateActivityResponse
+            {
+                Id = activityToUpdate.Id,
+                CityId = activityToUpdate.CityId,
+                Name = activityToUpdate.Name,
+                Description = activityToUpdate.Description
+            };
+
+            return response;
         }
     }
 }

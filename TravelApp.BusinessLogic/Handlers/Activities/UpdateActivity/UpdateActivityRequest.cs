@@ -5,10 +5,6 @@ namespace TravelApp.BusinessLogic.Handlers.Activities.UpdateActivity
     /// <summary>Contains the information needed to update activity.</summary>
     public class UpdateActivityRequest
     {
-        /// <summary>Gets or sets the activity id.</summary>
-        [System.Text.Json.Serialization.JsonIgnore]
-        public int ActivityId { get; set; }
-
         /// <summary>Gets or sets the city id.</summary>
         [Range(1, int.MaxValue)]
         public int CityId { get; set; }

@@ -64,13 +64,13 @@ namespace TravelApp.API.Controllers
         // GET api/auth/me
         [HttpGet("me")]
         [Authorize]
-        [ProducesResponseType(typeof(GetUserProfileResponse), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(UserProfileResponse), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(UnauthorizedResult), StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status404NotFound)] // Thrown from GetUserProfileHandler.
         [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult<GetUserProfileResponse>> Me([FromServices] GetUserProfileHandler getUserProfileHandler)
+        public async Task<ActionResult<UserProfileResponse>> Me([FromServices] GetUserProfileHandler getUserProfileHandler)
         {
-            GetUserProfileResponse result = await getUserProfileHandler.GetUserProfileAsync(_currentUser.UserId);
+            UserProfileResponse result = await getUserProfileHandler.GetUserProfileAsync(_currentUser.UserId);
 
             return Ok(result);
         }

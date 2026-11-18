@@ -1,4 +1,4 @@
-namespace TravelApp.BusinessLogic.Models.Destinations
+namespace TravelApp.BusinessLogic.Models.Locations
 {
     /// <summary>Represents a continent.</summary>
     public class Continent

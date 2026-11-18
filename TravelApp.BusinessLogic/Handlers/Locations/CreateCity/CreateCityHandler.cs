@@ -1,6 +1,6 @@
 using TravelApp.BusinessLogic.Exceptions.SpecificCustomException;
 using TravelApp.BusinessLogic.Interfaces;
-using TravelApp.BusinessLogic.Models.Destinations;
+using TravelApp.BusinessLogic.Models.Locations;
 
 namespace TravelApp.BusinessLogic.Handlers.Locations.CreateCity
 {
@@ -16,37 +16,37 @@ namespace TravelApp.BusinessLogic.Handlers.Locations.CreateCity
             _unitOfWorkFactory = unitOfWorkFactory;
         }
 
-        /// <summary>Creates city.</summary>
+        /// <summary>Creates a city and returns the persisted result.</summary>
         /// <param name="request">The city to create.</param>
-        /// <returns>The identifier of the created city.</returns>
-        /// <exception cref="TravelAppValidationException">Thrown when the name is missing or the country does not exist.</exception>
-        public async Task<int> CreateCityAsync(CreateCityRequest request)
+        /// <returns>The created city.</returns>
+        /// <exception cref="TravelAppNotFoundException">Thrown when the country does not exist.</exception>
+        public async Task<CreateCityResponse> CreateCityAsync(CreateCityRequest request)
         {
-            if (string.IsNullOrWhiteSpace(request.Name))
-            {
-                throw new TravelAppValidationException("City name is required.");
-            }
-
             await using IUnitOfWork unitOfWork = _unitOfWorkFactory.Create();
 
-            Country? countryFromDb = await unitOfWork.Locations.GetCountryByIdAsync(request.CountryId);
-
-            if (countryFromDb is null)
+            bool countryExists = await unitOfWork.Locations.CountryExistsAsync(request.CountryId);
+            if (countryExists is false)
             {
-                throw new TravelAppValidationException("The parent destination does not exist.");
+                throw new TravelAppNotFoundException($"Country with ID {request.CountryId} was not found.");
             }
 
-            City createdCity = new City
+            City city = new City
             {
-                Name = request.Name.Trim(),
-                Country = countryFromDb
+                Name = request.Name.Trim()
             };
 
-            await unitOfWork.Locations.AddCityAsync(createdCity);
+            await unitOfWork.Locations.CreateCityAsync(city, request.CountryId);
 
             await unitOfWork.CommitAsync();
 
-            return createdCity.Id;
+            CreateCityResponse response = new CreateCityResponse
+            {
+                Id = city.Id,
+                Name = city.Name,
+                CountryId = request.CountryId
+            };
+
+            return response;
         }
     }
 }

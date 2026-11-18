@@ -1,7 +1,8 @@
 using TravelApp.BusinessLogic.Exceptions.SpecificCustomException;
 using TravelApp.BusinessLogic.Interfaces;
+using TravelApp.BusinessLogic.Models.Locations;
 
-namespace TravelApp.BusinessLogic.Handlers.Locations.GetDestinationStats
+namespace TravelApp.BusinessLogic.Handlers.Locations.GetCityStats
 {
     /// <summary>Handles the get city stats use case.</summary>
     public class GetCityStatsHandler
@@ -23,14 +24,25 @@ namespace TravelApp.BusinessLogic.Handlers.Locations.GetDestinationStats
         {
             await using IUnitOfWork unitOfWork = _unitOfWorkFactory.Create();
 
-            GetCityStatsResponse? statistics = await unitOfWork.Locations.GetStatsAsync(cityId);
-
+            DestinationStatsView? statistics = await unitOfWork.Locations.GetCityStatsAsync(cityId);
             if (statistics is null)
             {
-                throw new TravelAppNotFoundException($"City {cityId} was not found.");
+                throw new TravelAppNotFoundException($"City with ID {cityId} was not found.");
             }
 
-            return statistics;
+            GetCityStatsResponse response = new GetCityStatsResponse
+            {
+                CityId = statistics.CityId,
+                City = statistics.City,
+                Country = statistics.Country,
+                Continent = statistics.Continent,
+                TripCount = statistics.TripCount,
+                CompletedTripCount = statistics.CompletedTripCount,
+                ActivityCount = statistics.ActivityCount,
+                AvgStars = statistics.AvgStars
+            };
+
+            return response;
         }
     }
 }

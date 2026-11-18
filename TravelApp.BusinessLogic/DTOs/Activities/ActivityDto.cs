@@ -1,14 +1,17 @@
-namespace TravelApp.BusinessLogic.Handlers.Activities.GetActivitiesByCity
+namespace TravelApp.BusinessLogic.DTOs.Activities
 {
-    /// <summary>Contains the result of get city activities.</summary>
-    public class GetActivitiesByCityResponse
+    /// <summary>Contains activity fields exchanged with a repository.</summary>
+    public class ActivityDTO
     {
-        /// <summary>Gets or sets the entity ID.</summary>
+        /// <summary>Gets or sets the activity identifier.</summary>
         public int Id { get; set; }
-        /// <summary>Gets or sets the city id.</summary>
+
+        /// <summary>Gets or sets the city identifier.</summary>
         public int CityId { get; set; }
+
         /// <summary>Gets or sets the name.</summary>
         public string Name { get; set; } = string.Empty;
+
         /// <summary>Gets or sets the description.</summary>
         public string? Description { get; set; }
     }

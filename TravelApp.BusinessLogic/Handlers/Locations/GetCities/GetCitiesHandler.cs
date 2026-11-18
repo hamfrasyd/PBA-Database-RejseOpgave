@@ -1,5 +1,5 @@
+using TravelApp.BusinessLogic.DTOs.Locations;
 using TravelApp.BusinessLogic.Interfaces;
-using TravelApp.BusinessLogic.Models.Destinations;
 
 namespace TravelApp.BusinessLogic.Handlers.Locations.GetCities
 {
@@ -18,24 +18,25 @@ namespace TravelApp.BusinessLogic.Handlers.Locations.GetCities
         /// <summary>Retrieves cities.</summary>
         /// <param name="request">The filter and sort options.</param>
         /// <returns>The matching cities.</returns>
-        /// <exception cref="InvalidOperationException">Thrown when a city's country was not loaded.</exception>
         public async Task<List<GetCitiesResponse>> GetCitiesAsync(GetCitiesRequest request)
         {
             await using IUnitOfWork unitOfWork = _unitOfWorkFactory.Create();
 
-            List<City> citiesFromDb = await unitOfWork.Locations.GetCitiesAsync(request);
-
-            List<GetCitiesResponse> cities = new List<GetCitiesResponse>();
-
-            foreach (City city in citiesFromDb)
+            GetCitiesFilterDTO filter = new GetCitiesFilterDTO
             {
-                cities.Add(new GetCitiesResponse
-                {
-                    Id = city.Id,
-                    CountryId = city.Country?.Id ?? throw new InvalidOperationException("Required Country relationship was not loaded."),
-                    Name = city.Name
-                });
-            }
+                CountryId = request.CountryId,
+                Search = request.Search,
+                Descending = request.Descending
+            };
+
+            List<CityDTO> citiesFromDb = await unitOfWork.Locations.GetCitiesAsync(filter);
+
+            List<GetCitiesResponse> cities = citiesFromDb.Select(city => new GetCitiesResponse
+            {
+                Id = city.Id,
+                CountryId = city.CountryId,
+                Name = city.Name
+            }).ToList();
 
             return cities;
         }

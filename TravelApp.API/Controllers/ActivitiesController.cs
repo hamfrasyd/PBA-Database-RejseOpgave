@@ -100,7 +100,7 @@ namespace TravelApp.API.Controllers
         [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status403Forbidden)]
         [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status404NotFound)]
         [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult<UpdateActivityResponse>> UpdateActivity([FromRoute] int? activityId, [FromBody] UpdateActivityRequest request, [FromServices] UpdateActivityHandler updateActivityHandler)
+        public async Task<ActionResult<UpdateActivityResponse>> UpdateActivity([FromRoute] int activityId, [FromBody] UpdateActivityRequest request, [FromServices] UpdateActivityHandler updateActivityHandler)
         {
             UpdateActivityResponse updatedActivity = await updateActivityHandler.UpdateActivityAsync(activityId, request);
 

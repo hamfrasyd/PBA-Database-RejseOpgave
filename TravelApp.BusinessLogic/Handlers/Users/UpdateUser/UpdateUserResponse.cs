@@ -16,6 +16,6 @@ namespace TravelApp.BusinessLogic.Handlers.Users.UpdateUser
         public int CityId { get; set; }
 
         /// <summary>Gets or sets a value indicating whether the profile is private.</summary>
-        public bool IsPrivate { get; set; }
+        public bool? IsPrivate { get; set; }
     }
 }

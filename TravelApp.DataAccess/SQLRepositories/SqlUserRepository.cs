@@ -125,7 +125,12 @@ namespace TravelApp.DataAccess.SQLRepositories
 
             userInDb.FirstName = userToUpdate.FirstName;
             userInDb.LastName = userToUpdate.LastName;
-            userInDb.IsPrivate = userToUpdate.IsPrivate;
+
+            if (userToUpdate.IsPrivate is not null)
+            {
+                userInDb.IsPrivate = userToUpdate.IsPrivate.Value;
+            }
+
             _context.Entry(userInDb).Property("CityId").CurrentValue = userToUpdate.CityId;
 
             return true;

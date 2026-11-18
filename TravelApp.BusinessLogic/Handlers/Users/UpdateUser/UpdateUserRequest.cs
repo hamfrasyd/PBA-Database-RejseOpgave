@@ -15,6 +15,6 @@ namespace TravelApp.BusinessLogic.Handlers.Users.UpdateUser
         [Range(1, int.MaxValue)]
         public int CityId { get; set; }
         /// <summary>Gets or sets whether is private.</summary>
-        public bool IsPrivate { get; set; }
+        public bool? IsPrivate { get; set; }
     }
 }

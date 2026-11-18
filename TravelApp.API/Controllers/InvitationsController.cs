@@ -4,6 +4,7 @@ using TravelApp.API.ExceptionFilters;
 using TravelApp.BusinessLogic.Handlers.Invitations.CreateInvitation;
 using TravelApp.BusinessLogic.Handlers.Invitations.GetInvitation;
 using TravelApp.BusinessLogic.Handlers.Invitations.GetInvitations;
+using TravelApp.BusinessLogic.Handlers.Invitations.RespondInvitation;
 
 namespace TravelApp.API.Controllers
 {
@@ -93,6 +94,31 @@ namespace TravelApp.API.Controllers
             CreateInvitationResponse response = await createInvitationHandler.CreateInvitationAsync(request);
 
             return Created($"/api/invitations/{response.Id}", response);
+        }
+
+        #endregion
+
+        #region PUT - Respond To Invitation
+
+        /// <summary>Accepts or declines a pending invitation.</summary>
+        /// <param name="invitationId">The invitation identifier.</param>
+        /// <param name="request">The invitation decision.</param>
+        /// <param name="respondInvitationHandler">The handler that responds to the invitation.</param>
+        /// <returns>The updated invitation status.</returns>
+        // PUT api/invitations/{invitationId}/response
+        [HttpPut("{invitationId:int}/response")]
+        [ProducesResponseType(typeof(RespondInvitationResponse), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status404NotFound)]
+        [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status409Conflict)]
+        [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status500InternalServerError)]
+        public async Task<ActionResult<RespondInvitationResponse>> RespondInvitation([FromRoute] int invitationId, [FromBody] RespondInvitationRequest request, [FromServices] RespondInvitationHandler respondInvitationHandler)
+        {
+            RespondInvitationResponse response = await respondInvitationHandler.RespondInvitationAsync(invitationId, request);
+
+            return Ok(response);
         }
 
         #endregion

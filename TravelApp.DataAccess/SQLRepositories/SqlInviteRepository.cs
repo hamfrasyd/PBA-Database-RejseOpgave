@@ -107,5 +107,24 @@ namespace TravelApp.DataAccess.SQLRepositories
         }
 
         #endregion
+
+        #region Update - Invitations
+
+        /// <inheritdoc/>
+        public async Task<bool> UpdateStatusAsync(int invitationId, int statusId)
+        {
+            // FindAsync reuses the invitation already tracked by GetByIdAsync.
+            Invite? invitationFromDb = await _context.InviteEntities.FindAsync(invitationId);
+            if (invitationFromDb is null)
+            {
+                return false;
+            }
+
+            _context.Entry(invitationFromDb).Property("InvitationStatusId").CurrentValue = statusId;
+
+            return true;
+        }
+
+        #endregion
     }
 }

@@ -45,5 +45,15 @@ namespace TravelApp.BusinessLogic.Interfaces
         Task<bool> ActivePendingExistsAsync(int tripId, int receiverId, DateTime oldestActiveSendDateUtc);
 
         #endregion
+
+        #region Update - Invitations
+
+        /// <summary>Stages a status change for an invitation.</summary>
+        /// <param name="invitationId">The invitation identifier.</param>
+        /// <param name="statusId">The new status identifier.</param>
+        /// <returns><see langword="true"/> if the invitation was found; otherwise, <see langword="false"/>.</returns>
+        Task<bool> UpdateStatusAsync(int invitationId, int statusId);
+
+        #endregion
     }
 }

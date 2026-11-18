@@ -22,9 +22,9 @@ namespace TravelApp.BusinessLogic.Handlers.Groups.UpdateGroupMember
         /// <summary>Removes members from group.</summary>
         public async Task RemoveGroupMembersAsync(int groupId, RemoveGroupMembersRequest request)
         {
-            if (groupId <= 0 || request.ToBeRemovedMembers.Count <= 0)
+            if (groupId <= 0)
             {
-                throw new TravelAppValidationException("Group id or members are empty.");
+                throw new TravelAppValidationException("Group id is invalid");
             }
 
             await using IUnitOfWork unitOfWork = _unitOfWorkFactory.Create();

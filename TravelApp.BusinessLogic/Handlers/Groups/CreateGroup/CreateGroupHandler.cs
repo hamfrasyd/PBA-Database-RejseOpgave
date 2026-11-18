@@ -22,11 +22,6 @@ namespace TravelApp.BusinessLogic.Handlers.Groups.CreateGroup
         /// <summary>Creates group.</summary>
         public async Task<CreateGroupResponse> CreateGroupAsync(CreateGroupRequest request)
         {
-            if (string.IsNullOrWhiteSpace(request.Name))
-            {
-                throw new TravelAppValidationException("Group needs a name.");
-            }
-
             await using IUnitOfWork unitOfWork = _unitOfWorkFactory.Create();
 
             TravelGroup group = await unitOfWork.Groups.CreateGroupAsync(new TravelGroupDTO

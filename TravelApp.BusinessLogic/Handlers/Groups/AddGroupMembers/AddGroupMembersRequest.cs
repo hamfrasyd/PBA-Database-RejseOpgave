@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Text;
 
 namespace TravelApp.BusinessLogic.Handlers.Groups.AddGroupMembers
@@ -8,6 +9,7 @@ namespace TravelApp.BusinessLogic.Handlers.Groups.AddGroupMembers
     public class AddGroupMembersRequest
     {
         ///<summary>Members to be added to a travel group</summary>
-        public List<int>? ToBeAddedMembers { get; set; }
+        [Required, MinLength(1)]
+        public List<int> ToBeAddedMembers { get; set; } = new List<int>();
     }
 }

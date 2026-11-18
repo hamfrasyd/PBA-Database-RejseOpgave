@@ -26,12 +26,7 @@ namespace TravelApp.BusinessLogic.Handlers.Groups.AddGroupMembers
         {
             if (groupId <= 0)
             {
-                throw new TravelAppValidationException("Group id is empty");
-            }
-
-            if (request.ToBeAddedMembers?.Count <= 0 || request.ToBeAddedMembers is null)
-            {
-                throw new TravelAppNotFoundException("The list of memebers to be added are empty or null");
+                throw new TravelAppValidationException("Group id is invalid");
             }
 
             await using IUnitOfWork unitOfWork = _unitOfWorkFactory.Create();

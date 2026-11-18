@@ -20,9 +20,9 @@ namespace TravelApp.BusinessLogic.Handlers.Groups.RemoveGroupTrips
         /// <summary>Removes trips from group.</summary>
         public async Task RemoveGroupTripsAsync(int groupId, RemoveGroupTripsRequest request)
         {
-            if (groupId <= 0 || request.ToBeRemovedTrips.Count <= 0)
+            if (groupId <= 0)
             {
-                throw new TravelAppValidationException("Group id or trips are empty.");
+                throw new TravelAppValidationException("Group id is invalid");
             }
 
             await using IUnitOfWork unitOfWork = _unitOfWorkFactory.Create();

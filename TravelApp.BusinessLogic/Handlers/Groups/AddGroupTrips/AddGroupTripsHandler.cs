@@ -17,9 +17,9 @@ namespace TravelApp.BusinessLogic.Handlers.Groups.AddGroupTrips
         /// <summary>Adds the given trips to a group.</summary>
         public async Task AddGroupTripsAsync(int groupId, AddGroupTripsRequest request)
         {
-            if (groupId <= 0 || request.ToBeAddedTrips.Count <= 0)
+            if (groupId <= 0)
             {
-                throw new TravelAppValidationException("Group id or trips are empty.");
+                throw new TravelAppValidationException("Group id is invalid");
             }
 
             await using IUnitOfWork unitOfWork = _unitOfWorkFactory.Create();

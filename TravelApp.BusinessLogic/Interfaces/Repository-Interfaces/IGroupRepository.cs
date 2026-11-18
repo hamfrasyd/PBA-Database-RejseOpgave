@@ -25,7 +25,7 @@ namespace TravelApp.BusinessLogic.Interfaces
         public Task DeleteGroupAsync(int groupId);
 
         ///<summary>Updates a groups title or description</summary>
-        public Task UpdateGroupAsync(TravelGroupDTO group);
+        public Task UpdateGroupAsync(UpdateTravelGroupDTO group);
 
         ///<summary>Removes members in a group</summary>
         public Task RemoveGroupMembersAsync(int groupId, List<int> userIds);

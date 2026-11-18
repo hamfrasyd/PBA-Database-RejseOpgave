@@ -30,10 +30,6 @@ namespace TravelApp.API.Controllers
         public async Task<ActionResult<List<GetGroupsResponse>>> GetGroups([FromServices] GetGroupsHandler getGroupsHandler)
         {
             List<GetGroupsResponse> result = await getGroupsHandler.GetGroupsAsync();
-            if (result.Count == 0)
-            {
-                return NotFound();
-            }
             return Ok(result);
         }
 
@@ -46,10 +42,6 @@ namespace TravelApp.API.Controllers
         public async Task<ActionResult<GetGroupResponse>> GetPost([FromRoute] int id, [FromServices] GetGroupHandler getGroupHandler)
         {
             GetGroupResponse result = await getGroupHandler.GetGroupByIdAsync(id);
-            if (result is null)
-            {
-                return NotFound();
-            }
             return Ok(result);
         }
 
@@ -74,7 +66,7 @@ namespace TravelApp.API.Controllers
         [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status400BadRequest)] // May be thrown from AddGroupMembersHandler.
         [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status404NotFound)] // Group or user not found.
         [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> AddGroupMembers(int groupId, [FromBody] AddGroupMembersRequest request, [FromServices] AddGroupMembersHandler addGroupMembersHandler)
+        public async Task<IActionResult> AddGroupMembers([FromRoute] int groupId, [FromBody] AddGroupMembersRequest request, [FromServices] AddGroupMembersHandler addGroupMembersHandler)
         {
             await addGroupMembersHandler.AddGroupMembersAsync(groupId, request);
             return NoContent();
@@ -87,7 +79,7 @@ namespace TravelApp.API.Controllers
         [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status400BadRequest)] // May be thrown from AddGroupTripsHandler.
         [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status404NotFound)] // Group or trip not found.
         [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> AddGroupTrips(int groupId, [FromBody] AddGroupTripsRequest request, [FromServices] AddGroupTripsHandler addGroupTripsHandler)
+        public async Task<IActionResult> AddGroupTrips([FromRoute] int groupId, [FromBody] AddGroupTripsRequest request, [FromServices] AddGroupTripsHandler addGroupTripsHandler)
         {
             await addGroupTripsHandler.AddGroupTripsAsync(groupId, request);
             return NoContent();
@@ -118,8 +110,7 @@ namespace TravelApp.API.Controllers
             [FromBody] UpdateGroupRequest request,
             [FromServices] UpdateGroupHandler updateGroupHandler)
         {
-            request.Id = groupId;
-            await updateGroupHandler.UpdateGroupAsync(request);
+            await updateGroupHandler.UpdateGroupAsync(groupId, request);
             return Ok(request);
         }
 

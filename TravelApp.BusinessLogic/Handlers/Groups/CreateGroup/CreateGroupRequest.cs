@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Text;
 
 namespace TravelApp.BusinessLogic.Handlers.Groups.CreateGroup
@@ -8,7 +9,8 @@ namespace TravelApp.BusinessLogic.Handlers.Groups.CreateGroup
     public class CreateGroupRequest
     {
         ///<summary>The name of the travel group to be created.</summary>
-        public string? Name { get; set; }
+        [Required]
+        public string Name { get; set; } = string.Empty;
         ///<summary>An optional description of the travel group to be created.</summary>
         public string? Description { get; set; }
     }

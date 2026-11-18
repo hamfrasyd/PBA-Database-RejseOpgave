@@ -20,20 +20,15 @@ namespace TravelApp.BusinessLogic.Handlers.Groups.UpdateGroup
         }
 
         /// <summary>Updates a group</summary>
-        public async Task UpdateGroupAsync(UpdateGroupRequest request)
+        public async Task UpdateGroupAsync(int groupId, UpdateGroupRequest request)
         {
-            if (request.Id <= 0 || string.IsNullOrWhiteSpace(request.Name))
-            {
-                throw new TravelAppValidationException("Invalid group data.");
-            }
-
             await using IUnitOfWork unitOfWork = _unitOfWorkFactory.Create();
 
-            await unitOfWork.Groups.UpdateGroupAsync(new TravelGroupDTO
+            await unitOfWork.Groups.UpdateGroupAsync(new UpdateTravelGroupDTO
             {
-                Id = request.Id,
-                Name = request.Name.Trim(),
-                Description = string.IsNullOrWhiteSpace(request.Description) ? null : request.Description.Trim()
+                Id = groupId,
+                Name = string.IsNullOrWhiteSpace(request.Name) ? "" : request.Name.Trim(),
+                Description = string.IsNullOrWhiteSpace(request.Description) ? "" : request.Description.Trim()
             });
 
             await unitOfWork.CommitAsync();

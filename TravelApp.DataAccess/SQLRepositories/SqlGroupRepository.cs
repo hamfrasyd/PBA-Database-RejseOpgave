@@ -183,16 +183,19 @@ namespace TravelApp.DataAccess.SQLRepositories
         }
 
         /// <inheritdoc />
-        public async Task UpdateGroupAsync(TravelGroupDTO group)
+        public async Task UpdateGroupAsync(UpdateTravelGroupDTO group)
         {
             TravelGroup toBeUpdated = await _context.TravelGroupEntities.FindAsync(group.Id)
                 ?? throw new TravelAppNotFoundException($"Group {group.Id} was not found.");
 
-            toBeUpdated.Name = group.Name;
-
-            if (group.Description is not null)
+            if (string.IsNullOrEmpty(group.Name) is false)
             {
-                toBeUpdated.Description = group.Description;
+                toBeUpdated.Name = group.Name.Trim();
+            }
+
+            if (string.IsNullOrEmpty(group.Description) is false)
+            {
+                toBeUpdated.Description = group.Description.Trim();
             }
         }
 

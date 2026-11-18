@@ -23,11 +23,11 @@ namespace TravelApp.BusinessLogic.Handlers.Activities.DeleteActivity
         {
             await using IUnitOfWork unitOfWork = _unitOfWorkFactory.Create();
 
-            ActivityDto? activity = await unitOfWork.Activities.GetActivityByIdAsync(activityId);
+            ActivityDTO? activity = await unitOfWork.Activities.GetActivityByIdAsync(activityId);
 
             if (activity is null)
             {
-                throw new TravelAppNotFoundException($"Activity {activityId} was not found.");
+                throw new TravelAppNotFoundException($"Activity with ID {activityId} was not found.");
             }
 
             await unitOfWork.Activities.DeleteAsync(activityId);

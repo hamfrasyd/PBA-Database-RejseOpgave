@@ -1,11 +1,11 @@
 ﻿using TravelApp.BusinessLogic.Auth;
 using TravelApp.BusinessLogic.DTOs.Trips;
 using TravelApp.BusinessLogic.Exceptions.SpecificCustomException;
-using TravelApp.BusinessLogic.Handlers.Trips.GetTrip;
+using TravelApp.BusinessLogic.Handlers.Trips.ManageTripRelations;
 using TravelApp.BusinessLogic.Handlers.Trips.TripCity;
 using TravelApp.BusinessLogic.Interfaces;
 
-namespace TravelApp.BusinessLogic.Handlers.Trips
+namespace TravelApp.BusinessLogic.Handlers.Trips.GetTrip
 {
     /// <summary>Returns the details of a single trip.</summary>
     public class GetTripHandler

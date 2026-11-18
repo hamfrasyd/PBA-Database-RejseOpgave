@@ -1,7 +1,7 @@
 namespace TravelApp.BusinessLogic.DTOs.Activities
 {
     /// <summary>Contains activity fields exchanged with a repository.</summary>
-    public class ActivityDto
+    public class ActivityDTO
     {
         /// <summary>Gets or sets the activity identifier.</summary>
         public int Id { get; set; }

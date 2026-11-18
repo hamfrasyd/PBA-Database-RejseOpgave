@@ -1,6 +1,6 @@
 using TravelApp.BusinessLogic.Exceptions.SpecificCustomException;
-using TravelApp.BusinessLogic.Handlers.Locations.Data;
 using TravelApp.BusinessLogic.Interfaces;
+using TravelApp.BusinessLogic.Models.Locations;
 
 namespace TravelApp.BusinessLogic.Handlers.Locations.CreateCity
 {
@@ -19,7 +19,6 @@ namespace TravelApp.BusinessLogic.Handlers.Locations.CreateCity
         /// <summary>Creates a city and returns the persisted result.</summary>
         /// <param name="request">The city to create.</param>
         /// <returns>The created city.</returns>
-        /// <exception cref="TravelAppValidationException">Thrown when the name is missing or longer than 64 characters.</exception>
         /// <exception cref="TravelAppNotFoundException">Thrown when the country does not exist.</exception>
         public async Task<CreateCityResponse> CreateCityAsync(CreateCityRequest request)
         {
@@ -28,31 +27,25 @@ namespace TravelApp.BusinessLogic.Handlers.Locations.CreateCity
             bool countryExists = await unitOfWork.Locations.CountryExistsAsync(request.CountryId);
             if (countryExists is false)
             {
-                throw new TravelAppNotFoundException($"Country {request.CountryId} was not found.");
+                throw new TravelAppNotFoundException($"Country with ID {request.CountryId} was not found.");
             }
 
-            CreateCityDto cityToCreate = new CreateCityDto
+            City city = new City
             {
-                Name = request.Name.Trim(),
-                CountryId = request.CountryId
+                Name = request.Name.Trim()
             };
 
-            CityDto? createdCity = await unitOfWork.Locations.CreateCityAsync(cityToCreate);
-           
-            await unitOfWork.CommitAsync();
+            await unitOfWork.Locations.CreateCityAsync(city, request.CountryId);
 
-            // cowboy, skal bruge cecilias måde at Create på
-            if (createdCity is null)
-            {
-                createdCity = unitOfWork.Locations.GetCreatedCity();
-            }
+            await unitOfWork.CommitAsync();
 
             CreateCityResponse response = new CreateCityResponse
             {
-                Id = createdCity.Id,
-                Name = createdCity.Name,
-                CountryId = createdCity.CountryId
+                Id = city.Id,
+                Name = city.Name,
+                CountryId = request.CountryId
             };
+
             return response;
         }
     }

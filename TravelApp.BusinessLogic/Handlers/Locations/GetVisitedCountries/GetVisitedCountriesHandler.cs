@@ -1,7 +1,7 @@
 using TravelApp.BusinessLogic.Auth;
+using TravelApp.BusinessLogic.DTOs.Locations;
 using TravelApp.BusinessLogic.DTOs.Users;
 using TravelApp.BusinessLogic.Exceptions.SpecificCustomException;
-using TravelApp.BusinessLogic.Handlers.Locations.Data;
 using TravelApp.BusinessLogic.Interfaces;
 
 namespace TravelApp.BusinessLogic.Handlers.Locations.GetVisitedCountries
@@ -34,24 +34,19 @@ namespace TravelApp.BusinessLogic.Handlers.Locations.GetVisitedCountries
 
             if (profileFromDb is null)
             {
-                throw new TravelAppNotFoundException($"User {userId} was not found.");
+                throw new TravelAppNotFoundException($"User with ID {userId} was not found.");
             }
 
             AccessRules.RequirePublicOrOwnerOrAdmin(_currentUser, userId, profileFromDb.IsPrivate);
 
-            List<VisitedCountryDto> countriesFromDb = await unitOfWork.Users.GetVisitedCountriesAsync(userId);
+            List<VisitedCountryDTO> countriesFromDb = await unitOfWork.Users.GetVisitedCountriesAsync(userId);
 
-            List<GetVisitedCountriesResponse> visitedCountriesResponse = new List<GetVisitedCountriesResponse>();
-
-            foreach (VisitedCountryDto country in countriesFromDb)
+            List<GetVisitedCountriesResponse> visitedCountriesResponse = countriesFromDb.Select(country => new GetVisitedCountriesResponse
             {
-                visitedCountriesResponse.Add(new GetVisitedCountriesResponse
-                {
-                    Id = country.Id,
-                    ContinentId = country.ContinentId,
-                    Name = country.Name
-                });
-            }
+                Id = country.Id,
+                ContinentId = country.ContinentId,
+                Name = country.Name
+            }).ToList();
 
             return visitedCountriesResponse;
         }

@@ -3,7 +3,7 @@ using TravelApp.BusinessLogic.Interfaces;
 using TravelApp.BusinessLogic.Models.Posts;
 using TravelApp.BusinessLogic.Models.Users;
 
-namespace TravelApp.BusinessLogic.Handlers.Posts
+namespace TravelApp.BusinessLogic.Handlers.Posts.CreatePost
 {
     /// <summary>Handles the create post operation.</summary>
     public class CreatePostHandler

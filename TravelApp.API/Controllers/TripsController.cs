@@ -2,11 +2,13 @@
 using Microsoft.AspNetCore.Mvc;
 using TravelApp.API.ExceptionFilters;
 using TravelApp.BusinessLogic.Handlers.Activities.GetActivity;
-using TravelApp.BusinessLogic.Handlers.Trips;
 using TravelApp.BusinessLogic.Handlers.Trips.CreateTrip;
+using TravelApp.BusinessLogic.Handlers.Trips.DeleteTrip;
 using TravelApp.BusinessLogic.Handlers.Trips.GetTrip;
+using TravelApp.BusinessLogic.Handlers.Trips.TripActivities;
 using TravelApp.BusinessLogic.Handlers.Trips.TripCity;
 using TravelApp.BusinessLogic.Handlers.Trips.TripParticipants;
+using TravelApp.BusinessLogic.Handlers.Trips.UpdateTrip;
 
 namespace TravelApp.API.Controllers
 {

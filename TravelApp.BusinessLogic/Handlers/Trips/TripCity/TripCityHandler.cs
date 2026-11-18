@@ -2,8 +2,9 @@
 using TravelApp.BusinessLogic.Auth;
 using TravelApp.BusinessLogic.DTOs.Trips;
 using TravelApp.BusinessLogic.Exceptions.SpecificCustomException;
+using TravelApp.BusinessLogic.Handlers.Trips.ManageTripRelations;
 using TravelApp.BusinessLogic.Interfaces;
-using TravelApp.BusinessLogic.Models.Destinations;
+using TravelApp.BusinessLogic.Models.Locations;
 
 namespace TravelApp.BusinessLogic.Handlers.Trips.TripCity
 {

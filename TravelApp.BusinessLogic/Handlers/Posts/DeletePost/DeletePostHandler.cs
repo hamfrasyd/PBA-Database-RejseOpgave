@@ -1,7 +1,6 @@
-﻿using TravelApp.BusinessLogic.Exceptions.SpecificCustomException;
-using TravelApp.BusinessLogic.Interfaces;
+﻿using TravelApp.BusinessLogic.Interfaces;
 
-namespace TravelApp.BusinessLogic.Handlers.Posts
+namespace TravelApp.BusinessLogic.Handlers.Posts.DeletePost
 {
     ///<summary>Handles the delete post operation.</summary>
     public class DeletePostHandler

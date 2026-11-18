@@ -1,5 +1,5 @@
+using TravelApp.BusinessLogic.DTOs.Locations;
 using TravelApp.BusinessLogic.Exceptions.SpecificCustomException;
-using TravelApp.BusinessLogic.Handlers.Locations.Data;
 using TravelApp.BusinessLogic.Interfaces;
 
 namespace TravelApp.BusinessLogic.Handlers.Locations.GetCity
@@ -24,10 +24,10 @@ namespace TravelApp.BusinessLogic.Handlers.Locations.GetCity
         {
             await using IUnitOfWork unitOfWork = _unitOfWorkFactory.Create();
 
-            CityDto? cityFromDb = await unitOfWork.Locations.GetCityAsync(cityId);
+            CityDTO? cityFromDb = await unitOfWork.Locations.GetCityAsync(cityId);
             if (cityFromDb is null)
             {
-                throw new TravelAppNotFoundException($"City {cityId} was not found.");
+                throw new TravelAppNotFoundException($"City with ID {cityId} was not found.");
             }
 
             GetCityResponse response = new GetCityResponse

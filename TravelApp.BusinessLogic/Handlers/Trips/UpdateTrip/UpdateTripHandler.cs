@@ -1,10 +1,10 @@
 ﻿using TravelApp.BusinessLogic.Auth;
 using TravelApp.BusinessLogic.DTOs.Trips;
 using TravelApp.BusinessLogic.Exceptions.SpecificCustomException;
+using TravelApp.BusinessLogic.Handlers.Trips.ManageTripRelations;
 using TravelApp.BusinessLogic.Interfaces;
-using TravelApp.BusinessLogic.Models.Trips;
 
-namespace TravelApp.BusinessLogic.Handlers.Trips
+namespace TravelApp.BusinessLogic.Handlers.Trips.UpdateTrip
 {
     /// <summary>Updates the details of a trip.</summary>
     public class UpdateTripHandler

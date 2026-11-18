@@ -33,7 +33,7 @@ namespace TravelApp.BusinessLogic.Handlers.Users.GetUserProfile
 
             if (existingProfile is null)
             {
-                throw new TravelAppNotFoundException($"User {userId} was not found.");
+                throw new TravelAppNotFoundException($"User with ID {userId} was not found.");
             }
 
             AccessRules.RequirePublicOrOwnerOrAdmin(_currentUser, userId, existingProfile.IsPrivate);

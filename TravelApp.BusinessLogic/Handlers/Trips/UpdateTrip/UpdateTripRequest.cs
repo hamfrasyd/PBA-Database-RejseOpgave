@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.Text.Json.Serialization;
 
-namespace TravelApp.BusinessLogic.Handlers.Trips
+namespace TravelApp.BusinessLogic.Handlers.Trips.UpdateTrip
 {
     /// <summary>Request to update a trip.</summary>
     public class UpdateTripRequest

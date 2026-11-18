@@ -33,7 +33,7 @@ namespace TravelApp.BusinessLogic.Handlers.Users.DeleteUser
 
             if (userWasFound is false)
             {
-                throw new TravelAppNotFoundException($"User {userId} was not found.");
+                throw new TravelAppNotFoundException($"User with ID {userId} was not found.");
             }
 
             await unitOfWork.Users.DeleteAsync(userId);

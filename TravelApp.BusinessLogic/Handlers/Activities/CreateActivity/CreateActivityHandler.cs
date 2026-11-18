@@ -1,7 +1,6 @@
-using TravelApp.BusinessLogic.DTOs.Activities;
 using TravelApp.BusinessLogic.Exceptions.SpecificCustomException;
-using TravelApp.BusinessLogic.Handlers.Locations.Data;
 using TravelApp.BusinessLogic.Interfaces;
+using TravelApp.BusinessLogic.Models.Activities;
 
 namespace TravelApp.BusinessLogic.Handlers.Activities.CreateActivity
 {
@@ -20,40 +19,33 @@ namespace TravelApp.BusinessLogic.Handlers.Activities.CreateActivity
         /// <summary>Creates an activity and returns the persisted result.</summary>
         /// <param name="request">The activity to create.</param>
         /// <returns>The created activity.</returns>
-        /// <exception cref="TravelAppValidationException">Thrown when the name is missing or the city does not exist.</exception>
+        /// <exception cref="TravelAppValidationException">Thrown when the city does not exist.</exception>
         public async Task<CreateActivityResponse> CreateActivityAsync(CreateActivityRequest request)
         {
             await using IUnitOfWork unitOfWork = _unitOfWorkFactory.Create();
 
-            CityDto? existingCity = await unitOfWork.Locations.GetCityAsync(request.CityId);
-            if (existingCity is null)
+            bool cityExists = await unitOfWork.Locations.CityExistsAsync(request.CityId);
+            if (cityExists is false)
             {
-                throw new TravelAppValidationException("The City for the activity does not exist.");
+                throw new TravelAppValidationException($"City with ID {request.CityId} does not exist.");
             }
 
-            CreateActivityDto activityToCreate = new CreateActivityDto
+            Activity activity = new Activity
             {
-                CityId = request.CityId,
                 Name = request.Name.Trim(),
                 Description = request.Description
             };
 
-            ActivityDto? createdActivity = await unitOfWork.Activities.CreateActivityAsync(activityToCreate);
+            await unitOfWork.Activities.CreateActivityAsync(activity, request.CityId);
 
             await unitOfWork.CommitAsync();
 
-            // cowboy, skal bruge cecilias måde at Create på
-            if (createdActivity is null)
-            {
-                createdActivity = unitOfWork.Activities.GetCreatedActivity();
-            }
-
             CreateActivityResponse response = new CreateActivityResponse
             {
-                Id = createdActivity.Id,
-                CityId = createdActivity.CityId,
-                Name = createdActivity.Name,
-                Description = createdActivity.Description
+                Id = activity.Id,
+                CityId = request.CityId,
+                Name = activity.Name,
+                Description = activity.Description
             };
 
             return response;

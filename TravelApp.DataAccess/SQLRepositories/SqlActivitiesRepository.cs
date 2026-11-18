@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using TravelApp.BusinessLogic.DTOs.Activities;
 using TravelApp.BusinessLogic.Interfaces;
-using TravelApp.BusinessLogic.Models.Destinations;
+using TravelApp.BusinessLogic.Models.Activities;
 using TravelApp.DataAccess.SQLRepositories.EntityFramework;
 
 namespace TravelApp.DataAccess.SQLRepositories
@@ -11,7 +11,6 @@ namespace TravelApp.DataAccess.SQLRepositories
     public class SqlActivitiesRepository : IActivitiesRepository
     {
         private readonly TravelAppContext _context;
-        private Activity? _addedActivity;
 
         /// <summary>Initializes a new instance of the <see cref="SqlActivitiesRepository"/> class.</summary>
         /// <param name="context">The Entity Framework Core context connected to SQL Server.</param>
@@ -23,55 +22,10 @@ namespace TravelApp.DataAccess.SQLRepositories
         #region Create - Activities
 
         /// <inheritdoc />
-        public async Task<ActivityDto?> CreateActivityAsync(CreateActivityDto activityToCreate)
+        public async Task CreateActivityAsync(Activity activity, int cityId)
         {
-            _addedActivity = new Activity
-            {
-                Name = activityToCreate.Name,
-                Description = activityToCreate.Description
-            };
-
-            await _context.ActivityEntities.AddAsync(_addedActivity);
-            _context.Entry(_addedActivity).Property("CityId").CurrentValue = activityToCreate.CityId;
-
-            // cowboy, skal bruge cecilias måde at Create på
-            int cityId = _context.Entry(_addedActivity).Property<int>("CityId").CurrentValue;
-
-            if (_addedActivity.Id <= 0)
-            {
-                return null;
-            }
-
-            ActivityDto createdActivity = new ActivityDto
-            {
-                Id = _addedActivity.Id,
-                CityId = cityId,
-                Name = _addedActivity.Name,
-                Description = _addedActivity.Description
-            };
-
-            return createdActivity;
-        }
-
-        /// <inheritdoc />
-        public ActivityDto GetCreatedActivity()
-        {
-            if (_addedActivity is null)
-            {
-                throw new InvalidOperationException("CreateActivityAsync must be called before GetCreatedActivity.");
-            }
-
-            int cityId = _context.Entry(_addedActivity).Property<int>("CityId").CurrentValue;
-
-            ActivityDto createdActivity = new ActivityDto
-            {
-                Id = _addedActivity.Id,
-                CityId = cityId,
-                Name = _addedActivity.Name,
-                Description = _addedActivity.Description
-            };
-
-            return createdActivity;
+            await _context.ActivityEntities.AddAsync(activity);
+            _context.Entry(activity).Property("CityId").CurrentValue = cityId;
         }
 
         #endregion
@@ -79,7 +33,7 @@ namespace TravelApp.DataAccess.SQLRepositories
         #region Read - All Activities
 
         /// <inheritdoc />
-        public async Task<List<ActivityDto>> GetActivitiesAsync(int? cityId)
+        public async Task<List<ActivityDTO>> GetActivitiesAsync(int? cityId)
         {
             IQueryable<Activity> activities = _context.ActivityEntities.AsNoTracking();
 
@@ -89,10 +43,10 @@ namespace TravelApp.DataAccess.SQLRepositories
                 activities = activities.Where(activity => EF.Property<int>(activity, "CityId") == filterCityId);
             }
 
-            List<ActivityDto> result = await activities
+            List<ActivityDTO> result = await activities
                 .OrderBy(activity => activity.Name)
                 .ThenBy(activity => activity.Id)
-                .Select(activity => new ActivityDto
+                .Select(activity => new ActivityDTO
                 {
                     Id = activity.Id,
                     CityId = EF.Property<int>(activity, "CityId"),
@@ -109,12 +63,12 @@ namespace TravelApp.DataAccess.SQLRepositories
         #region Read - By-ID Activities
 
         /// <inheritdoc />
-        public async Task<ActivityDto?> GetActivityByIdAsync(int activityId)
+        public async Task<ActivityDTO?> GetActivityByIdAsync(int activityId)
         {
-            ActivityDto? activityData = await _context.ActivityEntities
+            ActivityDTO? activityData = await _context.ActivityEntities
                 .AsNoTracking()
                 .Where(activity => activity.Id == activityId)
-                .Select(activity => new ActivityDto
+                .Select(activity => new ActivityDTO
                 {
                     Id = activity.Id,
                     CityId = EF.Property<int>(activity, "CityId"),
@@ -131,28 +85,20 @@ namespace TravelApp.DataAccess.SQLRepositories
         #region Update - Activities
 
         /// <inheritdoc />
-        public async Task<ActivityDto?> UpdateActivityAsync(UpdateActivityDto activityToUpdate)
+        public async Task<bool> UpdateActivityAsync(ActivityDTO activityToUpdate)
         {
             Activity? activityInDb = await _context.ActivityEntities.FirstOrDefaultAsync(activity => activity.Id == activityToUpdate.Id);
 
             if (activityInDb is null)
             {
-                return null;
+                return false;
             }
 
             activityInDb.Name = activityToUpdate.Name;
             activityInDb.Description = activityToUpdate.Description;
             _context.Entry(activityInDb).Property("CityId").CurrentValue = activityToUpdate.CityId;
 
-            ActivityDto updatedActivity = new ActivityDto
-            {
-                Id = activityInDb.Id,
-                CityId = activityToUpdate.CityId,
-                Name = activityInDb.Name,
-                Description = activityInDb.Description
-            };
-
-            return updatedActivity;
+            return true;
         }
 
         #endregion

@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace TravelApp.BusinessLogic.Handlers.Posts
+﻿namespace TravelApp.BusinessLogic.Handlers.Posts.GetPost
 {
     /// <summary>The response for get post</summary>
     public class GetPostResponse

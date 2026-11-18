@@ -1,7 +1,11 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using TravelApp.API.ExceptionFilters;
-using TravelApp.BusinessLogic.Handlers.Posts;
+using TravelApp.BusinessLogic.Handlers.Posts.CreatePost;
+using TravelApp.BusinessLogic.Handlers.Posts.DeletePost;
+using TravelApp.BusinessLogic.Handlers.Posts.GetPost;
+using TravelApp.BusinessLogic.Handlers.Posts.GetPosts;
+using TravelApp.BusinessLogic.Handlers.Posts.UpdatePost;
 
 namespace TravelApp.API.Controllers
 {

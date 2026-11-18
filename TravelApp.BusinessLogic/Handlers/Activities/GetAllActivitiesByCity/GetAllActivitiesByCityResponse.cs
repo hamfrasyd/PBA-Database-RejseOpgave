@@ -1,17 +1,14 @@
-namespace TravelApp.BusinessLogic.DTOs.Activities
+namespace TravelApp.BusinessLogic.Handlers.Activities.GetActivitiesByCity
 {
-    /// <summary>Contains the values required to persist an activity update.</summary>
-    public class UpdateActivityDto
+    /// <summary>Contains the result of get city activities.</summary>
+    public class GetAllActivitiesByCityResponse
     {
-        /// <summary>Gets or sets the activity identifier.</summary>
+        /// <summary>Gets or sets the entity ID.</summary>
         public int Id { get; set; }
-
-        /// <summary>Gets or sets the city identifier.</summary>
+        /// <summary>Gets or sets the city id.</summary>
         public int CityId { get; set; }
-
         /// <summary>Gets or sets the name.</summary>
         public string Name { get; set; } = string.Empty;
-
         /// <summary>Gets or sets the description.</summary>
         public string? Description { get; set; }
     }

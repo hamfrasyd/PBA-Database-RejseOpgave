@@ -2,7 +2,6 @@ using Microsoft.EntityFrameworkCore;
 using TravelApp.DataAccess.Auth;
 using TravelApp.BusinessLogic.Models.Posts;
 using TravelApp.BusinessLogic.Models.Groups;
-using TravelApp.BusinessLogic.Models.Destinations;
 using TravelApp.BusinessLogic.Models.Reviews;
 using TravelApp.BusinessLogic.Models.Friendships;
 using TravelApp.BusinessLogic.Models.Achievements;
@@ -10,7 +9,9 @@ using TravelApp.BusinessLogic.Models.Trips;
 using TravelApp.BusinessLogic.Models.Invitations;
 using TravelApp.BusinessLogic.DTOs.Users;
 using TravelApp.BusinessLogic.Models.Users;
-using TravelApp.BusinessLogic.Handlers.Locations.Data;
+using TravelApp.BusinessLogic.DTOs.Locations;
+using TravelApp.BusinessLogic.Models.Activities;
+using TravelApp.BusinessLogic.Models.Locations;
 
 namespace TravelApp.DataAccess.SQLRepositories.EntityFramework
 {
@@ -64,7 +65,7 @@ namespace TravelApp.DataAccess.SQLRepositories.EntityFramework
         /// <summary>Gets the user profile view rows.</summary>
         public DbSet<UserProfileDetailsDTO> UserProfiles => Set<UserProfileDetailsDTO>();
         /// <summary>Gets the destination statistics view rows.</summary>
-        public DbSet<CityStatsDto> DestinationStatistics => Set<CityStatsDto>();
+        public DbSet<CityStatsDTO> DestinationStatistics => Set<CityStatsDTO>();
 
         /// <summary>Configures the SQL schema mappings.</summary>
         /// <param name="modelBuilder">The model builder used to configure the entities.</param>
@@ -413,7 +414,7 @@ namespace TravelApp.DataAccess.SQLRepositories.EntityFramework
                 .OnDelete(DeleteBehavior.Cascade);
 
             modelBuilder.Entity<UserProfileDetailsDTO>(entity => entity.HasNoKey().ToView("vw_UserProfile", "dbo"));
-            modelBuilder.Entity<CityStatsDto>(entity => entity.HasNoKey().ToView("vw_DestinationStats", "dbo"));
+            modelBuilder.Entity<CityStatsDTO>(entity => entity.HasNoKey().ToView("vw_DestinationStats", "dbo"));
 
             modelBuilder.Entity<UserAccount>(entity =>
             {

@@ -1,4 +1,4 @@
-﻿namespace TravelApp.BusinessLogic.Handlers.Posts
+﻿namespace TravelApp.BusinessLogic.Handlers.Posts.CreatePost
 {
     ///<summary>Represents the response after creating a post.</summary>
     public class CreatePostResponse

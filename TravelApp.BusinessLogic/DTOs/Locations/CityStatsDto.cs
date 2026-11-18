@@ -1,7 +1,7 @@
-namespace TravelApp.BusinessLogic.Handlers.Locations.Data
+namespace TravelApp.BusinessLogic.DTOs.Locations
 {
     /// <summary>Contains destination statistics for a city read from a repository.</summary>
-    public class CityStatsDto
+    public class CityStatsDTO
     {
         /// <summary>Gets or sets the city identifier.</summary>
         public int CityId { get; set; }

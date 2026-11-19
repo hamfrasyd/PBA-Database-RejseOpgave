@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Neo4j.Driver;
 using TravelApp.API.ExceptionFilters;
+using TravelApp.BusinessLogic.DTOs.Pagination;
 using TravelApp.BusinessLogic.Handlers.Activities.GetActivity;
 using TravelApp.BusinessLogic.Handlers.Trips.CreateTrip;
 using TravelApp.BusinessLogic.Handlers.Trips.DeleteTrip;
@@ -18,15 +20,23 @@ namespace TravelApp.API.Controllers
     [Route("api/trips")]
     public class TripsController : ControllerBase
     {
-        /// <summary>Lists trips belonging to the current user.</summary>
-        // GET api/trips
+        /// <summary>Retrieves all trips in the system.</summary>
         [HttpGet]
-        [ProducesResponseType(typeof(List<GetTripsResponse>), StatusCodes.Status200OK)]
-        [ProducesResponseType(typeof(UnauthorizedResult), StatusCodes.Status401Unauthorized)]
-        [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult<List<GetTripsResponse>>> GetTrips([FromQuery] int? countryId, [FromQuery] int? continentId, [FromServices] GetTripsHandler handler)
+        public async Task<ActionResult<PagedResultDTO<GetTripsResponse>>> GetAllTrips(
+            [FromServices] GetAllTripsHandler handler, 
+            [FromQuery] int? countryId = null, [FromQuery] int? continentId = null, [FromQuery] bool? isCompleted = null, [FromQuery] int pageNumber = 1)
         {
-            List<GetTripsResponse> result = await handler.GetTripsAsync(countryId, continentId);
+            PagedResultDTO<GetTripsResponse> result = await handler.GetAllTripsAsync(countryId, continentId, isCompleted, pageNumber);
+            return Ok(result);
+        }
+
+        /// <summary>Retrieves the current user's trips.</summary>
+        [HttpGet("mine")]
+        public async Task<ActionResult<PagedResultDTO<GetTripsResponse>>> GetMyTrips(
+            [FromServices] GetTripsHandler handler,
+            [FromQuery] int? countryId = null, [FromQuery] int? continentId = null, [FromQuery] int pageNumber = 1)
+        {
+            PagedResultDTO<GetTripsResponse> result = await handler.GetTripsAsync(countryId, continentId, pageNumber);
             return Ok(result);
         }
 

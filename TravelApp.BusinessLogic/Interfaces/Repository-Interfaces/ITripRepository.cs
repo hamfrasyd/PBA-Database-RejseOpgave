@@ -1,4 +1,6 @@
-﻿using TravelApp.BusinessLogic.DTOs.Trips;
+﻿using Neo4j.Driver;
+using TravelApp.BusinessLogic.DTOs.Pagination;
+using TravelApp.BusinessLogic.DTOs.Trips;
 using TravelApp.BusinessLogic.Models.Trips;
 
 namespace TravelApp.BusinessLogic.Interfaces
@@ -11,9 +13,14 @@ namespace TravelApp.BusinessLogic.Interfaces
         Task CreateTripForUserAsync(Trip trip, int userId);
         #endregion
 
-        #region Read all
+        #region Read All
+        /// <summary>Retrieves paginated trip summaries across all users.</summary>
+        Task<PagedResultDTO<TripSummaryDTO>> GetAllSummariesAsync(int? countryId, int? continentId, bool? isCompleted, int pageNumber, int pageSize);
+        #endregion
+
+        #region Read all for user
         /// <summary>Retrieves trip summaries for user with optional filtering by country and continent.</summary>
-        Task<List<TripSummaryDTO>> GetSummariesByUserAsync(int userId, int? countryId, int? continentId);
+        Task<PagedResultDTO<TripSummaryDTO>> GetSummariesByUserAsync(int userId, int? countryId, int? continentId, int pageNumber, int pageSize);
         #endregion
 
         #region Read By Id

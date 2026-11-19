@@ -1,4 +1,5 @@
 using TravelApp.BusinessLogic.DTOs.Activities;
+using TravelApp.BusinessLogic.DTOs.Pagination;
 using TravelApp.BusinessLogic.Interfaces;
 
 namespace TravelApp.BusinessLogic.Handlers.Activities.GetAllActivitiesByCity
@@ -17,22 +18,37 @@ namespace TravelApp.BusinessLogic.Handlers.Activities.GetAllActivitiesByCity
 
         /// <summary>Retrieves city activities.</summary>
         /// <param name="cityId">The city identifier.</param>
+        /// <param name="pageNumber"="1">The page number for pagination, starting from 1.</param>
         /// <returns>The activities in the city.</returns>
-        public async Task<List<GetAllActivitiesByCityResponse>> GetActivitiesByCityIdAsync(int cityId)
+        public async Task<PagedResultDTO<GetAllActivitiesByCityResponse>> GetActivitiesByCityIdAsync(int cityId, int pageNumber = 1)
         {
+            if (pageNumber < 1)
+            {
+                throw new ArgumentOutOfRangeException(nameof(pageNumber), "Page number must be greater than or equal to 1.");
+            }
+
+            const int pageSize = 10; // Fixed page size for simplicity; can be made configurable if needed.
+
             await using IUnitOfWork unitOfWork = _unitOfWorkFactory.Create();
 
-            List<ActivityDTO> activitiesFromDb = await unitOfWork.Activities.GetActivitiesAsync(cityId);
+            PagedResultDTO<ActivityDTO> activitiesFromDb = await unitOfWork.Activities.GetActivitiesAsync(cityId, pageNumber, pageSize);
 
-            List<GetAllActivitiesByCityResponse> cityActivities = activitiesFromDb.Select(activity => new GetAllActivitiesByCityResponse
+            return new PagedResultDTO<GetAllActivitiesByCityResponse>
             {
-                Id = activity.Id,
-                CityId = activity.CityId,
-                Name = activity.Name,
-                Description = activity.Description
-            }).ToList();
+                Items = activitiesFromDb.Items.Select(activity => new GetAllActivitiesByCityResponse
+                {
+                    Id = activity.Id,
+                    CityId = activity.CityId,
+                    Name = activity.Name,
+                    Description = activity.Description
+                   
+                }).ToList(),
 
-            return cityActivities;
+                TotalCount = activitiesFromDb.TotalCount,
+                PageNumber = activitiesFromDb.PageNumber,
+                PageSize = activitiesFromDb.PageSize
+            };
         }
+
     }
 }

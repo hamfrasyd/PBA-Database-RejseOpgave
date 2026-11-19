@@ -33,6 +33,7 @@ namespace TravelApp.BusinessLogic.Handlers.Invitations.CreateInvitation
         public async Task<CreateInvitationResponse> CreateInvitationAsync(CreateInvitationRequest request)
         {
             int senderId = _currentUser.UserId;
+
             bool senderInvitedThemselves = senderId == request.ReceiverId;
             if (senderInvitedThemselves)
             {
@@ -75,6 +76,7 @@ namespace TravelApp.BusinessLogic.Handlers.Invitations.CreateInvitation
             {
                 throw new InvalidOperationException($"Invitation status {InvitationStatuses.Pending} does not define a status string.");
             }
+
             int? pendingInvitationStatusId = await unitOfWork.Invitations.GetStatusIdAsync(pendingStatusName);
             if (pendingInvitationStatusId is null)
             {

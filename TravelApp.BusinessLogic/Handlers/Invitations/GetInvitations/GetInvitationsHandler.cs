@@ -28,8 +28,8 @@ namespace TravelApp.BusinessLogic.Handlers.Invitations.GetInvitations
             await using IUnitOfWork unitOfWork = _unitOfWorkFactory.Create();
 
             List<InvitationDTO> invitationsFromDb = await unitOfWork.Invitations.GetForUserAsync(_currentUser.UserId, sentByCurrentUser);
-            DateTime currentUtc = DateTime.UtcNow;
 
+            DateTime currentUtc = DateTime.UtcNow;
             List<GetInvitationsResponse> response = invitationsFromDb.Select(invitation => new GetInvitationsResponse
             {
                 Id = invitation.Id,

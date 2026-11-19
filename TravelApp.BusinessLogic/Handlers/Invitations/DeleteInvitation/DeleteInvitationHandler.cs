@@ -24,7 +24,7 @@ namespace TravelApp.BusinessLogic.Handlers.Invitations.DeleteInvitation
         /// <summary>Cancels an invitation for its sender or an administrator.</summary>
         /// <param name="invitationId">The invitation identifier.</param>
         /// <returns>A task that completes when the invitation is deleted.</returns>
-        /// <exception cref="TravelAppNotFoundException">Thrown when the invitation does not exist.</exception>
+        /// <exception cref="TravelAppNotFoundException">Thrown when the invitation does not exist or its status is missing.</exception>
         /// <exception cref="TravelAppForbiddenException">Thrown when the current user cannot cancel the invitation.</exception>
         /// <exception cref="TravelAppConflictException">Thrown when an accepted invitation cannot be cancelled.</exception>
         /// <exception cref="InvalidOperationException">Thrown when Accepted has no <see cref="InvitationStatusNameAttribute"/>.</exception>
@@ -40,12 +40,19 @@ namespace TravelApp.BusinessLogic.Handlers.Invitations.DeleteInvitation
 
             AccessRules.RequireCurrentUserIsInvitationSenderOrAdmin(_currentUser, invitationFromDb.Sender!.Id);
 
-            string? acceptedStatusName = InvitationStatusEnumHelper.EnumToStringOrNull(InvitationStatuses.Accepted);
-            if (acceptedStatusName is null)
+            string? acceptedEnumStatusName = InvitationStatusEnumHelper.EnumToStringOrNull(InvitationStatuses.Accepted);
+            if (acceptedEnumStatusName is null)
             {
                 throw new InvalidOperationException($"Invitation status {InvitationStatuses.Accepted} does not define a status string.");
             }
-            bool invitationIsAccepted = invitationFromDb.InvitationStatus!.StatusName == acceptedStatusName;
+
+            InvitationStatus? invitationStatus = invitationFromDb.InvitationStatus;
+            if (invitationStatus is null)
+            {   
+                throw new TravelAppNotFoundException($"Invitation with ID {invitationId} was not found.");
+            }
+
+            bool invitationIsAccepted = invitationStatus.StatusName == acceptedEnumStatusName;
             if (invitationIsAccepted)
             {
                 throw new TravelAppConflictException("Accepted invitations cannot be cancelled because the user already joined the trip.");

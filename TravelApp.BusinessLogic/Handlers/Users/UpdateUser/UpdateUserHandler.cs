@@ -29,9 +29,15 @@ namespace TravelApp.BusinessLogic.Handlers.Users.UpdateUser
         /// <exception cref="TravelAppValidationException">Thrown when the home city does not exist.</exception>
         public async Task<UpdateUserResponse> UpdateUserAsync(int userId, UpdateUserRequest request)
         {
-            AccessRules.RequireCurrentUserIsOwnerOrAdmin(_currentUser, userId);
-
             await using IUnitOfWork unitOfWork = _unitOfWorkFactory.Create();
+
+            bool userWasFound = await unitOfWork.Users.UserExistsAsync(userId);
+            if (userWasFound is false)
+            {
+                throw new TravelAppNotFoundException($"User with ID {userId} was not found.");
+            }
+
+            AccessRules.RequireCurrentUserIsOwnerOrAdmin(_currentUser, userId);
 
             bool cityExists = await unitOfWork.Locations.CityExistsAsync(request.CityId);
             if (cityExists is false)
@@ -48,8 +54,8 @@ namespace TravelApp.BusinessLogic.Handlers.Users.UpdateUser
                 IsPrivate = request.IsPrivate
             };
 
-            bool userWasFound = await unitOfWork.Users.UpdateUserAsync(userToUpdate);
-            if (userWasFound is false)
+            bool userWasUpdated = await unitOfWork.Users.UpdateUserAsync(userToUpdate);
+            if (userWasUpdated is false)
             {
                 throw new TravelAppNotFoundException($"User with ID {userId} was not found.");
             }

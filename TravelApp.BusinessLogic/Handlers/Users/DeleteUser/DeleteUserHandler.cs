@@ -29,13 +29,6 @@ namespace TravelApp.BusinessLogic.Handlers.Users.DeleteUser
 
             await using IUnitOfWork unitOfWork = _unitOfWorkFactory.Create();
 
-            bool userWasFound = await unitOfWork.Users.UserExistsAsync(userId);
-
-            if (userWasFound is false)
-            {
-                throw new TravelAppNotFoundException($"User with ID {userId} was not found.");
-            }
-
             await unitOfWork.Users.DeleteAsync(userId);
             await unitOfWork.CommitAsync();
         }

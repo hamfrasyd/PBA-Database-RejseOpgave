@@ -32,25 +32,5 @@ namespace TravelApp.BusinessLogic.Handlers.Users.DeleteUser
             await unitOfWork.Users.DeleteAsync(userId);
             await unitOfWork.CommitAsync();
         }
-
-        public async Task DeleteReviewAsync(int reviewId)
-        {
-            await using IUnitOfWork unitOfWork = _unitOfWorkFactory.Create();
-
-            int? ownerOfReview = await unitOfWork.Reviews.GetAccessInfoAsync(reviewId);
-
-            if (ownerOfReview is null)
-            {
-                throw new TravelAppNotFoundException($"Review {reviewId} was not found.");
-            }
-
-            if (ownerOfReview.UserId != _currentUser.UserId && !_currentUser.IsAdmin)
-            {
-                throw new TravelAppForbiddenException("You cannot delete this review.");
-            }
-
-            await unitOfWork.Reviews.DeleteAsync(reviewId);
-            await unitOfWork.CommitAsync();
-        }
     }
 }

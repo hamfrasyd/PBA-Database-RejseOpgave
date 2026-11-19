@@ -2,6 +2,7 @@
 using Neo4j.Driver;
 using TravelApp.BusinessLogic.DTOs.Pagination;
 using TravelApp.BusinessLogic.DTOs.Trips;
+using TravelApp.BusinessLogic.Exceptions.SpecificCustomException;
 using TravelApp.BusinessLogic.Interfaces;
 using TravelApp.BusinessLogic.Models.Activities;
 using TravelApp.BusinessLogic.Models.Locations;
@@ -29,7 +30,7 @@ namespace TravelApp.DataAccess.SQLRepositories
             TravelUser? user = await _context.TravelUserEntities.FindAsync(userId);
             if (user is null)
             {
-                throw new InvalidOperationException("The user must exist before creating a trip.");
+                throw new TravelAppNotFoundException("The user must exist before creating a trip.");
             }
             trip.TripParticipants.Add(new TripParticipant
             {
@@ -212,7 +213,7 @@ namespace TravelApp.DataAccess.SQLRepositories
             Trip? trip = await _context.TripEntities.FirstOrDefaultAsync(trip => trip.Id == tripId);
             if (trip is null)
             {
-                throw new InvalidOperationException($"Trip {tripId} was not found.");
+                throw new TravelAppNotFoundException($"Trip {tripId} was not found.");
             }
             if (update.StartDate is not null)
             {
@@ -245,7 +246,7 @@ namespace TravelApp.DataAccess.SQLRepositories
 
             if (trip is null)
             {
-                throw new InvalidOperationException($"Trip {tripId} was not found.");
+                throw new TravelAppNotFoundException($"Trip {tripId} was not found.");
             }
             _context.TripEntities.Remove(trip);
         }
@@ -255,9 +256,9 @@ namespace TravelApp.DataAccess.SQLRepositories
         /// <summary>Adds a city to a trip.</summary>
         public async Task AddCityToTripAsync(int tripId, int cityId)
         {
-            Trip trip = await _context.TripEntities.FindAsync(tripId) ?? throw new InvalidOperationException("Trip was not found.");
+            Trip trip = await _context.TripEntities.FindAsync(tripId) ?? throw new TravelAppNotFoundException("Trip was not found.");
 
-            City city = await _context.CityEntities.FindAsync(cityId) ?? throw new InvalidOperationException("City was not found.");
+            City city = await _context.CityEntities.FindAsync(cityId) ?? throw new TravelAppNotFoundException("City was not found.");
 
             _context.TripStopEntities.Add(new TripStop
             {
@@ -274,7 +275,7 @@ namespace TravelApp.DataAccess.SQLRepositories
 
             if (stop is null)
             {
-                throw new InvalidOperationException("Trip stop was not found.");
+                throw new TravelAppNotFoundException("Trip stop was not found.");
             }
             _context.TripStopEntities.Remove(stop);
         }
@@ -302,10 +303,10 @@ namespace TravelApp.DataAccess.SQLRepositories
         public async Task AddActivityToTripAsync(int tripId, int activityId)
         {
             Trip trip = await _context.TripEntities.FindAsync(tripId)
-                ?? throw new InvalidOperationException("Trip was not found.");
+                ?? throw new TravelAppNotFoundException("Trip was not found.");
 
             Activity activity = await _context.ActivityEntities.FindAsync(activityId)
-                ?? throw new InvalidOperationException("Activity was not found.");
+                ?? throw new TravelAppNotFoundException("Activity was not found.");
 
             _context.TripActivityEntities.Add(new TripActivity
             {
@@ -322,7 +323,7 @@ namespace TravelApp.DataAccess.SQLRepositories
 
             if (activity is null)
             {
-                throw new InvalidOperationException("Trip activity was not found.");
+                throw new TravelAppNotFoundException("Trip activity was not found.");
             }
 
             _context.TripActivityEntities.Remove(activity);
@@ -351,10 +352,10 @@ namespace TravelApp.DataAccess.SQLRepositories
         public async Task AddParticipantToTripAsync(int tripId, int userId)
         {
             Trip trip = await _context.TripEntities.FindAsync(tripId)
-                ?? throw new InvalidOperationException("Trip was not found.");
+                ?? throw new TravelAppNotFoundException("Trip was not found.");
 
             TravelUser user = await _context.TravelUserEntities.FindAsync(userId)
-                ?? throw new InvalidOperationException("User was not found.");
+                ?? throw new TravelAppNotFoundException("User was not found.");
 
             _context.TripParticipantEntities.Add(new TripParticipant
             {
@@ -371,7 +372,7 @@ namespace TravelApp.DataAccess.SQLRepositories
 
             if (participant is null)
             {
-                throw new InvalidOperationException("Trip participant was not found.");
+                throw new TravelAppNotFoundException("Trip participant was not found.");
             }
             _context.TripParticipantEntities.Remove(participant);
         }

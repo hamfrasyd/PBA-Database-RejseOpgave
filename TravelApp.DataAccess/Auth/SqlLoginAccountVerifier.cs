@@ -1,4 +1,4 @@
-﻿using System.Globalization;
+using System.Globalization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using TravelApp.BusinessLogic.Auth;
@@ -26,7 +26,12 @@ namespace TravelApp.DataAccess.Auth
         /// <summary>Verifies login credentials and returns the associated account details.</summary>
         public async Task<VerifiedLoginAccount?> VerifyAsync(string userName, string password)
         {
-            string normalizedUserName = userName.Trim().ToUpperInvariant();
+            if (userName is null)
+            {
+                return null;
+            }
+
+            string normalizedUserName = userName.ToUpperInvariant();
 
             UserAccount? account = await _context.UserAccounts.AsNoTracking().SingleOrDefaultAsync(item => item.NormalizedUserName == normalizedUserName && item.IsActive);
 

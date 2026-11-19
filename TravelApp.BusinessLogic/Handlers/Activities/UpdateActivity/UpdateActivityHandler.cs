@@ -30,6 +30,11 @@ namespace TravelApp.BusinessLogic.Handlers.Activities.UpdateActivity
                 throw new TravelAppValidationException("Activity update requires a name or a description.");
             }
 
+            if (request.Description is not null && string.IsNullOrWhiteSpace(request.Description))
+            {
+                throw new TravelAppValidationException("Activity description cannot be empty.");
+            }
+
             await using IUnitOfWork unitOfWork = _unitOfWorkFactory.Create();
             
             bool cityExists = await unitOfWork.Locations.CityExistsAsync(request.CityId);
@@ -43,6 +48,8 @@ namespace TravelApp.BusinessLogic.Handlers.Activities.UpdateActivity
                 Id = activityId,
                 CityId = request.CityId,
                 Name = request.Name?.Trim(),
+                Description = request.Description?.Trim()
+                Name = request.Name.Trim(),
                 Description = request.Description?.Trim()
             };
 

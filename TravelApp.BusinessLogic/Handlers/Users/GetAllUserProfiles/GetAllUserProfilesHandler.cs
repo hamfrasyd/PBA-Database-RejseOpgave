@@ -1,5 +1,6 @@
 using TravelApp.BusinessLogic.Auth;
 using TravelApp.BusinessLogic.DTOs.Users;
+using TravelApp.BusinessLogic.Exceptions.SpecificCustomException;
 using TravelApp.BusinessLogic.Handlers.Users.GetUserProfile;
 using TravelApp.BusinessLogic.Interfaces;
 using TravelApp.BusinessLogic.Models.Users;
@@ -24,13 +25,19 @@ namespace TravelApp.BusinessLogic.Handlers.Users.GetAllUserProfiles
         /// <summary>Retrieves all user profiles that match the filter.</summary>
         /// <param name="request">The filter and sort options.</param>
         /// <returns>The matching user profiles.</returns>
+        /// <exception cref="TravelAppValidationException">Thrown when the search text is empty.</exception>
         public async Task<List<UserProfileResponse>> GetAllUserProfilesAsync(GetAllUserProfilesRequest request)
         {
+            if (request.Search is not null && string.IsNullOrWhiteSpace(request.Search))
+            {
+                throw new TravelAppValidationException("User search cannot be empty.");
+            }
+
             await using IUnitOfWork unitOfWork = _unitOfWorkFactory.Create();
 
             UserProfileSearchDTO userSearchProfileDTO = new UserProfileSearchDTO
             {
-                Search = request.Search,
+                Search = request.Search?.Trim(),
                 Descending = request.Descending,
                 CurrentUserId = _currentUser.UserId,
                 IncludePrivateProfiles = _currentUser.IsAdmin

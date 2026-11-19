@@ -18,7 +18,7 @@ namespace TravelApp.BusinessLogic.Handlers.Accounts.Login
         /// <summary>Verifies the credentials and issues an access token.</summary>
         public async Task<LoginResponse?> LoginAsync(LoginRequest request)
         {
-            VerifiedLoginAccount? account = await _accountVerifier.VerifyAsync(request.UserName, request.Password);
+            VerifiedLoginAccount? account = await _accountVerifier.VerifyAsync(request.UserName.Trim(), request.Password);
 
             if (account is null)
             {

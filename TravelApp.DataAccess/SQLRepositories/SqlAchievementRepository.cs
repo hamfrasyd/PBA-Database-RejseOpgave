@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using TravelApp.BusinessLogic.DTOs.Achievements;
+using TravelApp.BusinessLogic.Exceptions.SpecificCustomException;
 using TravelApp.BusinessLogic.Interfaces;
 using TravelApp.BusinessLogic.Models.Achievements;
 using TravelApp.DataAccess.SQLRepositories.EntityFramework;
@@ -48,7 +49,7 @@ namespace TravelApp.DataAccess.SQLRepositories
                 Achievement? achiev = earnedAchiev.Achievement;
                 if (achiev is null)
                 {
-                    throw new InvalidOperationException($"An earned achievement for user {userId} references a missing achievement definition.");
+                    throw new TravelAppNotFoundException($"An earned achievement for user {userId} references a missing achievement definition.");
                 }
 
                 EarnedAchievementDto response = new EarnedAchievementDto

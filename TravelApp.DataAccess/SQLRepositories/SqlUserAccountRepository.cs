@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using TravelApp.BusinessLogic.DTOs.Accounts;
@@ -25,13 +25,16 @@ namespace TravelApp.DataAccess.SQLRepositories
         /// <inheritdoc />
         public async Task<int> CreateAsync(TravelUser profile, int cityId, CreateUserAccountDto account)
         {
-            string userName = account.UserName.Trim();
+            if (account.UserName is null)
+            {
+                throw new TravelAppValidationException("User name cannot be null.");
+            }
 
-            var entity = new UserAccount
+            UserAccount entity = new UserAccount
             {
                 Profile = profile,
-                UserName = userName,
-                NormalizedUserName = userName.ToUpperInvariant(),
+                UserName = account.UserName,
+                NormalizedUserName = account.UserName.ToUpperInvariant(),
                 Role = "User"
             };
 

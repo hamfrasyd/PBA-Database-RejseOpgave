@@ -24,13 +24,18 @@ namespace TravelApp.BusinessLogic.Handlers.Trips.CreateTrip
         /// <summary>Creates a trip from the request.</summary>
         /// <param name="request">The trip details to create.</param>
         /// <returns>The created trip.</returns>
-        /// <exception cref="TravelAppValidationException">Thrown when the start date is after the end date.</exception>
+        /// <exception cref="TravelAppValidationException">Thrown when the start date is after the end date or the plan notes are empty.</exception>
         /// <exception cref="TravelAppNotFoundException">Thrown when the current user does not exist.</exception>
         public async Task<CreateTripResponse> CreateTripAsync(CreateTripRequest request)
         {
             if (request.StartDate > request.EndDate)
             {
                 throw new TravelAppValidationException("Start date cannot be after end date.");
+            }
+
+            if (request.PlanNotes is not null && string.IsNullOrWhiteSpace(request.PlanNotes))
+            {
+                throw new TravelAppValidationException("Trip plan notes cannot be empty.");
             }
 
             await using IUnitOfWork unitOfWork = _unitOfWorkFactory.Create();
@@ -45,7 +50,7 @@ namespace TravelApp.BusinessLogic.Handlers.Trips.CreateTrip
             {
                 StartDate = request.StartDate,
                 EndDate = request.EndDate,
-                PlanNotes = request.PlanNotes,
+                PlanNotes = request.PlanNotes?.Trim(),
                 IsCompleted = false
             };
 

@@ -19,9 +19,14 @@ namespace TravelApp.BusinessLogic.Handlers.Activities.CreateActivity
         /// <summary>Creates an activity and returns the persisted result.</summary>
         /// <param name="request">The activity to create.</param>
         /// <returns>The created activity.</returns>
-        /// <exception cref="TravelAppValidationException">Thrown when the city does not exist.</exception>
+        /// <exception cref="TravelAppValidationException">Thrown when the city does not exist or the description is empty.</exception>
         public async Task<CreateActivityResponse> CreateActivityAsync(CreateActivityRequest request)
         {
+            if (request.Description is not null && string.IsNullOrWhiteSpace(request.Description))
+            {
+                throw new TravelAppValidationException("Activity description cannot be empty.");
+            }
+
             await using IUnitOfWork unitOfWork = _unitOfWorkFactory.Create();
 
             bool cityExists = await unitOfWork.Locations.CityExistsAsync(request.CityId);

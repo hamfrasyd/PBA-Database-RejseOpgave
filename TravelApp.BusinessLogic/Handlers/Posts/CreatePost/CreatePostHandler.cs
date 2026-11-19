@@ -19,7 +19,7 @@ namespace TravelApp.BusinessLogic.Handlers.Posts.CreatePost
         /// <summary>Creates post.</summary>
         public async Task<CreatePostResponse> CreatePostAsync(CreatePostRequest request)
         {
-            if (string.IsNullOrWhiteSpace(request.Content) || request.UserId <= 0)
+            if (request.UserId <= 0)
             {
                 throw new TravelAppValidationException("Invalid post data.");
             }

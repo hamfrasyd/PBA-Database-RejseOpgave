@@ -41,9 +41,9 @@ namespace TravelApp.DataAccess.SQLRepositories
                 profiles = profiles.Where(profile => profile.IsPrivate == false || profile.UserId == profileSearch.CurrentUserId);
             }
 
-            if (string.IsNullOrWhiteSpace(profileSearch.Search) is false)
+            if (profileSearch.Search is not null)
             {
-                string search = profileSearch.Search.Trim();
+                string search = profileSearch.Search;
 
                 profiles = profiles.Where(profile => profile.FullName.Contains(search));
             }

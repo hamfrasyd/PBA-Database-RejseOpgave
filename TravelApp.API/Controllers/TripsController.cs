@@ -2,9 +2,11 @@
 using Microsoft.AspNetCore.Mvc;
 using TravelApp.API.ExceptionFilters;
 using TravelApp.BusinessLogic.Handlers.Activities.GetActivity;
+using TravelApp.BusinessLogic.Handlers.Trips.AddTripParticipant;
 using TravelApp.BusinessLogic.Handlers.Trips.CreateTrip;
 using TravelApp.BusinessLogic.Handlers.Trips.DeleteTrip;
 using TravelApp.BusinessLogic.Handlers.Trips.GetTrip;
+using TravelApp.BusinessLogic.Handlers.Trips.RemoveTripParticipant;
 using TravelApp.BusinessLogic.Handlers.Trips.TripActivities;
 using TravelApp.BusinessLogic.Handlers.Trips.TripCity;
 using TravelApp.BusinessLogic.Handlers.Trips.TripParticipants;
@@ -189,9 +191,9 @@ namespace TravelApp.API.Controllers
         [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status404NotFound)]
         [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status409Conflict)]
         [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> AddParticipant([FromRoute] int tripId, [FromRoute] int userId, [FromServices] TripParticipantsHandler handler)
+        public async Task<IActionResult> AddParticipant([FromRoute] int tripId, [FromRoute] int userId, [FromServices] AddTripParticipantHandler addTripParticipantHandler)
         {
-            await handler.AddParticipantAsync(tripId, userId);
+            await addTripParticipantHandler.AddTripParticipantAsync(tripId, userId);
             return NoContent();
         }
 
@@ -204,9 +206,9 @@ namespace TravelApp.API.Controllers
         [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status404NotFound)]
         [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status409Conflict)]
         [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> RemoveParticipant([FromRoute] int tripId, [FromRoute] int userId, [FromServices] TripParticipantsHandler handler)
+        public async Task<IActionResult> RemoveParticipant([FromRoute] int tripId, [FromRoute] int userId, [FromServices] RemoveTripParticipantHandler removeTripParticipantHandler)
         {
-            await handler.RemoveParticipantAsync(tripId, userId);
+            await removeTripParticipantHandler.RemoveTripParticipantAsync(tripId, userId);
             return NoContent();
         }
     }

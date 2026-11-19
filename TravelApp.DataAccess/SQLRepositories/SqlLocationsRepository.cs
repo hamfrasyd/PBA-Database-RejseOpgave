@@ -42,9 +42,9 @@ namespace TravelApp.DataAccess.SQLRepositories
                 cities = cities.Where(city => EF.Property<int>(city, "CountryId") == countryId);
             }
 
-            if (string.IsNullOrWhiteSpace(filter.Search) is false)
+            if (filter.Search is not null)
             {
-                string search = filter.Search.Trim();
+                string search = filter.Search;
                 cities = cities.Where(city => city.Name.Contains(search));
             }
 

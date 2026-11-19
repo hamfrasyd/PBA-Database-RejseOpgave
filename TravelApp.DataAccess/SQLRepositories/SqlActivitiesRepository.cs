@@ -95,7 +95,11 @@ namespace TravelApp.DataAccess.SQLRepositories
             }
 
             activityInDb.Name = activityToUpdate.Name;
-            activityInDb.Description = activityToUpdate.Description;
+
+            if (activityToUpdate.Description is not null)
+            {
+                activityInDb.Description = activityToUpdate.Description;
+            }
             _context.Entry(activityInDb).Property("CityId").CurrentValue = activityToUpdate.CityId;
 
             return true;

@@ -20,9 +20,14 @@ namespace TravelApp.BusinessLogic.Handlers.Groups.UpdateGroup
         }
 
         /// <summary>Updates a group</summary>
-        /// <exception cref="TravelAppValidationException">Thrown when the name or description is empty.</exception>
+        /// <exception cref="TravelAppValidationException">Thrown when no field is provided or the name or description is empty.</exception>
         public async Task UpdateGroupAsync(int groupId, UpdateGroupRequest request)
         {
+            if (request.Name is null && request.Description is null)
+            {
+                throw new TravelAppValidationException("At least one field must be provided.");
+            }
+
             if (request.Name is not null && string.IsNullOrWhiteSpace(request.Name))
             {
                 throw new TravelAppValidationException("Group name cannot be empty.");

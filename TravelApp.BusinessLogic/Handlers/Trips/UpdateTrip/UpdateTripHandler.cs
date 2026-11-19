@@ -23,14 +23,33 @@ namespace TravelApp.BusinessLogic.Handlers.Trips.UpdateTrip
 
         /// <summary>Updates a trip from the request.</summary>
         /// <param name="request">The updated trip details.</param>
-        /// <exception cref="TravelAppValidationException">Thrown when the start date is after the end date.</exception>
+        /// <exception cref="TravelAppValidationException">Thrown when no field is provided, the start date is after the end date, or the notes are empty.</exception>
         /// <exception cref="TravelAppNotFoundException">Thrown when the trip does not exist.</exception>
         /// <exception cref="TravelAppForbiddenException">Thrown when the current user cannot update the trip.</exception>
         public async Task UpdateTripAsync(int tripId, UpdateTripRequest request)
         {
+            if (request.StartDate is null
+                && request.EndDate is null
+                && request.IsCompleted is null
+                && request.PlanNotes is null
+                && request.ExperienceNotes is null)
+            {
+                throw new TravelAppValidationException("At least one field must be provided.");
+            }
+
             if (request.StartDate > request.EndDate)
             {
                 throw new TravelAppValidationException("Start date cannot be after end date.");
+            }
+
+            if (request.PlanNotes is not null && string.IsNullOrWhiteSpace(request.PlanNotes))
+            {
+                throw new TravelAppValidationException("Trip plan notes cannot be empty.");
+            }
+
+            if (request.ExperienceNotes is not null && string.IsNullOrWhiteSpace(request.ExperienceNotes))
+            {
+                throw new TravelAppValidationException("Trip experience notes cannot be empty.");
             }
 
             await using IUnitOfWork unitOfWork = _unitOfWorkFactory.Create();
@@ -42,8 +61,8 @@ namespace TravelApp.BusinessLogic.Handlers.Trips.UpdateTrip
                 StartDate = request.StartDate,
                 EndDate = request.EndDate,
                 IsCompleted = request.IsCompleted,
-                PlanNotes = request.PlanNotes,
-                ExperienceNotes = request.ExperienceNotes
+                PlanNotes = request.PlanNotes?.Trim(),
+                ExperienceNotes = request.ExperienceNotes?.Trim()
             };
 
             await unitOfWork.Trips.UpdateAsync(tripId, update);

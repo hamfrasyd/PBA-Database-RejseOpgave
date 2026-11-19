@@ -104,8 +104,7 @@ namespace TravelApp.DataAccess.SQLRepositories
         /// <inheritdoc />
         public async Task AddGroupMembersAsync(int groupId, List<int> userIds)
         {
-            TravelGroup group = await _context.TravelGroupEntities.FindAsync(groupId)
-                ?? throw new InvalidOperationException("Group was not found.");
+            TravelGroup group = await _context.TravelGroupEntities.FindAsync(groupId) ?? throw new TravelAppNotFoundException($"Group {groupId} was not found.");
 
             List<int> distinctIds = userIds.Distinct().ToList();
 
@@ -116,7 +115,7 @@ namespace TravelApp.DataAccess.SQLRepositories
             if (users.Count != distinctIds.Count)
             {
                 int missingId = distinctIds.Except(users.Select(u => u.Id)).First();
-                throw new InvalidOperationException($"User {missingId} was not found.");
+                throw new TravelAppNotFoundException($"User {missingId} was not found.");
             }
 
             HashSet<int> existingMemberIds = (await _context.GroupMembershipEntities
@@ -139,7 +138,7 @@ namespace TravelApp.DataAccess.SQLRepositories
         public async Task AddGroupTripsAsync(int groupId, List<int> tripIds)
         {
             TravelGroup group = await _context.TravelGroupEntities.FindAsync(groupId)
-                ?? throw new InvalidOperationException("Group was not found.");
+                ?? throw new TravelAppNotFoundException($"Group {groupId} was not found.");
 
             List<int> distinctIds = tripIds.Distinct().ToList();
 
@@ -150,7 +149,7 @@ namespace TravelApp.DataAccess.SQLRepositories
             if (trips.Count != distinctIds.Count)
             {
                 int missingId = distinctIds.Except(trips.Select(t => t.Id)).First();
-                throw new InvalidOperationException($"Trip {missingId} was not found.");
+                throw new TravelAppNotFoundException($"Trip {missingId} was not found.");
             }
 
             HashSet<int> existingTripIds = (await _context.GroupTripEntities

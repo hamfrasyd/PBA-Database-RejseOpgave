@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using TravelApp.BusinessLogic.DTOs.Reviews;
+using TravelApp.BusinessLogic.Exceptions.SpecificCustomException;
 using TravelApp.BusinessLogic.Interfaces.Repository_Interfaces;
 using TravelApp.BusinessLogic.Models.Reviews;
 using TravelApp.BusinessLogic.Models.Trips;
@@ -24,10 +25,10 @@ namespace TravelApp.DataAccess.SQLRepositories
         public async Task CreateReviewForUserAsync(Review review, int tripId, int userId)
         {
             Trip trip = await _context.TripEntities.FindAsync(tripId)
-                ?? throw new InvalidOperationException($"Trip {tripId} was not found.");
+                ?? throw new TravelAppNotFoundException($"Trip {tripId} was not found.");
 
             TravelUser user = await _context.TravelUserEntities.FindAsync(userId)
-                ?? throw new InvalidOperationException( $"User {userId} was not found.");
+                ?? throw new TravelAppNotFoundException($"User {userId} was not found.");
 
             review.Trip = trip;
             review.User = user;
@@ -97,7 +98,7 @@ namespace TravelApp.DataAccess.SQLRepositories
 
             if (review is null)
             {
-                throw new InvalidOperationException($"Review {reviewId} was not found.");
+                throw new TravelAppNotFoundException($"Review {reviewId} was not found.");
             }
             if (update.Content is not null)
             {
@@ -126,7 +127,7 @@ namespace TravelApp.DataAccess.SQLRepositories
 
             if (review is null)
             {
-                throw new InvalidOperationException($"Review {reviewId} was not found.");
+                throw new TravelAppNotFoundException($"Review {reviewId} was not found.");
             }
 
             _context.ReviewEntities.Remove(review);

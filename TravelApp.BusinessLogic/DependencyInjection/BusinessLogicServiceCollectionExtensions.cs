@@ -38,9 +38,11 @@ using TravelApp.BusinessLogic.Handlers.Reviews.DeleteReview;
 using TravelApp.BusinessLogic.Handlers.Reviews.GetReview;
 using TravelApp.BusinessLogic.Handlers.Reviews.UpdateReview;
 using TravelApp.BusinessLogic.Handlers.Trips;
+using TravelApp.BusinessLogic.Handlers.Trips.AddTripParticipant;
 using TravelApp.BusinessLogic.Handlers.Trips.CreateTrip;
 using TravelApp.BusinessLogic.Handlers.Trips.DeleteTrip;
 using TravelApp.BusinessLogic.Handlers.Trips.GetTrip;
+using TravelApp.BusinessLogic.Handlers.Trips.RemoveTripParticipant;
 using TravelApp.BusinessLogic.Handlers.Trips.TripActivities;
 using TravelApp.BusinessLogic.Handlers.Trips.TripCity;
 using TravelApp.BusinessLogic.Handlers.Trips.TripParticipants;
@@ -129,6 +131,8 @@ namespace TravelApp.BusinessLogic.DependencyInjection
             services.AddScoped<TripActivitiesHandler>();
             services.AddScoped<TripCityHandler>();
             services.AddScoped<TripParticipantsHandler>();
+            services.AddScoped<AddTripParticipantHandler>();
+            services.AddScoped<RemoveTripParticipantHandler>();
         }
 
         private static void RegisterPosts(IServiceCollection services)

@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using TravelApp.BusinessLogic.DTOs.Posts;
 using TravelApp.BusinessLogic.Exceptions.SpecificCustomException;
 using TravelApp.BusinessLogic.Interfaces;
 using TravelApp.BusinessLogic.Models.Posts;
@@ -39,10 +40,22 @@ namespace TravelApp.DataAccess.SQLRepositories
             return createdPost.Entity;
         }
 
-        /// <inheritdoc/>
-        public async Task UpdatePostAsync(Post post)
+        /// <summary>Updates an existing post. A null content leaves the stored content unchanged.</summary>
+        /// <param name="post">The post fields to update.</param>
+        /// <exception cref="TravelAppNotFoundException">Thrown when the post does not exist.</exception>
+        public async Task UpdatePostAsync(UpdatePostDTO post)
         {
-            _context.PostEntities.Update(post);
+            Post? postInDb = await _context.PostEntities.FirstOrDefaultAsync(item => item.Id == post.Id);
+
+            if (postInDb is null)
+            {
+                throw new TravelAppNotFoundException($"Post {post.Id} was not found.");
+            }
+
+            if (post.Content is not null)
+            {
+                postInDb.Content = post.Content;
+            }
         }
 
         /// <inheritdoc/>

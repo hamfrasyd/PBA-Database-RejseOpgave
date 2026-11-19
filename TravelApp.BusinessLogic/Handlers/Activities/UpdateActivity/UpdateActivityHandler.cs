@@ -21,9 +21,14 @@ namespace TravelApp.BusinessLogic.Handlers.Activities.UpdateActivity
         /// <param name="request">The updated activity details.</param>
         /// <returns>The updated activity.</returns>
         /// <exception cref="TravelAppNotFoundException">Thrown when the activity does not exist.</exception>
-        /// <exception cref="TravelAppValidationException">Thrown when the city does not exist.</exception>
+        /// <exception cref="TravelAppValidationException">Thrown when the city does not exist or the description is empty.</exception>
         public async Task<UpdateActivityResponse> UpdateActivityAsync(int activityId, UpdateActivityRequest request)
         {
+            if (request.Description is not null && string.IsNullOrWhiteSpace(request.Description))
+            {
+                throw new TravelAppValidationException("Activity description cannot be empty.");
+            }
+
             await using IUnitOfWork unitOfWork = _unitOfWorkFactory.Create();
             
             bool cityExists = await unitOfWork.Locations.CityExistsAsync(request.CityId);
@@ -37,7 +42,7 @@ namespace TravelApp.BusinessLogic.Handlers.Activities.UpdateActivity
                 Id = activityId,
                 CityId = request.CityId,
                 Name = request.Name.Trim(),
-                Description = request.Description
+                Description = request.Description?.Trim()
             };
 
             bool activityWasFound = await unitOfWork.Activities.UpdateActivityAsync(activityToUpdate);

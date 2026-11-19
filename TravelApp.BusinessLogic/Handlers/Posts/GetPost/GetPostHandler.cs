@@ -28,7 +28,7 @@ namespace TravelApp.BusinessLogic.Handlers.Posts.GetPost
 
             if (postFromDb.User is null)
             {
-                throw new InvalidOperationException($"Required User relationship was not loaded for Post {id}.");
+                throw new TravelAppNotFoundException($"User for post {id} was not found.");
             }
 
             GetPostResponse response = new GetPostResponse

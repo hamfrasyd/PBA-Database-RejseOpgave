@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Text;
 using TravelApp.BusinessLogic.DTOs.Groups;
@@ -20,8 +20,14 @@ namespace TravelApp.BusinessLogic.Handlers.Groups.CreateGroup
         }
 
         /// <summary>Creates group.</summary>
+        /// <exception cref="TravelAppValidationException">Thrown when the description is empty.</exception>
         public async Task<CreateGroupResponse> CreateGroupAsync(CreateGroupRequest request)
         {
+            if (request.Description is not null && string.IsNullOrWhiteSpace(request.Description))
+            {
+                throw new TravelAppValidationException("Group description cannot be empty.");
+            }
+
             await using IUnitOfWork unitOfWork = _unitOfWorkFactory.Create();
 
             TravelGroup group = await unitOfWork.Groups.CreateGroupAsync(new TravelGroupDTO

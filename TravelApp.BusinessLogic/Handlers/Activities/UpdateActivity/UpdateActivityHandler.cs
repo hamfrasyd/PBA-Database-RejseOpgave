@@ -1,6 +1,5 @@
 using TravelApp.BusinessLogic.DTOs.Activities;
 using TravelApp.BusinessLogic.Exceptions.SpecificCustomException;
-using TravelApp.BusinessLogic.Handlers.Locations.Data;
 using TravelApp.BusinessLogic.Interfaces;
 
 namespace TravelApp.BusinessLogic.Handlers.Activities.UpdateActivity
@@ -22,18 +21,18 @@ namespace TravelApp.BusinessLogic.Handlers.Activities.UpdateActivity
         /// <param name="request">The updated activity details.</param>
         /// <returns>The updated activity.</returns>
         /// <exception cref="TravelAppNotFoundException">Thrown when the activity does not exist.</exception>
-        /// <exception cref="TravelAppValidationException">Thrown when the name is missing or the city does not exist.</exception>
+        /// <exception cref="TravelAppValidationException">Thrown when the city does not exist.</exception>
         public async Task<UpdateActivityResponse> UpdateActivityAsync(int activityId, UpdateActivityRequest request)
         {
             await using IUnitOfWork unitOfWork = _unitOfWorkFactory.Create();
-
-            CityDto? existingCity = await unitOfWork.Locations.GetCityAsync(request.CityId);
-            if (existingCity is null)
+            
+            bool cityExists = await unitOfWork.Locations.CityExistsAsync(request.CityId);
+            if (cityExists is false)
             {
-                throw new TravelAppValidationException("The City for the activity does not exist.");
+                throw new TravelAppValidationException($"City with ID {request.CityId} does not exist.");
             }
 
-            UpdateActivityDto activityToUpdate = new UpdateActivityDto
+            ActivityDTO activityToUpdate = new ActivityDTO
             {
                 Id = activityId,
                 CityId = request.CityId,
@@ -41,8 +40,8 @@ namespace TravelApp.BusinessLogic.Handlers.Activities.UpdateActivity
                 Description = request.Description
             };
 
-            ActivityDto? updatedActivity = await unitOfWork.Activities.UpdateActivityAsync(activityToUpdate);
-            if (updatedActivity is null)
+            bool activityWasFound = await unitOfWork.Activities.UpdateActivityAsync(activityToUpdate);
+            if (activityWasFound is false)
             {
                 throw new TravelAppNotFoundException($"Activity with ID {activityId} was not found.");
             }
@@ -51,10 +50,10 @@ namespace TravelApp.BusinessLogic.Handlers.Activities.UpdateActivity
 
             UpdateActivityResponse response = new UpdateActivityResponse
             {
-                Id = updatedActivity.Id,
-                CityId = updatedActivity.CityId,
-                Name = updatedActivity.Name,
-                Description = updatedActivity.Description
+                Id = activityToUpdate.Id,
+                CityId = activityToUpdate.CityId,
+                Name = activityToUpdate.Name,
+                Description = activityToUpdate.Description
             };
 
             return response;

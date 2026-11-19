@@ -26,6 +26,8 @@ namespace TravelApp.DataAccess.UnitOfWork
         /// <inheritdoc/>
         public IPostRepository Posts { get; }
         /// <inheritdoc/>
+        public IGroupRepository Groups { get; }
+        /// <inheritdoc/>
         public IReviewRepository Reviews { get; }
 
         /// <summary>
@@ -46,6 +48,7 @@ namespace TravelApp.DataAccess.UnitOfWork
             Trips = new SqlTripRepository(_context);
             Users = new SqlUserRepository(_context);
             Posts = new SqlPostRepository(_context);
+            Groups = new SqlGroupRepository(_context);
             Reviews = new SqlReviewRepository(_context);
         }
 

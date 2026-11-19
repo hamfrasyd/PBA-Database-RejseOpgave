@@ -18,12 +18,24 @@ namespace TravelApp.API.DatabaseSelection
             _configuration = configuration;
         }
 
-        /// <summary>Selects the database provider for the current HTTP request.</summary>
-        /// <param name="context">The current HTTP context.</param>
-        /// <param name="selectedDatabaseProvider">The provider selection stored for this request.</param>
-        /// <returns>A task that completes when the request has been handled.</returns>
+        /// <summary>
+        /// Selects the database provider for the request and invokes the next middleware when supported.
+        /// </summary>
+        /// <remarks>Requests targeting endpoints marked with <see cref="UseSqlDatabaseAttribute"/> use
+        /// SQL. Otherwise, the provider is selected from the request header or configuration. Unknown providers result
+        /// in a 400 response, and currently unsupported providers result in a 501 response.</remarks>
+        /// <param name="context">The HTTP context for the current request.</param>
+        /// <param name="selectedDatabaseProvider">The scoped database provider selection to update.</param>
+        /// <returns>A task representing the asynchronous middleware operation.</returns>
         public async Task InvokeAsync(HttpContext context, SelectedDatabaseProvider selectedDatabaseProvider)
         {
+            if (context.GetEndpoint()?.Metadata.GetMetadata<UseSqlDatabaseAttribute>() is not null)
+            {
+                selectedDatabaseProvider.Provider = DatabaseProviderTypes.Sql;
+                await _next(context);
+                return;
+            }
+
             string selectedProvider = context.Request.Headers[ProviderHeaderName].ToString();
             if (string.IsNullOrWhiteSpace(selectedProvider))
             {

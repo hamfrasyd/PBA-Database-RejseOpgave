@@ -3,7 +3,7 @@ using TravelApp.BusinessLogic.Interfaces;
 using TravelApp.BusinessLogic.Models.Posts;
 using TravelApp.BusinessLogic.Models.Users;
 
-namespace TravelApp.BusinessLogic.Handlers.Posts
+namespace TravelApp.BusinessLogic.Handlers.Posts.CreatePost
 {
     /// <summary>Handles the create post operation.</summary>
     public class CreatePostHandler
@@ -26,7 +26,12 @@ namespace TravelApp.BusinessLogic.Handlers.Posts
 
             await using IUnitOfWork unitOfWork = _unitOfWorkFactory.Create();
 
-            TravelUser user = await unitOfWork.Users.GetByIdAsync(request.UserId);
+            TravelUser? user = await unitOfWork.Users.GetByIdAsync(request.UserId);
+
+            if (user is null)
+            {
+                throw new TravelAppNotFoundException("User was not found");
+            }
 
             Post addedPost = await unitOfWork.Posts.AddPostAsync(new Post
             {

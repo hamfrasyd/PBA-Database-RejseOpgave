@@ -45,6 +45,7 @@ var app = builder.Build();
 app.UseTravelAppSwagger();
 
 app.UseHttpsRedirection();
+app.UseRouting();
 
 // Use CORS policy
 if (allowedOrigins.Length > 0)

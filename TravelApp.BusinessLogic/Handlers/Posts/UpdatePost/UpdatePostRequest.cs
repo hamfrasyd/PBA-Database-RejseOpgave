@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace TravelApp.BusinessLogic.Handlers.Posts
+﻿namespace TravelApp.BusinessLogic.Handlers.Posts.UpdatePost
 {
     ///<summary>Represents the request to update a post.</summary>
     public class UpdatePostRequest
@@ -10,6 +6,6 @@ namespace TravelApp.BusinessLogic.Handlers.Posts
         /// <summary>Gets or sets the post id.</summary>
         public int Id { get; set; }
         /// <summary>Gets or sets the content.</summary>
-        public string Content { get; set; }
+        public string? Content { get; set; }
     }
 }

@@ -1,10 +1,9 @@
-﻿
-using TravelApp.BusinessLogic.Auth;
+﻿using TravelApp.BusinessLogic.Auth;
 using TravelApp.BusinessLogic.DTOs.Trips;
 using TravelApp.BusinessLogic.Exceptions.SpecificCustomException;
 using TravelApp.BusinessLogic.Interfaces;
 
-namespace TravelApp.BusinessLogic.Handlers.Trips
+namespace TravelApp.BusinessLogic.Handlers.Trips.ManageTripRelations
 {
     /// <summary>Provides shared access control for trips.</summary>
     public static class TripAccessHelper

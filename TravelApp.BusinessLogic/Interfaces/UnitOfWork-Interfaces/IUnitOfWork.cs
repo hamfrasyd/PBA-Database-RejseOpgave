@@ -20,9 +20,11 @@ namespace TravelApp.BusinessLogic.Interfaces
         /// <summary>Provides access to the users repository.</summary>
         public IUserRepository Users { get; }
 
-
         /// <summary>Provides access to the posts repository.</summary>
         public IPostRepository Posts { get; }
+
+        /// <summary>Provides access to the groups repository.</summary>
+        public IGroupRepository Groups { get; }
 
         /// <summary>Provides access to the reviews repository.</summary>
         public IReviewRepository Reviews { get; }

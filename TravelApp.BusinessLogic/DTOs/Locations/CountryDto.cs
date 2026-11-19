@@ -1,7 +1,7 @@
-namespace TravelApp.BusinessLogic.Handlers.Locations.Data
+namespace TravelApp.BusinessLogic.DTOs.Locations
 {
     /// <summary>Contains the country fields exchanged with a repository.</summary>
-    public class CountryDto
+    public class CountryDTO
     {
         /// <summary>Gets or sets the country identifier.</summary>
         public int Id { get; set; }

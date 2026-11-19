@@ -1,6 +1,7 @@
 using TravelApp.BusinessLogic.Auth;
 using TravelApp.BusinessLogic.Exceptions.SpecificCustomException;
 using TravelApp.BusinessLogic.Interfaces;
+using TravelApp.BusinessLogic.Models.Users;
 
 namespace TravelApp.BusinessLogic.Handlers.Users.GetUserProfile
 {
@@ -22,18 +23,38 @@ namespace TravelApp.BusinessLogic.Handlers.Users.GetUserProfile
         /// <summary>Retrieves user profile.</summary>
         /// <param name="userId">The user identifier.</param>
         /// <returns>The user profile.</returns>
-        /// <exception cref="TravelAppNotFoundException">Thrown when the user does not exist or the profile is private.</exception>
-        public async Task<GetUserProfileResponse> GetUserProfileAsync(int userId)
+        /// <exception cref="TravelAppNotFoundException">Thrown when the user does not exist.</exception>
+        /// <exception cref="TravelAppForbiddenException">Thrown when the profile is private and the current user is neither the owner nor an administrator.</exception>
+        public async Task<UserProfileResponse> GetUserProfileAsync(int userId)
         {
             await using IUnitOfWork unitOfWork = _unitOfWorkFactory.Create();
 
-            GetUserProfileResponse? profile = await unitOfWork.Users.GetProfileAsync(userId);
-            if (profile is null || (profile.IsPrivate && _currentUser.IsAdmin is false && _currentUser.UserId != userId))
+            UserProfileView? existingProfile = await unitOfWork.Users.GetProfileAsync(userId);
+
+            if (existingProfile is null)
             {
-                throw new TravelAppNotFoundException($"User {userId} was not found.");
+                throw new TravelAppNotFoundException($"User with ID {userId} was not found.");
             }
 
-            return profile;
+            AccessRules.RequirePublicOrOwnerOrAdmin(_currentUser, userId, existingProfile.IsPrivate);
+
+            UserProfileResponse response = new UserProfileResponse
+            {
+                UserId = existingProfile.UserId,
+                FullName = existingProfile.FullName,
+                Age = existingProfile.Age,
+                HomeCity = existingProfile.HomeCity,
+                HomeCountry = existingProfile.HomeCountry,
+                IsPrivate = existingProfile.IsPrivate,
+                MemberSince = existingProfile.MemberSince,
+                FriendCount = existingProfile.FriendCount,
+                CompletedTrips = existingProfile.CompletedTrips,
+                PlannedTrips = existingProfile.PlannedTrips,
+                ReviewCount = existingProfile.ReviewCount,
+                AchievementCount = existingProfile.AchievementCount
+            };
+
+            return response;
         }
     }
 }

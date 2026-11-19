@@ -1,4 +1,4 @@
-using TravelApp.BusinessLogic.Handlers.Locations.Data;
+using TravelApp.BusinessLogic.DTOs.Locations;
 using TravelApp.BusinessLogic.Interfaces;
 
 namespace TravelApp.BusinessLogic.Handlers.Locations.GetCities
@@ -22,25 +22,21 @@ namespace TravelApp.BusinessLogic.Handlers.Locations.GetCities
         {
             await using IUnitOfWork unitOfWork = _unitOfWorkFactory.Create();
 
-            GetCitiesFilterDto filter = new GetCitiesFilterDto
+            GetCitiesFilterDTO filter = new GetCitiesFilterDTO
             {
                 CountryId = request.CountryId,
                 Search = request.Search,
                 Descending = request.Descending
             };
 
-            List<CityDto> citiesFromDb = await unitOfWork.Locations.GetCitiesAsync(filter);
+            List<CityDTO> citiesFromDb = await unitOfWork.Locations.GetCitiesAsync(filter);
 
-            List<GetCitiesResponse> cities = new List<GetCitiesResponse>();
-            foreach (CityDto city in citiesFromDb)
+            List<GetCitiesResponse> cities = citiesFromDb.Select(city => new GetCitiesResponse
             {
-                cities.Add(new GetCitiesResponse
-                {
-                    Id = city.Id,
-                    CountryId = city.CountryId,
-                    Name = city.Name
-                });
-            }
+                Id = city.Id,
+                CountryId = city.CountryId,
+                Name = city.Name
+            }).ToList();
 
             return cities;
         }

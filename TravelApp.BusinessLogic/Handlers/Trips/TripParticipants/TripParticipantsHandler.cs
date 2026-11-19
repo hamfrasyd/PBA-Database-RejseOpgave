@@ -1,12 +1,11 @@
 ﻿using TravelApp.BusinessLogic.Auth;
 using TravelApp.BusinessLogic.DTOs.Trips;
 using TravelApp.BusinessLogic.Exceptions.SpecificCustomException;
-using TravelApp.BusinessLogic.Handlers.Trips.TripParticipants;
+using TravelApp.BusinessLogic.Handlers.Trips.ManageTripRelations;
 using TravelApp.BusinessLogic.Interfaces;
-using TravelApp.BusinessLogic.Models.Trips;
 using TravelApp.BusinessLogic.Models.Users;
 
-namespace TravelApp.BusinessLogic.Handlers.Trips
+namespace TravelApp.BusinessLogic.Handlers.Trips.TripParticipants
 {
     /// <summary>Handler for managing trip participants.</summary>
     public class TripParticipantsHandler

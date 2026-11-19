@@ -1,11 +1,11 @@
 using Microsoft.Extensions.DependencyInjection;
 using TravelApp.BusinessLogic.DatabaseSelection;
 using TravelApp.BusinessLogic.Handlers.Accounts.Login;
+using TravelApp.BusinessLogic.Handlers.Accounts.Register;
 using TravelApp.BusinessLogic.Handlers.Achievements.GetAchievementDefinitions;
 using TravelApp.BusinessLogic.Handlers.Achievements.GetEarnedAchievements;
 using TravelApp.BusinessLogic.Handlers.Activities.CreateActivity;
 using TravelApp.BusinessLogic.Handlers.Activities.DeleteActivity;
-using TravelApp.BusinessLogic.Handlers.Activities.GetActivitiesByCity;
 using TravelApp.BusinessLogic.Handlers.Activities.GetActivity;
 using TravelApp.BusinessLogic.Handlers.Activities.UpdateActivity;
 using TravelApp.BusinessLogic.Handlers.DatabaseSelection.GetDatabaseProviders;
@@ -25,8 +25,17 @@ using TravelApp.BusinessLogic.Handlers.Trips.GetTrip;
 using TravelApp.BusinessLogic.Handlers.Trips.TripCity;
 using TravelApp.BusinessLogic.Handlers.Users.DeleteUser;
 using TravelApp.BusinessLogic.Handlers.Users.GetUserProfile;
-using TravelApp.BusinessLogic.Handlers.Users.GetUserProfiles;
+using TravelApp.BusinessLogic.Handlers.Users.GetAllUserProfiles;
 using TravelApp.BusinessLogic.Handlers.Users.UpdateUser;
+using TravelApp.BusinessLogic.Handlers.Groups;
+using TravelApp.BusinessLogic.Handlers.Group;
+using TravelApp.BusinessLogic.Handlers.Groups.CreateGroup;
+using TravelApp.BusinessLogic.Handlers.Groups.AddGroupMembers;
+using TravelApp.BusinessLogic.Handlers.Groups.AddGroupTrips;
+using TravelApp.BusinessLogic.Handlers.Groups.DeleteGroup;
+using TravelApp.BusinessLogic.Handlers.Groups.UpdateGroup;
+using TravelApp.BusinessLogic.Handlers.Groups.UpdateGroupMember;
+using TravelApp.BusinessLogic.Handlers.Groups.RemoveGroupTrips;
 
 namespace TravelApp.BusinessLogic.DependencyInjection
 {
@@ -46,6 +55,7 @@ namespace TravelApp.BusinessLogic.DependencyInjection
             RegisterUsers(services);
             RegisterTrips(services);
             RegisterPosts(services);
+            RegisterGroups(services);
             RegisterReviews(services);
 
             return services;
@@ -60,6 +70,7 @@ namespace TravelApp.BusinessLogic.DependencyInjection
         private static void RegisterAccounts(IServiceCollection services)
         {
             services.AddScoped<LoginHandler>();
+            services.AddScoped<RegisterHandler>();
         }
 
         private static void RegisterAchievements(IServiceCollection services)
@@ -72,7 +83,7 @@ namespace TravelApp.BusinessLogic.DependencyInjection
             services.AddScoped<CreateActivityHandler>();
             services.AddScoped<DeleteActivityHandler>();
             services.AddScoped<GetActivityHandler>();
-            services.AddScoped<GetActivitiesByCityHandler>();
+            services.AddScoped<GetAllActivitiesByCityHandler>();
             services.AddScoped<UpdateActivityHandler>();
         }
 
@@ -90,7 +101,7 @@ namespace TravelApp.BusinessLogic.DependencyInjection
         {
             services.AddScoped<DeleteUserHandler>();
             services.AddScoped<GetUserProfileHandler>();
-            services.AddScoped<GetUserProfilesHandler>();
+            services.AddScoped<GetAllUserProfilesHandler>();
             services.AddScoped<UpdateUserHandler>();
         }
 
@@ -113,6 +124,19 @@ namespace TravelApp.BusinessLogic.DependencyInjection
             services.AddScoped<CreatePostHandler>();
             services.AddScoped<DeletePostHandler>();
             services.AddScoped<UpdatePostHandler>();
+        }
+
+        private static void RegisterGroups(IServiceCollection services)
+        {
+            services.AddScoped<GetGroupsHandler>();
+            services.AddScoped<GetGroupHandler>();
+            services.AddScoped<CreateGroupHandler>();
+            services.AddScoped<AddGroupMembersHandler>();
+            services.AddScoped<AddGroupTripsHandler>();
+            services.AddScoped<DeleteGroupHandler>();
+            services.AddScoped<UpdateGroupHandler>();
+            services.AddScoped<RemoveGroupMembersHandler>();
+            services.AddScoped<RemoveGroupTripsHandler>();
         }
 
         private static void RegisterReviews(IServiceCollection services)

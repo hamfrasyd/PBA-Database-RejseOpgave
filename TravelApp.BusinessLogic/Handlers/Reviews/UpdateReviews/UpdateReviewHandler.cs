@@ -24,14 +24,14 @@ namespace TravelApp.BusinessLogic.Handlers.Reviews.UpdateReview
         {
             await using IUnitOfWork unitOfWork = _unitOfWorkFactory.Create();
 
-            ReviewAccessInfoDTO? access = await unitOfWork.Reviews.GetAccessInfoAsync(reviewId);
+            int? authorId = await unitOfWork.Reviews.GetReviewAuthorIdAsync(reviewId);
 
-            if (access is null)
+            if (authorId is null)
             {
                 throw new TravelAppNotFoundException($"Review {reviewId} was not found.");
             }
 
-            if (access.UserId != _currentUser.UserId)
+            if (authorId != _currentUser.UserId)
             {
                 throw new TravelAppForbiddenException("You cannot update this review.");
             }

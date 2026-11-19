@@ -24,14 +24,14 @@ namespace TravelApp.BusinessLogic.Handlers.Reviews.DeleteReview
         {
             await using IUnitOfWork unitOfWork = _unitOfWorkFactory.Create();
 
-            ReviewAccessInfoDTO? access = await unitOfWork.Reviews.GetAccessInfoAsync(reviewId);
+            int? authorId = await unitOfWork.Reviews.GetReviewAuthorIdAsync(reviewId);
 
-            if (access is null)
+            if (authorId is null)
             {
                 throw new TravelAppNotFoundException($"Review {reviewId} was not found.");
             }
 
-            if (access.UserId != _currentUser.UserId && !_currentUser.IsAdmin)
+            if (authorId != _currentUser.UserId && !_currentUser.IsAdmin)
             {
                 throw new TravelAppForbiddenException("You cannot delete this review.");
             }

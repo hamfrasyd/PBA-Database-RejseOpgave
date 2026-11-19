@@ -109,18 +109,12 @@ namespace TravelApp.DataAccess.SQLRepositories
             }
         }
 
-        /// <summary>Retrieves the author information for a review.</summary>
-        public async Task<ReviewAccessInfoDTO?> GetAccessInfoAsync(int reviewId)
+        /// <summary>Retrieves the author ID of a review.</summary>
+        public async Task<int?> GetReviewAuthorIdAsync(int reviewId)
         {
-            ReviewAccessInfoDTO? access = await _context.ReviewEntities
-                .AsNoTracking().Where(review => review.Id == reviewId)
-                .Select(review => new ReviewAccessInfoDTO
-                {
-                    UserId = review.User!.Id
-                })
+            return await _context.ReviewEntities
+                .AsNoTracking().Where(review => review.Id == reviewId).Select(review => (int?)review.User!.Id)
                 .FirstOrDefaultAsync();
-
-            return access;
         }
         #endregion
 

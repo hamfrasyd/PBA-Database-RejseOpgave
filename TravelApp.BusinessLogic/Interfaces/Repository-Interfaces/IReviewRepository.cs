@@ -26,7 +26,7 @@ namespace TravelApp.BusinessLogic.Interfaces.Repository_Interfaces
         Task UpdateAsync(int reviewId, UpdateReviewDTO update);
 
         /// <summary>Retrieves the author information for a review.</summary>
-        Task<ReviewAccessInfoDTO?> GetAccessInfoAsync(int reviewId);
+        Task<int?> GetReviewAuthorIdAsync(int reviewId);
         #endregion
 
         #region Delete

@@ -32,9 +32,6 @@ namespace TravelApp.BusinessLogic.Interfaces
         /// <summary>Provides access to the friendships repository.</summary>
         public IFriendshipRepository Friendships { get; }
 
-        /// <summary>Provides access to the invitations repository.</summary>
-        public IInviteRepository Invitations { get; }
-
         /// <summary>Saves pending changes and commits the transaction.</summary>
         /// <returns>A task that completes when the changes are saved.</returns>
         public Task CommitAsync();

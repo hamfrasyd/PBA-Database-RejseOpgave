@@ -105,7 +105,6 @@ namespace TravelApp.DataAccess.SQLRepositories
                 activityInDb.Description = activityToUpdate.Description.Trim();
             }
 
-            activityInDb.Description = activityToUpdate.Description;
             _context.Entry(activityInDb).Property("CityId").CurrentValue = activityToUpdate.CityId;
 
             return true;

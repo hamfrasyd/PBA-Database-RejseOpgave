@@ -106,19 +106,12 @@ namespace TravelApp.DataAccess.SQLRepositories
                 return false;
             }
 
-            activityInDb.Name = activityToUpdate.Name;
-
-            if (activityToUpdate.Description is not null)
-            {
-                activityInDb.Description = activityToUpdate.Description;
-            }
-            if (string.IsNullOrEmpty(activityToUpdate.Name) is false)
+            if (activityToUpdate.Name is not null)
             {
                 activityInDb.Name = activityToUpdate.Name;
             }
 
-
-            if (string.IsNullOrEmpty(activityToUpdate.Description) is false)
+            if (activityToUpdate.Description is not null)
             {
                 activityInDb.Description = activityToUpdate.Description;
             }

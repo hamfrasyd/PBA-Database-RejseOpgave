@@ -1,5 +1,6 @@
 using TravelApp.BusinessLogic.Auth;
 using TravelApp.BusinessLogic.DTOs.Trips;
+using TravelApp.BusinessLogic.Enums;
 using TravelApp.BusinessLogic.Exceptions.SpecificCustomException;
 using TravelApp.BusinessLogic.Interfaces;
 using TravelApp.BusinessLogic.Models.Invitations;
@@ -29,14 +30,27 @@ namespace TravelApp.BusinessLogic.Handlers.Invitations.RespondInvitation
         /// <exception cref="TravelAppForbiddenException">Thrown when the user is not the receiver.</exception>
         /// <exception cref="TravelAppValidationException">Thrown when the decision is invalid.</exception>
         /// <exception cref="TravelAppConflictException">Thrown when the invitation is no longer active or the user already participates.</exception>
+        /// <exception cref="InvalidOperationException">Thrown when Accepted, Declined, or Pending has no <see cref="InvitationStatusNameAttribute"/>.</exception>
         public async Task<RespondInvitationResponse> RespondInvitationAsync(int invitationId, RespondInvitationRequest request)
         {
             string decision = request.Decision.Trim();
-            bool isAccepted = decision == "Accepted";
-            bool isDeclined = decision == "Declined";
+            bool decisionWasKnown = InvitationStatusEnumHelper.TryGetStatusFromString(decision, out InvitationStatuses decisionStatus);
+            bool isAccepted = decisionWasKnown && decisionStatus == InvitationStatuses.Accepted;
+            bool isDeclined = decisionWasKnown && decisionStatus == InvitationStatuses.Declined;
             if (isAccepted is false && isDeclined is false)
             {
-                throw new TravelAppValidationException("The decision must be Accepted or Declined.");
+                string? acceptedStatusName = InvitationStatusEnumHelper.EnumToStringOrNull(InvitationStatuses.Accepted);
+                string? declinedStatusName = InvitationStatusEnumHelper.EnumToStringOrNull(InvitationStatuses.Declined);
+                if (acceptedStatusName is null)
+                {
+                    throw new InvalidOperationException($"Invitation status {InvitationStatuses.Accepted} does not define a status string.");
+                }
+
+                if (declinedStatusName is null)
+                {
+                    throw new InvalidOperationException($"Invitation status {InvitationStatuses.Declined} does not define a status string.");
+                }
+                throw new TravelAppValidationException($"The decision must be {acceptedStatusName} or {declinedStatusName}.");
             }
 
             await using IUnitOfWork unitOfWork = _unitOfWorkFactory.Create();
@@ -50,8 +64,14 @@ namespace TravelApp.BusinessLogic.Handlers.Invitations.RespondInvitation
             int receiverId = invitationFromDb.Receiver!.Id;
             AccessRules.RequireCurrentUserIsInvitationReceiver(_currentUser, receiverId);
 
-            string statusName = InvitationStatusRules.GetEffectiveStatus(invitationFromDb.InvitationStatus!.StatusName, invitationFromDb.SendDate, DateTime.UtcNow);
-            if (statusName != "Pending")
+            DateTime currentUtc = DateTime.UtcNow;
+            string statusName = InvitationStatusEnumHelper.GetStringWhenPendingReaches14Days(invitationFromDb.InvitationStatus!.StatusName, invitationFromDb.SendDate, currentUtc);
+            string? pendingStatusName = InvitationStatusEnumHelper.EnumToStringOrNull(InvitationStatuses.Pending);
+            if (pendingStatusName is null)
+            {
+                throw new InvalidOperationException($"Invitation status {InvitationStatuses.Pending} does not define a status string.");
+            }
+            if (statusName != pendingStatusName)
             {
                 throw new TravelAppConflictException($"Invitation with ID {invitationId} is {statusName} and cannot be answered.");
             }
@@ -74,10 +94,15 @@ namespace TravelApp.BusinessLogic.Handlers.Invitations.RespondInvitation
                 await unitOfWork.Trips.AddParticipantToTripAsync(tripId, receiverId);
             }
 
-            int? newStatusId = await unitOfWork.Invitations.GetStatusIdAsync(decision);
+            string? decisionName = InvitationStatusEnumHelper.EnumToStringOrNull(decisionStatus);
+            if (decisionName is null)
+            {
+                throw new InvalidOperationException($"Invitation status {decisionStatus} does not define a status string.");
+            }
+            int? newStatusId = await unitOfWork.Invitations.GetStatusIdAsync(decisionName);
             if (newStatusId is null)
             {
-                throw new InvalidOperationException($"The {decision} invitation status is missing from the database.");
+                throw new InvalidOperationException($"The {decisionName} invitation status is missing from the database.");
             }
 
             bool invitationWasFound = await unitOfWork.Invitations.UpdateStatusAsync(invitationId, newStatusId.Value);
@@ -91,7 +116,7 @@ namespace TravelApp.BusinessLogic.Handlers.Invitations.RespondInvitation
             RespondInvitationResponse response = new RespondInvitationResponse
             {
                 Id = invitationFromDb.Id,
-                Status = decision
+                Status = decisionName
             };
 
             return response;

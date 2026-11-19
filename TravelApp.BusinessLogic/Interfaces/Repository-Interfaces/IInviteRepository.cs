@@ -42,6 +42,7 @@ namespace TravelApp.BusinessLogic.Interfaces
         /// <param name="receiverId">The receiver's identifier.</param>
         /// <param name="oldestActiveSendDateUtc">The earliest send date still considered active.</param>
         /// <returns>true if an active pending invitation exists; otherwise, false.</returns>
+        /// <exception cref="InvalidOperationException">Thrown when Pending has no status string.</exception>
         Task<bool> ActivePendingExistsAsync(int tripId, int receiverId, DateTime oldestActiveSendDateUtc);
 
         #endregion

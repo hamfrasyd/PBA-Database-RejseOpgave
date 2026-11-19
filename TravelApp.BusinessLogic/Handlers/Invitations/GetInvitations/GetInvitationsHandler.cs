@@ -1,4 +1,5 @@
 using TravelApp.BusinessLogic.Auth;
+using TravelApp.BusinessLogic.Enums;
 using TravelApp.BusinessLogic.DTOs.Invitations;
 using TravelApp.BusinessLogic.Interfaces;
 
@@ -37,9 +38,9 @@ namespace TravelApp.BusinessLogic.Handlers.Invitations.GetInvitations
                 SenderName = invitation.SenderName,
                 ReceiverId = invitation.ReceiverId,
                 ReceiverName = invitation.ReceiverName,
-                Status = InvitationStatusRules.GetEffectiveStatus(invitation.Status, invitation.SendDate, currentUtc),
+                Status = InvitationStatusEnumHelper.GetStringWhenPendingReaches14Days(invitation.Status, invitation.SendDate, currentUtc),
                 SendDate = invitation.SendDate,
-                ExpiresAt = invitation.SendDate.AddDays(14)
+                ExpiresAt = invitation.SendDate.AddDays(InvitationStatusEnumHelper.PendingLifetimeDays)
             }).ToList();
 
             return response;

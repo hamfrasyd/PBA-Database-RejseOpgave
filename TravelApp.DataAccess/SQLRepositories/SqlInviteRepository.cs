@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using TravelApp.BusinessLogic.DTOs.Invitations;
+using TravelApp.BusinessLogic.Enums;
 using TravelApp.BusinessLogic.Interfaces;
 using TravelApp.BusinessLogic.Models.Invitations;
 using TravelApp.DataAccess.SQLRepositories.EntityFramework;
@@ -97,10 +98,16 @@ namespace TravelApp.DataAccess.SQLRepositories
         /// <inheritdoc/>
         public async Task<bool> ActivePendingExistsAsync(int tripId, int receiverId, DateTime oldestActiveSendDateUtc)
         {
+            string? pendingStatusName = InvitationStatusEnumHelper.EnumToStringOrNull(InvitationStatuses.Pending);
+            if (pendingStatusName is null)
+            {
+                throw new InvalidOperationException($"Invitation status {InvitationStatuses.Pending} does not define a status string.");
+            }
+
             bool invitationExists = await _context.InviteEntities.AsNoTracking().AnyAsync(invitation =>
                 invitation.Trip!.Id == tripId &&
                 invitation.Receiver!.Id == receiverId &&
-                invitation.InvitationStatus!.StatusName == "Pending" &&
+                invitation.InvitationStatus!.StatusName == pendingStatusName &&
                 invitation.SendDate > oldestActiveSendDateUtc);
 
             return invitationExists;

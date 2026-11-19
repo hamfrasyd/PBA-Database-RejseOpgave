@@ -1,4 +1,5 @@
 using TravelApp.BusinessLogic.Auth;
+using TravelApp.BusinessLogic.Enums;
 using TravelApp.BusinessLogic.Exceptions.SpecificCustomException;
 using TravelApp.BusinessLogic.Interfaces;
 using TravelApp.BusinessLogic.Models.Invitations;
@@ -39,15 +40,16 @@ namespace TravelApp.BusinessLogic.Handlers.Invitations.GetInvitation
             int receiverId = invitationFromDb.Receiver!.Id;
             AccessRules.RequireCurrentUserIsInvitationParticipantOrAdmin(_currentUser, senderId, receiverId);
 
+            DateTime currentUtc = DateTime.UtcNow;
             GetInvitationResponse response = new GetInvitationResponse
             {
                 Id = invitationFromDb.Id,
                 TripId = invitationFromDb.Trip!.Id,
                 SenderId = senderId,
                 ReceiverId = receiverId,
-                Status = InvitationStatusRules.GetEffectiveStatus(invitationFromDb.InvitationStatus!.StatusName, invitationFromDb.SendDate, DateTime.UtcNow),
+                Status = InvitationStatusEnumHelper.GetStringWhenPendingReaches14Days(invitationFromDb.InvitationStatus!.StatusName, invitationFromDb.SendDate, currentUtc),
                 SendDate = invitationFromDb.SendDate,
-                ExpiresAt = invitationFromDb.SendDate.AddDays(14)
+                ExpiresAt = invitationFromDb.SendDate.AddDays(InvitationStatusEnumHelper.PendingLifetimeDays)
             };
 
             return response;

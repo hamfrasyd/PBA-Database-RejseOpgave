@@ -1,5 +1,6 @@
 using TravelApp.BusinessLogic.Auth;
 using TravelApp.BusinessLogic.DTOs.Trips;
+using TravelApp.BusinessLogic.Enums;
 using TravelApp.BusinessLogic.Exceptions.SpecificCustomException;
 using TravelApp.BusinessLogic.Interfaces;
 using TravelApp.BusinessLogic.Models.Invitations;
@@ -28,6 +29,7 @@ namespace TravelApp.BusinessLogic.Handlers.Invitations.CreateInvitation
         /// <exception cref="TravelAppForbiddenException">Thrown when the sender does not have trip invitation access.</exception>
         /// <exception cref="TravelAppValidationException">Thrown when the receiver is invalid or missing.</exception>
         /// <exception cref="TravelAppConflictException">Thrown when the receiver is already participating or already has an active invitation.</exception>
+        /// <exception cref="InvalidOperationException">Thrown when Pending has no <see cref="InvitationStatusNameAttribute"/>.</exception>
         public async Task<CreateInvitationResponse> CreateInvitationAsync(CreateInvitationRequest request)
         {
             int senderId = _currentUser.UserId;
@@ -68,10 +70,15 @@ namespace TravelApp.BusinessLogic.Handlers.Invitations.CreateInvitation
                 throw new TravelAppConflictException("The user already has an active invitation to this trip.");
             }
 
-            int? pendingInvitationStatusId = await unitOfWork.Invitations.GetStatusIdAsync("Pending");
+            string? pendingStatusName = InvitationStatusEnumHelper.EnumToStringOrNull(InvitationStatuses.Pending);
+            if (pendingStatusName is null)
+            {
+                throw new InvalidOperationException($"Invitation status {InvitationStatuses.Pending} does not define a status string.");
+            }
+            int? pendingInvitationStatusId = await unitOfWork.Invitations.GetStatusIdAsync(pendingStatusName);
             if (pendingInvitationStatusId is null)
             {
-                throw new InvalidOperationException("The Pending invitation status is missing from the database.");
+                throw new InvalidOperationException($"The {pendingStatusName} invitation status is missing from the database.");
             }
 
             Invite invitation = new Invite
@@ -88,7 +95,7 @@ namespace TravelApp.BusinessLogic.Handlers.Invitations.CreateInvitation
                 TripId = request.TripId,
                 SenderId = senderId,
                 ReceiverId = request.ReceiverId,
-                Status = "Pending",
+                Status = pendingStatusName,
                 SendDate = invitation.SendDate
             };
 

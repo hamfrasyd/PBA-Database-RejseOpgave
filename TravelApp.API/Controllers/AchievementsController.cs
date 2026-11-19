@@ -40,8 +40,8 @@ namespace TravelApp.API.Controllers
         /// <returns>The achievements earned by the user.</returns>
         /// <exception cref="TravelAppForbiddenException">Thrown when the current user cannot view the achievements.</exception>
         /// <exception cref="TravelAppNotFoundException">Thrown when the user does not exist.</exception>
-        // GET api/achievements/users/{userId}
-        [HttpGet("users/{userId:int}")]
+        // GET api/users/{userId}/achievements
+        [HttpGet("/api/users/{userId:int}/achievements")]
         [Authorize]
         [ProducesResponseType(typeof(List<EarnedAchievementResponse>), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]

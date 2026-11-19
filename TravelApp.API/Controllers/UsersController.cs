@@ -99,7 +99,7 @@ namespace TravelApp.API.Controllers
         /// <returns>The updated user.</returns>
         /// <exception cref="TravelAppForbiddenException">Thrown when the current user cannot update the user.</exception>
         /// <exception cref="TravelAppNotFoundException">Thrown when the user does not exist.</exception>
-        /// <exception cref="TravelAppValidationException">Thrown when the home city does not exist.</exception>
+        /// <exception cref="TravelAppValidationException">Thrown when the home city does not exist, or when the first name, last name, and privacy are all null.</exception>
         // PUT api/users/{userId}
         [HttpPut("{userId:int}")]
         [ProducesResponseType(typeof(UpdateUserResponse), StatusCodes.Status200OK)]

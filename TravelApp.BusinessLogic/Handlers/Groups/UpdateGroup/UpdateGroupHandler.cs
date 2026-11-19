@@ -20,15 +20,26 @@ namespace TravelApp.BusinessLogic.Handlers.Groups.UpdateGroup
         }
 
         /// <summary>Updates a group</summary>
+        /// <exception cref="TravelAppValidationException">Thrown when the name or description is empty.</exception>
         public async Task UpdateGroupAsync(int groupId, UpdateGroupRequest request)
         {
+            if (request.Name is not null && string.IsNullOrWhiteSpace(request.Name))
+            {
+                throw new TravelAppValidationException("Group name cannot be empty.");
+            }
+
+            if (request.Description is not null && string.IsNullOrWhiteSpace(request.Description))
+            {
+                throw new TravelAppValidationException("Group description cannot be empty.");
+            }
+
             await using IUnitOfWork unitOfWork = _unitOfWorkFactory.Create();
 
             await unitOfWork.Groups.UpdateGroupAsync(new UpdateTravelGroupDTO
             {
                 Id = groupId,
-                Name = string.IsNullOrWhiteSpace(request.Name) ? "" : request.Name.Trim(),
-                Description = string.IsNullOrWhiteSpace(request.Description) ? "" : request.Description.Trim()
+                Name = request.Name?.Trim(),
+                Description = request.Description?.Trim()
             });
 
             await unitOfWork.CommitAsync();

@@ -188,14 +188,14 @@ namespace TravelApp.DataAccess.SQLRepositories
             TravelGroup toBeUpdated = await _context.TravelGroupEntities.FindAsync(group.Id)
                 ?? throw new TravelAppNotFoundException($"Group {group.Id} was not found.");
 
-            if (string.IsNullOrEmpty(group.Name) is false)
+            if (group.Name is not null)
             {
-                toBeUpdated.Name = group.Name.Trim();
+                toBeUpdated.Name = group.Name;
             }
 
-            if (string.IsNullOrEmpty(group.Description) is false)
+            if (group.Description is not null)
             {
-                toBeUpdated.Description = group.Description.Trim();
+                toBeUpdated.Description = group.Description;
             }
         }
 

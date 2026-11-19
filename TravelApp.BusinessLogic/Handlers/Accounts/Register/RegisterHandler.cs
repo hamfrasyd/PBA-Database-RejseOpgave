@@ -48,7 +48,7 @@ namespace TravelApp.BusinessLogic.Handlers.Accounts.Register
 
             return await userAccountRepository.CreateAsync(profile, request.CityId, new CreateUserAccountDto
             {
-                UserName = request.UserName,
+                UserName = request.UserName.Trim(),
                 Password = request.Password
             });
         }

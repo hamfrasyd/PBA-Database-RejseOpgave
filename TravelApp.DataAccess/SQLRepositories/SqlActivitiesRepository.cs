@@ -1,8 +1,11 @@
 
 using Microsoft.EntityFrameworkCore;
 using TravelApp.BusinessLogic.DTOs.Activities;
+using TravelApp.BusinessLogic.DTOs.Pagination;
+using TravelApp.BusinessLogic.DTOs.Trips;
 using TravelApp.BusinessLogic.Interfaces;
 using TravelApp.BusinessLogic.Models.Activities;
+using TravelApp.BusinessLogic.Models.Trips;
 using TravelApp.DataAccess.SQLRepositories.EntityFramework;
 
 namespace TravelApp.DataAccess.SQLRepositories
@@ -33,7 +36,7 @@ namespace TravelApp.DataAccess.SQLRepositories
         #region Read - All Activities
 
         /// <inheritdoc />
-        public async Task<List<ActivityDTO>> GetActivitiesAsync(int? cityId)
+        public async Task<PagedResultDTO<ActivityDTO>> GetActivitiesAsync(int? cityId, int pageNumber, int pageSize)
         {
             IQueryable<Activity> activities = _context.ActivityEntities.AsNoTracking();
 
@@ -42,10 +45,13 @@ namespace TravelApp.DataAccess.SQLRepositories
                 int filterCityId = cityId.Value;
                 activities = activities.Where(activity => EF.Property<int>(activity, "CityId") == filterCityId);
             }
+            int totalCount = await activities.CountAsync();
 
-            List<ActivityDTO> result = await activities
-                .OrderBy(activity => activity.Name)
-                .ThenBy(activity => activity.Id)
+            List<ActivityDTO> items = await activities
+                .OrderByDescending(activity => activity.Name)
+                .ThenByDescending(activity => activity.Id)
+                .Skip((pageNumber - 1) * pageSize)
+                .Take(pageSize)
                 .Select(activity => new ActivityDTO
                 {
                     Id = activity.Id,
@@ -55,7 +61,13 @@ namespace TravelApp.DataAccess.SQLRepositories
                 })
                 .ToListAsync();
 
-            return result;
+            return new PagedResultDTO<ActivityDTO>
+            {
+                Items = items,
+                TotalCount = totalCount,
+                PageNumber = pageNumber,
+                PageSize = pageSize
+            }; ;
         }
 
         #endregion

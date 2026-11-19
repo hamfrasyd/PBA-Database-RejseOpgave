@@ -1,4 +1,6 @@
+using System.Text;
 using TravelApp.BusinessLogic.DTOs.Activities;
+using TravelApp.BusinessLogic.DTOs.Pagination;
 using TravelApp.BusinessLogic.Models.Activities;
 
 namespace TravelApp.BusinessLogic.Interfaces
@@ -20,8 +22,10 @@ namespace TravelApp.BusinessLogic.Interfaces
 
         /// <summary>Retrieves activities, optionally filtered by city.</summary>
         /// <param name="cityId">The city identifier to filter by, or <see langword="null"/> for all cities.</param>
+        /// <param name="pageNumber">The page number for pagination, starting from 1.</param>
+        /// <param name="pageSize">The number of items per page.</param>
         /// <returns>The matching activities.</returns>
-        Task<List<ActivityDTO>> GetActivitiesAsync(int? cityId);
+        Task<PagedResultDTO<ActivityDTO>> GetActivitiesAsync(int? cityId, int pageNumber, int pageSize);
 
         #endregion
 

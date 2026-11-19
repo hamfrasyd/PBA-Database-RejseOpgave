@@ -1,7 +1,9 @@
 ﻿
+using Azure;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using TravelApp.API.ExceptionFilters;
+using TravelApp.BusinessLogic.DTOs.Pagination;
 using TravelApp.BusinessLogic.Exceptions.SpecificCustomException;
 using TravelApp.BusinessLogic.Handlers.Activities.CreateActivity;
 using TravelApp.BusinessLogic.Handlers.Activities.DeleteActivity;
@@ -45,15 +47,16 @@ namespace TravelApp.API.Controllers
         /// <summary>Lists activities for a specific city.</summary>
         /// <param name="cityId">The city identifier.</param>
         /// <param name="getActivitiesByCityHandler">The handler that loads the city's activities.</param>
+        /// <param name="pageNumber">The page number for pagination (default is 1).</param>
         /// <returns>The activities in the city.</returns>
         // GET api/activities/cities/{cityId}
         [HttpGet("cities/{cityId:int}")]
         [AllowAnonymous]
         [ProducesResponseType(typeof(List<GetAllActivitiesByCityResponse>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult<List<GetAllActivitiesByCityResponse>>> GetActivitiesByCity([FromRoute] int cityId, [FromServices] GetAllActivitiesByCityHandler getActivitiesByCityHandler)
+        public async Task<ActionResult<List<GetAllActivitiesByCityResponse>>> GetActivitiesByCity([FromRoute] int cityId, [FromServices] GetAllActivitiesByCityHandler getActivitiesByCityHandler, [FromQuery] int pageNumber = 1)
         {
-            List<GetAllActivitiesByCityResponse> result = await getActivitiesByCityHandler.GetActivitiesByCityIdAsync(cityId);
+            PagedResultDTO<GetAllActivitiesByCityResponse> result = await getActivitiesByCityHandler.GetActivitiesByCityIdAsync(cityId, pageNumber);
 
             return Ok(result);
         }

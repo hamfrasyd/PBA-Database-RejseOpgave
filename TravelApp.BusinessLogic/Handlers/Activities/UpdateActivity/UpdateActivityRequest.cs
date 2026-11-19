@@ -10,8 +10,8 @@ namespace TravelApp.BusinessLogic.Handlers.Activities.UpdateActivity
         public int CityId { get; set; }
 
         /// <summary>Gets or sets the name.</summary>
-        [StringLength(128)]
-        public string? Name { get; set; }
+        [Required, StringLength(128)]
+        public string Name { get; set; } = string.Empty;
 
         /// <summary>Gets or sets the description.</summary>
         [StringLength(1024)]

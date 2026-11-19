@@ -34,17 +34,17 @@ namespace TravelApp.BusinessLogic.Interfaces
 
         /// <summary>Checks whether a user exists.</summary>
         /// <param name="userId">The user identifier.</param>
-        /// <returns><see langword="true"/> when the user exists; otherwise, <see langword="false"/>.</returns>
+        /// <returns>true when the user exists; otherwise, false.</returns>
         Task<bool> UserExistsAsync(int userId);
 
         /// <summary>Retrieves a user by ID.</summary>
         /// <param name="userId">The user identifier.</param>
-        /// <returns>The user, or <see langword="null"/> when it does not exist.</returns>
+        /// <returns>The user, or null when it does not exist.</returns>
         Task<TravelUser?> GetByIdAsync(int userId);
 
         /// <summary>Retrieves one detailed user profile by ID.</summary>
         /// <param name="userId">The user identifier.</param>
-        /// <returns>The detailed profile, or <see langword="null"/> when the user does not exist.</returns>
+        /// <returns>The detailed profile, or null when the user does not exist.</returns>
         Task<UserProfileView?> GetProfileAsync(int userId);
 
         #endregion
@@ -53,7 +53,7 @@ namespace TravelApp.BusinessLogic.Interfaces
 
         /// <summary>Updates a user's basic info: first name, last name, home city, and privacy.</summary>
         /// <param name="userToUpdate">The basic user fields to persist.</param>
-        /// <returns><see langword="true"/> when the user exists and is marked for update; otherwise, <see langword="false"/>.</returns>
+        /// <returns>true when the user exists and is marked for update; otherwise, false.</returns>
         Task<bool> UpdateUserAsync(UserBasicInfoDto userToUpdate);
 
         #endregion

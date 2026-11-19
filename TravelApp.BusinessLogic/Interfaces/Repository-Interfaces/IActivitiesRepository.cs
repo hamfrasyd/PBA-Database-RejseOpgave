@@ -19,7 +19,7 @@ namespace TravelApp.BusinessLogic.Interfaces
         #region Read - All Activities
 
         /// <summary>Retrieves activities, optionally filtered by city.</summary>
-        /// <param name="cityId">The city identifier to filter by, or <see langword="null"/> for all cities.</param>
+        /// <param name="cityId">The city identifier to filter by, or null for all cities.</param>
         /// <returns>The matching activities.</returns>
         Task<List<ActivityDTO>> GetActivitiesAsync(int? cityId);
 
@@ -29,7 +29,7 @@ namespace TravelApp.BusinessLogic.Interfaces
 
         /// <summary>Retrieves an activity by ID.</summary>
         /// <param name="activityId">The activity identifier.</param>
-        /// <returns>The activity, or <see langword="null"/> when it does not exist.</returns>
+        /// <returns>The activity, or null when it does not exist.</returns>
         Task<ActivityDTO?> GetActivityByIdAsync(int activityId);
 
         #endregion
@@ -38,7 +38,7 @@ namespace TravelApp.BusinessLogic.Interfaces
 
         /// <summary>Updates an activity.</summary>
         /// <param name="activityToUpdate">The activity values to persist.</param>
-        /// <returns><see langword="true"/> when the activity exists and is marked for update; otherwise, <see langword="false"/>.</returns>
+        /// <returns>true when the activity exists and is marked for update; otherwise, false.</returns>
         Task<bool> UpdateActivityAsync(UpdateActivityDTO activityToUpdate);
 
         #endregion

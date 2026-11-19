@@ -37,11 +37,7 @@ namespace TravelApp.BusinessLogic.Handlers.Friendships.RemoveFriend
 
             AccessRules.RequireCurrentUserIsFriendOrAdmin(_currentUser, friendshipFromDb.UserA!.Id, friendshipFromDb.UserB!.Id);
 
-            bool friendshipWasFound = await unitOfWork.Friendships.DeleteAsync(friendshipId);
-            if (friendshipWasFound is false)
-            {
-                throw new TravelAppNotFoundException($"Friendship with ID {friendshipId} was not found.");
-            }
+            await unitOfWork.Friendships.DeleteAsync(friendshipFromDb);
 
             await unitOfWork.CommitAsync();
         }

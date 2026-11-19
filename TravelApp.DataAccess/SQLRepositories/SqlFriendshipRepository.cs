@@ -61,13 +61,13 @@ namespace TravelApp.DataAccess.SQLRepositories
             }
 
             IQueryable<FriendDTO> friendsQuery = friendshipsQuery.Select(friendship => new FriendDTO
-                {
-                    FriendshipId = friendship.Id,
-                    UserId = friendship.UserA!.Id == userId ? friendship.UserB!.Id : friendship.UserA.Id,
-                    FirstName = friendship.UserA.Id == userId ? friendship.UserB!.FirstName : friendship.UserA.FirstName,
-                    LastName = friendship.UserA.Id == userId ? friendship.UserB!.LastName : friendship.UserA.LastName,
-                    StartDate = friendship.StartDate
-                });
+            {
+                FriendshipId = friendship.Id,
+                UserId = friendship.UserA!.Id == userId ? friendship.UserB!.Id : friendship.UserA.Id,
+                FirstName = friendship.UserA.Id == userId ? friendship.UserB!.FirstName : friendship.UserA.FirstName,
+                LastName = friendship.UserA.Id == userId ? friendship.UserB!.LastName : friendship.UserA.LastName,
+                StartDate = friendship.StartDate
+            });
 
             List<FriendDTO> friendsFromDb = await friendsQuery
                 .OrderBy(friend => friend.FirstName)
@@ -93,18 +93,9 @@ namespace TravelApp.DataAccess.SQLRepositories
         #region Delete - Friendships
 
         /// <inheritdoc/>
-        public async Task<bool> DeleteAsync(int friendshipId)
+        public async Task DeleteAsync(Friendship friendshipFromDb)
         {
-            // FindAsync uses the tracked entity from GetByIdAsync without another query.
-            Friendship? friendshipFromDb = await _context.FriendshipEntities.FindAsync(friendshipId);
-            if (friendshipFromDb is null)
-            {
-                return false;
-            }
-
             _context.FriendshipEntities.Remove(friendshipFromDb);
-
-            return true;
         }
 
         #endregion

@@ -31,20 +31,21 @@ namespace TravelApp.BusinessLogic.Handlers.Invitations.CreateInvitation
         public async Task<CreateInvitationResponse> CreateInvitationAsync(CreateInvitationRequest request)
         {
             int senderId = _currentUser.UserId;
-            if (senderId == request.ReceiverId)
+            bool senderInvitedThemselves = senderId == request.ReceiverId;
+            if (senderInvitedThemselves)
             {
                 throw new TravelAppValidationException("You cannot invite yourself to a trip.");
             }
 
             await using IUnitOfWork unitOfWork = _unitOfWorkFactory.Create();
 
-            TripAccessInfoDTO? senderAccess = await unitOfWork.Trips.GetAccessInfoAsync(request.TripId, senderId);
-            if (senderAccess is null)
+            TripAccessInfoDTO? senderTripAccess = await unitOfWork.Trips.GetAccessInfoAsync(request.TripId, senderId);
+            if (senderTripAccess is null)
             {
                 throw new TravelAppNotFoundException($"Trip with ID {request.TripId} was not found.");
             }
 
-            AccessRules.RequireCurrentUserIsTripParticipantOrAdmin(_currentUser, senderAccess.IsParticipant);
+            AccessRules.RequireCurrentUserIsTripParticipantOrAdmin(_currentUser, senderTripAccess.IsParticipant);
 
             bool receiverExists = await unitOfWork.Users.UserExistsAsync(request.ReceiverId);
             if (receiverExists is false)
@@ -52,21 +53,23 @@ namespace TravelApp.BusinessLogic.Handlers.Invitations.CreateInvitation
                 throw new TravelAppValidationException($"User with ID {request.ReceiverId} does not exist.");
             }
 
-            TripAccessInfoDTO? receiverAccess = await unitOfWork.Trips.GetAccessInfoAsync(request.TripId, request.ReceiverId);
-            if (receiverAccess is not null && receiverAccess.IsParticipant)
+            TripAccessInfoDTO? receiverTripAccess = await unitOfWork.Trips.GetAccessInfoAsync(request.TripId, request.ReceiverId);
+            bool receiverAlreadyParticipates = receiverTripAccess is not null && receiverTripAccess.IsParticipant;
+            if (receiverAlreadyParticipates)
             {
                 throw new TravelAppConflictException("The user already participates in this trip.");
             }
 
             DateTime sendDateUtc = DateTime.UtcNow;
-            bool activePendingExists = await unitOfWork.Invitations.ActivePendingExistsAsync(request.TripId, request.ReceiverId, sendDateUtc.AddDays(-14));
-            if (activePendingExists is true)
+            DateTime oldestActiveSendDateUtc = sendDateUtc.AddDays(-14);
+            bool activePendingInvitationExists = await unitOfWork.Invitations.ActivePendingExistsAsync(request.TripId, request.ReceiverId, oldestActiveSendDateUtc);
+            if (activePendingInvitationExists is true)
             {
                 throw new TravelAppConflictException("The user already has an active invitation to this trip.");
             }
 
-            int? pendingStatusId = await unitOfWork.Invitations.GetStatusIdAsync("Pending");
-            if (pendingStatusId is null)
+            int? pendingInvitationStatusId = await unitOfWork.Invitations.GetStatusIdAsync("Pending");
+            if (pendingInvitationStatusId is null)
             {
                 throw new InvalidOperationException("The Pending invitation status is missing from the database.");
             }
@@ -76,7 +79,7 @@ namespace TravelApp.BusinessLogic.Handlers.Invitations.CreateInvitation
                 SendDate = sendDateUtc
             };
 
-            await unitOfWork.Invitations.AddAsync(invitation, request.TripId, senderId, request.ReceiverId, pendingStatusId.Value);
+            await unitOfWork.Invitations.AddAsync(invitation, request.TripId, senderId, request.ReceiverId, pendingInvitationStatusId.Value);
             await unitOfWork.CommitAsync();
 
             CreateInvitationResponse response = new CreateInvitationResponse

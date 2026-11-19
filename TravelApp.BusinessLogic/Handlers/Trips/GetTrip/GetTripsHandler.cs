@@ -21,8 +21,8 @@ namespace TravelApp.BusinessLogic.Handlers.Trips.GetTrip
         }
 
         /// <summary>Returns the current user's trips, optionally filtered by country or continent.</summary>
-        /// <param name="countryId">The country identifier to filter by, or <see langword="null"/> for all countries.</param>
-        /// <param name="continentId">The continent identifier to filter by, or <see langword="null"/> for all continents.</param>
+        /// <param name="countryId">The country identifier to filter by, or null for all countries.</param>
+        /// <param name="continentId">The continent identifier to filter by, or null for all continents.</param>
         /// <returns>The matching trip summaries.</returns>
         public async Task<List<GetTripsResponse>> GetTripsAsync(int? countryId = null, int? continentId = null)
         {

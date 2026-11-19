@@ -21,7 +21,7 @@ namespace TravelApp.BusinessLogic.Interfaces
 
         /// <summary>Retrieves a friendship by its identifier.</summary>
         /// <param name="friendshipId">The friendship identifier.</param>
-        /// <returns>The friendship, or <see langword="null"/> if it does not exist.</returns>
+        /// <returns>The friendship, or null if it does not exist.</returns>
         Task<Friendship?> GetByIdAsync(int friendshipId);
 
         /// <summary>Retrieves the friends of a user.</summary>
@@ -34,7 +34,7 @@ namespace TravelApp.BusinessLogic.Interfaces
         /// <summary>Checks whether two users are already friends in either direction.</summary>
         /// <param name="firstUserId">The first user's identifier.</param>
         /// <param name="secondUserId">The second user's identifier.</param>
-        /// <returns><see langword="true"/> if the friendship exists; otherwise, <see langword="false"/>.</returns>
+        /// <returns>true if the friendship exists; otherwise, false.</returns>
         Task<bool> FriendshipExistsAsync(int firstUserId, int secondUserId);
 
         #endregion
@@ -42,9 +42,8 @@ namespace TravelApp.BusinessLogic.Interfaces
         #region Delete - Friendships
 
         /// <summary>Stages deletion of a friendship by its identifier.</summary>
-        /// <param name="friendshipId">The friendship identifier.</param>
-        /// <returns><see langword="true"/> if the friendship was found; otherwise, <see langword="false"/>.</returns>
-        Task<bool> DeleteAsync(int friendshipId);
+        /// <param name="friendshipFromDb">The friendship to delete.</param>
+        Task DeleteAsync(Friendship friendshipFromDb);
 
         #endregion
     }

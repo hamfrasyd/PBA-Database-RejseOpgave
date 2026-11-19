@@ -2,6 +2,7 @@ using TravelApp.BusinessLogic.Auth;
 using TravelApp.BusinessLogic.Exceptions.SpecificCustomException;
 using TravelApp.BusinessLogic.Interfaces;
 using TravelApp.BusinessLogic.Models.Friendships;
+using TravelApp.BusinessLogic.Models.Users;
 
 namespace TravelApp.BusinessLogic.Handlers.Friendships.GetFriendship
 {
@@ -23,7 +24,7 @@ namespace TravelApp.BusinessLogic.Handlers.Friendships.GetFriendship
         /// <summary>Retrieves a friendship for either member or an administrator.</summary>
         /// <param name="friendshipId">The friendship identifier.</param>
         /// <returns>The friendship details.</returns>
-        /// <exception cref="TravelAppNotFoundException">Thrown when the friendship does not exist.</exception>
+        /// <exception cref="TravelAppNotFoundException">Thrown when the friendship does not exist or one of its users is missing.</exception>
         /// <exception cref="TravelAppForbiddenException">Thrown when the current user cannot view the friendship.</exception>
         public async Task<GetFriendshipResponse> GetFriendshipAsync(int friendshipId)
         {
@@ -35,8 +36,20 @@ namespace TravelApp.BusinessLogic.Handlers.Friendships.GetFriendship
                 throw new TravelAppNotFoundException($"Friendship with ID {friendshipId} was not found.");
             }
 
-            int firstUserId = friendshipFromDb.UserA!.Id;
-            int secondUserId = friendshipFromDb.UserB!.Id;
+            TravelUser? firstUser = friendshipFromDb.UserA;
+            if (firstUser is null)
+            {
+                throw new TravelAppNotFoundException($"Friendship with ID {friendshipId} was not found.");
+            }
+
+            TravelUser? secondUser = friendshipFromDb.UserB;
+            if (secondUser is null)
+            {
+                throw new TravelAppNotFoundException($"Friendship with ID {friendshipId} was not found.");
+            }
+
+            int firstUserId = firstUser.Id;
+            int secondUserId = secondUser.Id;
             AccessRules.RequireCurrentUserIsFriendOrAdmin(_currentUser, firstUserId, secondUserId);
 
             GetFriendshipResponse response = new GetFriendshipResponse

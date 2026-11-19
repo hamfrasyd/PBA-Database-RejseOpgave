@@ -1,6 +1,5 @@
 using Microsoft.Extensions.DependencyInjection;
 using TravelApp.BusinessLogic.DatabaseSelection;
-using TravelApp.BusinessLogic.Handlers.Trips.GetTrip;
 using TravelApp.BusinessLogic.Handlers.Accounts.Login;
 using TravelApp.BusinessLogic.Handlers.Accounts.Register;
 using TravelApp.BusinessLogic.Handlers.Achievements.GetAchievementDefinitions;
@@ -8,41 +7,48 @@ using TravelApp.BusinessLogic.Handlers.Achievements.GetEarnedAchievements;
 using TravelApp.BusinessLogic.Handlers.Activities.CreateActivity;
 using TravelApp.BusinessLogic.Handlers.Activities.DeleteActivity;
 using TravelApp.BusinessLogic.Handlers.Activities.GetActivity;
+using TravelApp.BusinessLogic.Handlers.Activities.GetAllActivitiesByCity;
 using TravelApp.BusinessLogic.Handlers.Activities.UpdateActivity;
 using TravelApp.BusinessLogic.Handlers.DatabaseSelection.GetDatabaseProviders;
+using TravelApp.BusinessLogic.Handlers.Group;
+using TravelApp.BusinessLogic.Handlers.Groups;
+using TravelApp.BusinessLogic.Handlers.Groups.AddGroupMembers;
+using TravelApp.BusinessLogic.Handlers.Groups.AddGroupTrips;
+using TravelApp.BusinessLogic.Handlers.Groups.CreateGroup;
+using TravelApp.BusinessLogic.Handlers.Groups.DeleteGroup;
+using TravelApp.BusinessLogic.Handlers.Groups.RemoveGroupTrips;
+using TravelApp.BusinessLogic.Handlers.Groups.UpdateGroup;
+using TravelApp.BusinessLogic.Handlers.Groups.UpdateGroupMember;
 using TravelApp.BusinessLogic.Handlers.Locations.CreateCity;
 using TravelApp.BusinessLogic.Handlers.Locations.GetCities;
 using TravelApp.BusinessLogic.Handlers.Locations.GetCity;
+using TravelApp.BusinessLogic.Handlers.Locations.GetCityStats;
 using TravelApp.BusinessLogic.Handlers.Locations.GetContinents;
 using TravelApp.BusinessLogic.Handlers.Locations.GetCountries;
-using TravelApp.BusinessLogic.Handlers.Locations.GetCityStats;
 using TravelApp.BusinessLogic.Handlers.Locations.GetVisitedCountries;
-using TravelApp.BusinessLogic.Handlers.Users.DeleteUser;
-using TravelApp.BusinessLogic.Handlers.Users.GetUserProfile;
-using TravelApp.BusinessLogic.Handlers.Users.GetAllUserProfiles;
-using TravelApp.BusinessLogic.Handlers.Users.UpdateUser;
-using TravelApp.BusinessLogic.Handlers.Trips.TripCity;
-using TravelApp.BusinessLogic.Handlers.Trips.TripParticipants;
+using TravelApp.BusinessLogic.Handlers.Posts;
+using TravelApp.BusinessLogic.Handlers.Posts.CreatePost;
+using TravelApp.BusinessLogic.Handlers.Posts.DeletePost;
+using TravelApp.BusinessLogic.Handlers.Posts.GetPost;
+using TravelApp.BusinessLogic.Handlers.Posts.GetPosts;
+using TravelApp.BusinessLogic.Handlers.Posts.UpdatePost;
+using TravelApp.BusinessLogic.Handlers.Reviews;
+using TravelApp.BusinessLogic.Handlers.Reviews.CreateReview;
+using TravelApp.BusinessLogic.Handlers.Reviews.DeleteReview;
+using TravelApp.BusinessLogic.Handlers.Reviews.GetReview;
+using TravelApp.BusinessLogic.Handlers.Reviews.UpdateReview;
+using TravelApp.BusinessLogic.Handlers.Trips;
 using TravelApp.BusinessLogic.Handlers.Trips.CreateTrip;
 using TravelApp.BusinessLogic.Handlers.Trips.DeleteTrip;
-using TravelApp.BusinessLogic.Handlers.Trips.UpdateTrip;
+using TravelApp.BusinessLogic.Handlers.Trips.GetTrip;
 using TravelApp.BusinessLogic.Handlers.Trips.TripActivities;
-using TravelApp.BusinessLogic.Handlers.Posts.UpdatePost;
-using TravelApp.BusinessLogic.Handlers.Posts.CreatePost;
-using TravelApp.BusinessLogic.Handlers.Posts.GetPosts;
-using TravelApp.BusinessLogic.Handlers.Posts.GetPost;
-using TravelApp.BusinessLogic.Handlers.Posts.DeletePost;
-using TravelApp.BusinessLogic.Handlers.Activities.GetAllActivitiesByCity;
-using TravelApp.BusinessLogic.Handlers.Posts;
-using TravelApp.BusinessLogic.Handlers.Groups;
-using TravelApp.BusinessLogic.Handlers.Group;
-using TravelApp.BusinessLogic.Handlers.Groups.CreateGroup;
-using TravelApp.BusinessLogic.Handlers.Groups.AddGroupMembers;
-using TravelApp.BusinessLogic.Handlers.Groups.AddGroupTrips;
-using TravelApp.BusinessLogic.Handlers.Groups.DeleteGroup;
-using TravelApp.BusinessLogic.Handlers.Groups.UpdateGroup;
-using TravelApp.BusinessLogic.Handlers.Groups.UpdateGroupMember;
-using TravelApp.BusinessLogic.Handlers.Groups.RemoveGroupTrips;
+using TravelApp.BusinessLogic.Handlers.Trips.TripCity;
+using TravelApp.BusinessLogic.Handlers.Trips.TripParticipants;
+using TravelApp.BusinessLogic.Handlers.Trips.UpdateTrip;
+using TravelApp.BusinessLogic.Handlers.Users.DeleteUser;
+using TravelApp.BusinessLogic.Handlers.Users.GetAllUserProfiles;
+using TravelApp.BusinessLogic.Handlers.Users.GetUserProfile;
+using TravelApp.BusinessLogic.Handlers.Users.UpdateUser;
 
 namespace TravelApp.BusinessLogic.DependencyInjection
 {
@@ -63,6 +69,7 @@ namespace TravelApp.BusinessLogic.DependencyInjection
             RegisterTrips(services);
             RegisterPosts(services);
             RegisterGroups(services);
+            RegisterReviews(services);
 
             return services;
         }
@@ -143,6 +150,15 @@ namespace TravelApp.BusinessLogic.DependencyInjection
             services.AddScoped<UpdateGroupHandler>();
             services.AddScoped<RemoveGroupMembersHandler>();
             services.AddScoped<RemoveGroupTripsHandler>();
+        }
+
+        private static void RegisterReviews(IServiceCollection services)
+        {
+            services.AddScoped<GetReviewHandler>();
+            services.AddScoped<GetReviewsHandler>();
+            services.AddScoped<CreateReviewHandler>();
+            services.AddScoped<UpdateReviewHandler>();
+            services.AddScoped<DeleteReviewHandler>();
         }
     }
 }

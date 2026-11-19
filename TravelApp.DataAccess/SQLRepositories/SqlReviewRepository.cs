@@ -88,5 +88,55 @@ namespace TravelApp.DataAccess.SQLRepositories
             return review;
         }
         #endregion
+
+        #region Update
+        /// <summary>Updates the content and rating of a review.</summary>
+        public async Task UpdateAsync(int reviewId, UpdateReviewDTO update)
+        {
+            Review? review = await _context.ReviewEntities.FirstOrDefaultAsync(review => review.Id == reviewId);
+
+            if (review is null)
+            {
+                throw new InvalidOperationException($"Review {reviewId} was not found.");
+            }
+            if (update.Content is not null)
+            {
+                review.Content = update.Content;
+            }
+            if (update.Stars is not null)
+            {
+                review.Stars = update.Stars.Value;
+            }
+        }
+
+        /// <summary>Retrieves the author information for a review.</summary>
+        public async Task<ReviewAccessInfoDTO?> GetAccessInfoAsync(int reviewId)
+        {
+            ReviewAccessInfoDTO? access = await _context.ReviewEntities
+                .AsNoTracking().Where(review => review.Id == reviewId)
+                .Select(review => new ReviewAccessInfoDTO
+                {
+                    UserId = review.User!.Id
+                })
+                .FirstOrDefaultAsync();
+
+            return access;
+        }
+        #endregion
+
+        #region Delete
+        /// <summary>Deletes a review by its identifier.</summary>
+        public async Task DeleteAsync(int reviewId)
+        {
+            Review? review = await _context.ReviewEntities.FirstOrDefaultAsync(review => review.Id == reviewId);
+
+            if (review is null)
+            {
+                throw new InvalidOperationException($"Review {reviewId} was not found.");
+            }
+
+            _context.ReviewEntities.Remove(review);
+        }
+        #endregion
     }
 }

@@ -20,5 +20,18 @@ namespace TravelApp.BusinessLogic.Interfaces.Repository_Interfaces
         /// <summary>Retrieves a review by its unique identifier.</summary>
         Task<ReviewDetailsDTO?> GetReviewByIdAsync(int reviewId);
         #endregion
+
+        #region Update
+        /// <summary>Updates a review's content and star rating.</summary>
+        Task UpdateAsync(int reviewId, UpdateReviewDTO update);
+
+        /// <summary>Retrieves the author information for a review.</summary>
+        Task<ReviewAccessInfoDTO?> GetAccessInfoAsync(int reviewId);
+        #endregion
+
+        #region Delete
+        /// <summary>Deletes a review by its identifier.</summary>
+        Task DeleteAsync(int reviewId);
+        #endregion
     }
 }

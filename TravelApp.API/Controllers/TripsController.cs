@@ -97,10 +97,11 @@ namespace TravelApp.API.Controllers
         [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status403Forbidden)]
         [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status404NotFound)]
         [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> UpdateTrip([FromRoute] int tripId, [FromBody] UpdateTripRequest request, [FromServices] UpdateTripHandler updateTripHandler)
+        public async Task<IActionResult> UpdateTrip(
+            [FromRoute] int tripId, [FromBody] UpdateTripRequest request, 
+            [FromServices] UpdateTripHandler updateTripHandler)
         {
-            request.TripId = tripId;
-            await updateTripHandler.UpdateTripAsync(request);
+            await updateTripHandler.UpdateTripAsync(tripId, request);
             return NoContent();
         }
 

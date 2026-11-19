@@ -26,7 +26,7 @@ namespace TravelApp.BusinessLogic.Handlers.Trips.UpdateTrip
         /// <exception cref="TravelAppValidationException">Thrown when the start date is after the end date.</exception>
         /// <exception cref="TravelAppNotFoundException">Thrown when the trip does not exist.</exception>
         /// <exception cref="TravelAppForbiddenException">Thrown when the current user cannot update the trip.</exception>
-        public async Task UpdateTripAsync(UpdateTripRequest request)
+        public async Task UpdateTripAsync(int tripId, UpdateTripRequest request)
         {
             if (request.StartDate > request.EndDate)
             {
@@ -35,7 +35,7 @@ namespace TravelApp.BusinessLogic.Handlers.Trips.UpdateTrip
 
             await using IUnitOfWork unitOfWork = _unitOfWorkFactory.Create();
 
-            await TripAccessHelper.EnsureCanModifyAsync(unitOfWork, request.TripId, _currentUser);
+            await TripAccessHelper.EnsureCanModifyAsync(unitOfWork, tripId, _currentUser);
 
             UpdateTripDTO update = new UpdateTripDTO
             {
@@ -46,7 +46,7 @@ namespace TravelApp.BusinessLogic.Handlers.Trips.UpdateTrip
                 ExperienceNotes = request.ExperienceNotes
             };
 
-            await unitOfWork.Trips.UpdateAsync(request.TripId, update);
+            await unitOfWork.Trips.UpdateAsync(tripId, update);
 
             await unitOfWork.CommitAsync();
         }

@@ -3,8 +3,10 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using TravelApp.BusinessLogic.Handlers.Reviews;
 using TravelApp.BusinessLogic.Handlers.Reviews.CreateReview;
+using TravelApp.BusinessLogic.Handlers.Reviews.DeleteReview;
 using TravelApp.BusinessLogic.Handlers.Reviews.GetReview;
 using TravelApp.BusinessLogic.Handlers.Reviews.GetReviews;
+using TravelApp.BusinessLogic.Handlers.Reviews.UpdateReview;
 
 namespace TravelApp.API.Controllers
 {
@@ -49,6 +51,37 @@ namespace TravelApp.API.Controllers
             GetReviewResponse result = await handler.GetReviewById(reviewId);
 
             return Ok(result);
+        }
+
+
+        /// <summary>Updates an existing review.</summary>
+        // PUT api/reviews/{reviewId}
+        [HttpPut("{reviewId:int}")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<IActionResult> UpdateReview(
+            [FromRoute] int reviewId, [FromBody] UpdateReviewRequest request,
+            [FromServices] UpdateReviewHandler handler)
+        {
+            await handler.UpdateReviewAsync(reviewId, request);
+            return NoContent();
+        }
+
+
+        /// <summary>Deletes an existing review.</summary>
+        // DELETE api/reviews/{reviewId}
+        [HttpDelete("{reviewId:int}")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<IActionResult> DeleteReview([FromRoute] int reviewId, [FromServices] DeleteReviewHandler handler)
+        {
+            await handler.DeleteReviewAsync(reviewId);
+            return NoContent();
         }
     }
 }

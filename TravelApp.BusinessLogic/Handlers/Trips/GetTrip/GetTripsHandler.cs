@@ -46,7 +46,9 @@ namespace TravelApp.BusinessLogic.Handlers.Trips.GetTrip
                 }).ToList(),
 
                 ActivityCount = trip.ActivityCount,
-                ParticipantCount = trip.ParticipantCount
+                ParticipantCount = trip.ParticipantCount,
+                ReviewCount = trip.ReviewCount,
+                AverageStars = trip.AverageStars
             }).ToList();
         }
     }

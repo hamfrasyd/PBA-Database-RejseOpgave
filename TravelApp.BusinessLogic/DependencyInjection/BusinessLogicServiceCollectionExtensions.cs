@@ -121,6 +121,7 @@ namespace TravelApp.BusinessLogic.DependencyInjection
         private static void RegisterTrips(IServiceCollection services)
         {
             services.AddScoped<CreateTripHandler>();
+            services.AddScoped<GetAllTripsHandler>();
             services.AddScoped<GetTripHandler>();
             services.AddScoped<GetTripsHandler>();
             services.AddScoped<UpdateTripHandler>();

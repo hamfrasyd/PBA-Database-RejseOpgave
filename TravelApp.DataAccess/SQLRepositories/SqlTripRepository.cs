@@ -1,4 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Neo4j.Driver;
+using TravelApp.BusinessLogic.DTOs.Pagination;
 using TravelApp.BusinessLogic.DTOs.Trips;
 using TravelApp.BusinessLogic.Interfaces;
 using TravelApp.BusinessLogic.Models.Activities;
@@ -37,11 +39,79 @@ namespace TravelApp.DataAccess.SQLRepositories
         }
         #endregion
 
-        #region Read All
-        /// <summary>Retrieves trip summaries for a user with optional filtering by country and continent.</summary>
-        public async Task<List<TripSummaryDTO>> GetSummariesByUserAsync(int userId, int? countryId, int? continentId)
+        #region
+
+        /// <summary>Retrieves trip summaries for all trips with optional filtering by country, continent and completion status.</summary>
+        public async Task<PagedResultDTO<TripSummaryDTO>> GetAllSummariesAsync(int? countryId, int? continentId, bool? isCompleted, int pageNumber, int pageSize)
         {
-            IQueryable<Trip> trips = _context.TripEntities.AsNoTracking().Where(trip => trip.TripParticipants.Any(participant => participant.User!.Id == userId));
+            IQueryable<Trip> trips = _context.TripEntities.AsNoTracking();
+
+            if (countryId.HasValue)
+            {
+                trips = trips.Where(trip => trip.TripStops.Any(stop => stop.City!.Country!.Id == countryId.Value));
+            }
+
+            if (continentId.HasValue)
+            {
+                trips = trips.Where(trip => trip.TripStops.Any(stop => stop.City!.Country!.Continent!.Id == continentId.Value));
+            }
+            if (isCompleted.HasValue)
+            {
+                trips = trips.Where(trip => trip.IsCompleted == isCompleted.Value);
+            }
+
+            int totalCount = await trips.CountAsync();
+
+            List<TripSummaryDTO> items = await trips.OrderByDescending(trip => trip.StartDate).ThenByDescending(trip => trip.Id)
+                .Skip((pageNumber - 1) * pageSize)
+                .Take(pageSize)
+                .Select(trip => new TripSummaryDTO
+                {
+                    Id = trip.Id,
+                    StartDate = trip.StartDate,
+                    EndDate = trip.EndDate,
+                    IsCompleted = trip.IsCompleted,
+                    PlanNotes = trip.PlanNotes,
+                    ExperienceNotes = trip.ExperienceNotes,
+
+                    Cities = trip.TripStops
+                        .Select(stop => new TripCitySummaryDTO
+                        {
+                            Id = stop.City!.Id,
+                            Name = stop.City.Name
+                        })
+                        .ToList(),
+
+                    ActivityCount = trip.TripActivities.Count(),
+                    ParticipantCount = trip.TripParticipants.Count(),
+
+                    ReviewCount = trip.IsCompleted 
+                    ? _context.ReviewEntities.Count(review => review.Trip!.Id == trip.Id)
+                    : 0,
+
+                    AverageStars = trip.IsCompleted
+                    ? _context.ReviewEntities.Where(review => review.Trip!.Id == trip.Id).Average(review => (double?)review.Stars) ?? 0
+                    : 0
+                })
+                .AsSplitQuery()
+                .ToListAsync();
+
+            return new PagedResultDTO<TripSummaryDTO>
+            {
+                Items = items,
+                TotalCount = totalCount,
+                PageNumber = pageNumber,
+                PageSize = pageSize
+            };
+        }
+
+        #endregion
+        #region Read All for user
+        /// <summary>Retrieves trip summaries for a user with optional filtering by country and continent.</summary>
+        public async Task<PagedResultDTO<TripSummaryDTO>> GetSummariesByUserAsync(int userId, int? countryId, int? continentId, int pageNumber, int pageSize)
+        {
+            IQueryable<Trip> trips = _context.TripEntities.AsNoTracking()
+                .Where(trip => trip.TripParticipants.Any(participant => participant.User!.Id == userId));
 
             if (countryId.HasValue)
             {
@@ -53,7 +123,13 @@ namespace TravelApp.DataAccess.SQLRepositories
                 trips = trips.Where(trip => trip.TripStops.Any(stop => stop.City!.Country!.Continent!.Id == continentId.Value));
             }
 
-            List<TripSummaryDTO> result = await trips.OrderByDescending(trip => trip.StartDate).Select(trip => new TripSummaryDTO
+            int totalCount = await trips.CountAsync();
+
+
+            List<TripSummaryDTO> items = await trips.OrderByDescending(trip => trip.StartDate).ThenByDescending(trip => trip.Id)
+                .Skip((pageNumber - 1) * pageSize)
+                .Take(pageSize)
+                .Select(trip => new TripSummaryDTO
             {
                 Id = trip.Id,
                 StartDate = trip.StartDate,
@@ -82,7 +158,13 @@ namespace TravelApp.DataAccess.SQLRepositories
                 .AsSplitQuery()
                 .ToListAsync();
 
-            return result;
+            return new PagedResultDTO<TripSummaryDTO>
+            {
+                Items = items,
+                TotalCount = totalCount,
+                PageNumber = pageNumber,
+                PageSize = pageSize
+            };
         }
         #endregion
 

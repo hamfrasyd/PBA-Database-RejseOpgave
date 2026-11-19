@@ -1,3 +1,5 @@
+using TravelApp.BusinessLogic.Interfaces.Repository_Interfaces;
+
 namespace TravelApp.BusinessLogic.Interfaces
 {
     /// <summary>Provides repositories that share one persistence context and commit boundary.</summary>
@@ -26,6 +28,12 @@ namespace TravelApp.BusinessLogic.Interfaces
 
         /// <summary>Provides access to the invitations repository.</summary>
         public IInviteRepository Invitations { get; }
+
+        /// <summary>Provides access to the groups repository.</summary>
+        public IGroupRepository Groups { get; }
+
+        /// <summary>Provides access to the reviews repository.</summary>
+        public IReviewRepository Reviews { get; }
 
         /// <summary>Saves pending changes and commits the transaction.</summary>
         /// <returns>A task that completes when the changes are saved.</returns>

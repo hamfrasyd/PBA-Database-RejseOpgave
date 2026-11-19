@@ -10,7 +10,7 @@
         public DateTime? EndDate { get; set; }
 
         /// <summary>Gets or sets the unique identifier of the trip.</summary>
-        public bool IsCompleted { get; set; }
+        public bool? IsCompleted { get; set; }
 
         /// <summary>Gets or sets the unique identifier of the trip.</summary>
         public string? PlanNotes { get; set; }

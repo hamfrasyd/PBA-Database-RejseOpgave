@@ -1,4 +1,8 @@
 using Microsoft.EntityFrameworkCore;
+using TravelApp.BusinessLogic.Handlers.Locations.GetCityStats;
+using TravelApp.BusinessLogic.Models.Achievements;
+using TravelApp.BusinessLogic.Models.Activities;
+using TravelApp.BusinessLogic.Models.Friendships;
 using TravelApp.BusinessLogic.Models.Achievements;
 using TravelApp.BusinessLogic.Models.Activities;
 using TravelApp.BusinessLogic.Models.Friendships;

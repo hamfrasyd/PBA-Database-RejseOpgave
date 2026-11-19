@@ -71,7 +71,13 @@ namespace TravelApp.DataAccess.SQLRepositories
                         .ToList(),
 
                 ActivityCount = trip.TripActivities.Count(),
-                ParticipantCount = trip.TripParticipants.Count()
+                ParticipantCount = trip.TripParticipants.Count(),
+                ReviewCount = trip.IsCompleted 
+                ? _context.ReviewEntities.Count(review => review.Trip!.Id == trip.Id) : 0,
+                
+                AverageStars = trip.IsCompleted
+                ? _context.ReviewEntities.Where(review => review.Trip!.Id == trip.Id).Average(review => (double?)review.Stars) ?? 0
+                : 0
             })
                 .AsSplitQuery()
                 .ToListAsync();
@@ -126,12 +132,26 @@ namespace TravelApp.DataAccess.SQLRepositories
             {
                 throw new InvalidOperationException($"Trip {tripId} was not found.");
             }
-
-            trip.StartDate = update.StartDate;
-            trip.EndDate = update.EndDate;
-            trip.IsCompleted = update.IsCompleted;
-            trip.PlanNotes = update.PlanNotes;
-            trip.ExperienceNotes = update.ExperienceNotes;
+            if (update.StartDate is not null)
+            {
+                trip.StartDate = update.StartDate;
+            }
+            if (update.EndDate is not null)
+            {
+                trip.EndDate = update.EndDate;
+            }
+            if (update.IsCompleted is not null)
+            {
+                trip.IsCompleted = update.IsCompleted.Value;
+            }
+            if (update.PlanNotes is not null)
+            {
+                trip.PlanNotes = update.PlanNotes;
+            }
+            if (update.ExperienceNotes is not null)
+            {
+                trip.ExperienceNotes = update.ExperienceNotes;
+            }
         }
         #endregion
 

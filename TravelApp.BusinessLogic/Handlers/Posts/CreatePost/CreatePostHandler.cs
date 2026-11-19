@@ -26,7 +26,12 @@ namespace TravelApp.BusinessLogic.Handlers.Posts.CreatePost
 
             await using IUnitOfWork unitOfWork = _unitOfWorkFactory.Create();
 
-            TravelUser user = await unitOfWork.Users.GetByIdAsync(request.UserId);
+            TravelUser? user = await unitOfWork.Users.GetByIdAsync(request.UserId);
+
+            if (user is null)
+            {
+                throw new TravelAppNotFoundException("User was not found");
+            }
 
             Post addedPost = await unitOfWork.Posts.AddPostAsync(new Post
             {

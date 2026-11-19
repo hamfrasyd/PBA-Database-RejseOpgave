@@ -1,9 +1,9 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace TravelApp.BusinessLogic.Handlers.Invitations.CreateInvitation
+namespace TravelApp.BusinessLogic.Handlers.Invitations.SendInvitation
 {
     /// <summary>Contains the information needed to invite a user to a trip.</summary>
-    public class CreateInvitationRequest
+    public class SendInvitationRequest
     {
         /// <summary>Gets or sets the trip identifier.</summary>
         [Range(1, int.MaxValue)]

@@ -5,18 +5,18 @@ using TravelApp.BusinessLogic.Exceptions.SpecificCustomException;
 using TravelApp.BusinessLogic.Interfaces;
 using TravelApp.BusinessLogic.Models.Invitations;
 
-namespace TravelApp.BusinessLogic.Handlers.Invitations.CreateInvitation
+namespace TravelApp.BusinessLogic.Handlers.Invitations.SendInvitation
 {
-    /// <summary>Handles the create invitation use case.</summary>
-    public class CreateInvitationHandler
+    /// <summary>Handles the send invitation use case.</summary>
+    public class SendInvitationHandler
     {
         private readonly IUnitOfWorkFactory _unitOfWorkFactory;
         private readonly ICurrentUser _currentUser;
 
-        /// <summary>Initializes a new CreateInvitationHandler instance.</summary>
+        /// <summary>Initializes a new SendInvitationHandler instance.</summary>
         /// <param name="unitOfWorkFactory">The Unit of Work factory.</param>
         /// <param name="currentUser">The current logged-in user.</param>
-        public CreateInvitationHandler(IUnitOfWorkFactory unitOfWorkFactory, ICurrentUser currentUser)
+        public SendInvitationHandler(IUnitOfWorkFactory unitOfWorkFactory, ICurrentUser currentUser)
         {
             _unitOfWorkFactory = unitOfWorkFactory;
             _currentUser = currentUser;
@@ -24,13 +24,13 @@ namespace TravelApp.BusinessLogic.Handlers.Invitations.CreateInvitation
 
         /// <summary>Invites another user to a trip that the sender may manage.</summary>
         /// <param name="request">The trip and receiver identifiers.</param>
-        /// <returns>The newly created invitation.</returns>
+        /// <returns>The sent invitation.</returns>
         /// <exception cref="TravelAppNotFoundException">Thrown when the trip does not exist.</exception>
         /// <exception cref="TravelAppForbiddenException">Thrown when the sender does not have trip invitation access.</exception>
         /// <exception cref="TravelAppValidationException">Thrown when the receiver is invalid or missing.</exception>
         /// <exception cref="TravelAppConflictException">Thrown when the receiver is already participating or already has an active invitation.</exception>
         /// <exception cref="InvalidOperationException">Thrown when Pending has no <see cref="InvitationStatusNameAttribute"/>.</exception>
-        public async Task<CreateInvitationResponse> CreateInvitationAsync(CreateInvitationRequest request)
+        public async Task<SendInvitationResponse> SendInvitationAsync(SendInvitationRequest request)
         {
             int senderId = _currentUser.UserId;
 
@@ -91,7 +91,7 @@ namespace TravelApp.BusinessLogic.Handlers.Invitations.CreateInvitation
             await unitOfWork.Invitations.AddAsync(invitation, request.TripId, senderId, request.ReceiverId, pendingInvitationStatusId.Value);
             await unitOfWork.CommitAsync();
 
-            CreateInvitationResponse response = new CreateInvitationResponse
+            SendInvitationResponse response = new SendInvitationResponse
             {
                 Id = invitation.Id,
                 TripId = request.TripId,

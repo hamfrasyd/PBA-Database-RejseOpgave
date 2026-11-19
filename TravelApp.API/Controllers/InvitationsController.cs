@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using TravelApp.API.ExceptionFilters;
-using TravelApp.BusinessLogic.Handlers.Invitations.CreateInvitation;
+using TravelApp.BusinessLogic.Handlers.Invitations.SendInvitation;
 using TravelApp.BusinessLogic.Handlers.Invitations.DeleteInvitation;
 using TravelApp.BusinessLogic.Handlers.Invitations.GetInvitation;
 using TravelApp.BusinessLogic.Handlers.Invitations.GetInvitations;
@@ -75,24 +75,24 @@ namespace TravelApp.API.Controllers
 
         #endregion
 
-        #region POST - Create Invitation
+        #region POST - Send Invitation
 
         /// <summary>Invites an existing user to a trip.</summary>
         /// <param name="request">The trip and receiving user.</param>
-        /// <param name="createInvitationHandler">The handler that creates the invitation.</param>
-        /// <returns>The created invitation.</returns>
+        /// <param name="sendInvitationHandler">The handler that sends the invitation.</param>
+        /// <returns>The sent invitation.</returns>
         // POST api/invitations
         [HttpPost]
-        [ProducesResponseType(typeof(CreateInvitationResponse), StatusCodes.Status201Created)]
+        [ProducesResponseType(typeof(SendInvitationResponse), StatusCodes.Status201Created)]
         [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status403Forbidden)]
         [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status404NotFound)]
         [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status409Conflict)]
         [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult<CreateInvitationResponse>> CreateInvitation([FromBody] CreateInvitationRequest request, [FromServices] CreateInvitationHandler createInvitationHandler)
+        public async Task<ActionResult<SendInvitationResponse>> SendInvitation([FromBody] SendInvitationRequest request, [FromServices] SendInvitationHandler sendInvitationHandler)
         {
-            CreateInvitationResponse response = await createInvitationHandler.CreateInvitationAsync(request);
+            SendInvitationResponse response = await sendInvitationHandler.SendInvitationAsync(request);
 
             return Created($"/api/invitations/{response.Id}", response);
         }

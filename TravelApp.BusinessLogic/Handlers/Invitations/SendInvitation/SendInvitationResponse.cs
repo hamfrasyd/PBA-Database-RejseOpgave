@@ -1,7 +1,7 @@
-namespace TravelApp.BusinessLogic.Handlers.Invitations.CreateInvitation
+namespace TravelApp.BusinessLogic.Handlers.Invitations.SendInvitation
 {
-    /// <summary>Contains a newly created trip invitation.</summary>
-    public class CreateInvitationResponse
+    /// <summary>Contains a sent trip invitation.</summary>
+    public class SendInvitationResponse
     {
         /// <summary>Gets or sets the invitation identifier.</summary>
         public int Id { get; set; }

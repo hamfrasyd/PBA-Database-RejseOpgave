@@ -128,7 +128,8 @@ namespace TravelApp.DataAccess.SQLRepositories.EntityFramework
 
             modelBuilder.Entity<Review>(entity =>
             {
-                entity.ToTable("Review", "dbo");
+                entity.ToTable("Review", "dbo",
+                    table => table.UseSqlOutputClause(false));
                 entity.HasKey(item => item.Id);
                 entity.Property<int>("TripId").HasColumnName("Trip_Id").IsRequired();
                 entity.Property<int>("UserId").HasColumnName("User_Id").IsRequired();

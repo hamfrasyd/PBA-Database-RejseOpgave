@@ -29,5 +29,11 @@ namespace TravelApp.BusinessLogic.Handlers.Trips.GetTrip
         public int ActivityCount { get; set; }
         /// <summary>Gets or sets the number of participants.</summary>
         public int ParticipantCount { get; set; }
+
+        /// <summary>Gets or sets the average star rating.</summary>
+        public double AverageStars { get; set; }
+
+        /// <summary>Number of reviews associated with the trip.</summary>
+        public int ReviewCount { get; set; }
     }
 }

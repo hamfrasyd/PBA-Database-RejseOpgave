@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using TravelApp.BusinessLogic.Interfaces;
+using TravelApp.BusinessLogic.Interfaces.Repository_Interfaces;
 using TravelApp.DataAccess.SQLRepositories;
 using TravelApp.DataAccess.SQLRepositories.EntityFramework;
 
@@ -24,6 +25,10 @@ namespace TravelApp.DataAccess.UnitOfWork
         public IUserRepository Users { get; }
         /// <inheritdoc/>
         public IPostRepository Posts { get; }
+        /// <inheritdoc/>
+        public IGroupRepository Groups { get; }
+        /// <inheritdoc/>
+        public IReviewRepository Reviews { get; }
 
         /// <inheritdoc/>
         public IFriendshipRepository Friendships { get; }
@@ -48,6 +53,8 @@ namespace TravelApp.DataAccess.UnitOfWork
             Trips = new SqlTripRepository(_context);
             Users = new SqlUserRepository(_context);
             Posts = new SqlPostRepository(_context);
+            Groups = new SqlGroupRepository(_context);
+            Reviews = new SqlReviewRepository(_context);
             Friendships = new SqlFriendshipRepository(_context);
             Invitations = new SqlInviteRepository(_context);
         }

@@ -64,7 +64,8 @@ namespace TravelApp.BusinessLogic.Handlers.Invitations.SendInvitation
             }
 
             DateTime sendDateUtc = DateTime.UtcNow;
-            DateTime oldestActiveSendDateUtc = sendDateUtc.AddDays(-14);
+            int pendingLifetimeDays = InvitationStatusEnumHelper.PendingLifetimeDays;
+            DateTime oldestActiveSendDateUtc = sendDateUtc.AddDays(-pendingLifetimeDays);
             bool activePendingInvitationExists = await unitOfWork.Invitations.ActivePendingExistsAsync(request.TripId, request.ReceiverId, oldestActiveSendDateUtc);
             if (activePendingInvitationExists is true)
             {

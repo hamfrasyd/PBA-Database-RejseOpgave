@@ -36,8 +36,8 @@ namespace TravelApp.BusinessLogic.Handlers.Activities.UpdateActivity
             {
                 Id = activityId,
                 CityId = request.CityId,
-                Name = request.Name,
-                Description = request.Description
+                Name = request.Name?.Trim(),
+                Description = request.Description?.Trim()
             };
 
             bool activityWasFound = await unitOfWork.Activities.UpdateActivityAsync(activityToUpdate);

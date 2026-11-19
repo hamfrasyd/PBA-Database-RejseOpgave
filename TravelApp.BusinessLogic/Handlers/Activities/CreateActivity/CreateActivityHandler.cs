@@ -33,7 +33,7 @@ namespace TravelApp.BusinessLogic.Handlers.Activities.CreateActivity
             Activity activity = new Activity
             {
                 Name = request.Name.Trim(),
-                Description = request.Description
+                Description = request.Description?.Trim()
             };
 
             await unitOfWork.Activities.CreateActivityAsync(activity, request.CityId);

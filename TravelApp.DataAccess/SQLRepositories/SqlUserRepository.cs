@@ -126,12 +126,12 @@ namespace TravelApp.DataAccess.SQLRepositories
 
             if (string.IsNullOrEmpty(userToUpdate.FirstName) is false)
             {
-                userInDb.FirstName = userToUpdate.FirstName.Trim();
+                userInDb.FirstName = userToUpdate.FirstName;
             }
 
             if (string.IsNullOrEmpty(userToUpdate.LastName) is false)
             {
-                userInDb.LastName = userToUpdate.LastName.Trim();
+                userInDb.LastName = userToUpdate.LastName;
             }
 
             if (userToUpdate.IsPrivate is not null)

@@ -96,13 +96,13 @@ namespace TravelApp.DataAccess.SQLRepositories
 
             if (string.IsNullOrEmpty(activityToUpdate.Name) is false)
             {
-                activityInDb.Name = activityToUpdate.Name.Trim();
+                activityInDb.Name = activityToUpdate.Name;
             }
 
 
             if (string.IsNullOrEmpty(activityToUpdate.Description) is false)
             {
-                activityInDb.Description = activityToUpdate.Description.Trim();
+                activityInDb.Description = activityToUpdate.Description;
             }
 
             _context.Entry(activityInDb).Property("CityId").CurrentValue = activityToUpdate.CityId;

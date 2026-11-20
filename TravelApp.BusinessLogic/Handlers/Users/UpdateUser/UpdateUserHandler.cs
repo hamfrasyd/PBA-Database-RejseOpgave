@@ -26,12 +26,24 @@ namespace TravelApp.BusinessLogic.Handlers.Users.UpdateUser
         /// <returns>The updated user.</returns>
         /// <exception cref="TravelAppForbiddenException">Thrown when the current user cannot update the user.</exception>
         /// <exception cref="TravelAppNotFoundException">Thrown when the user does not exist.</exception>
-        /// <exception cref="TravelAppValidationException">Thrown when the home city does not exist.</exception>
+        /// <exception cref="TravelAppValidationException">Thrown when the home city does not exist, or when the first name, last name, and privacy are all null.</exception>
         public async Task<UpdateUserResponse> UpdateUserAsync(int userId, UpdateUserRequest request)
         {
-            AccessRules.RequireOwnerOrAdmin(_currentUser, userId);
+            bool userUpdateIsEmpty = request.FirstName is null && request.LastName is null && request.IsPrivate is null;
+            if (userUpdateIsEmpty)
+            {
+                throw new TravelAppValidationException("User update requires a first name, a last name, or a privacy value.");
+            }
 
             await using IUnitOfWork unitOfWork = _unitOfWorkFactory.Create();
+
+            bool userWasFound = await unitOfWork.Users.UserExistsAsync(userId);
+            if (userWasFound is false)
+            {
+                throw new TravelAppNotFoundException($"User with ID {userId} was not found.");
+            }
+
+            AccessRules.RequireCurrentUserIsOwnerOrAdmin(_currentUser, userId);
 
             bool cityExists = await unitOfWork.Locations.CityExistsAsync(request.CityId);
             if (cityExists is false)
@@ -42,14 +54,14 @@ namespace TravelApp.BusinessLogic.Handlers.Users.UpdateUser
             UserBasicInfoDto userToUpdate = new UserBasicInfoDto
             {
                 Id = userId,
-                FirstName = request.FirstName.Trim(),
-                LastName = request.LastName.Trim(),
+                FirstName = request.FirstName?.Trim(),
+                LastName = request.LastName?.Trim(),
                 CityId = request.CityId,
                 IsPrivate = request.IsPrivate
             };
 
-            bool userWasFound = await unitOfWork.Users.UpdateUserAsync(userToUpdate);
-            if (userWasFound is false)
+            bool userWasUpdated = await unitOfWork.Users.UpdateUserAsync(userToUpdate);
+            if (userWasUpdated is false)
             {
                 throw new TravelAppNotFoundException($"User with ID {userId} was not found.");
             }

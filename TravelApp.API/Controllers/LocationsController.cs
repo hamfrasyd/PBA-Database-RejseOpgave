@@ -61,7 +61,7 @@ namespace TravelApp.API.Controllers
         }
 
         /// <summary>Lists countries, optionally filtered by continent.</summary>
-        /// <param name="continentId">The continent identifier to filter by, or <see langword="null"/> for all continents.</param>
+        /// <param name="continentId">The continent identifier to filter by, or null for all continents.</param>
         /// <param name="getCountriesHandler">The handler that loads the countries.</param>
         /// <returns>The matching countries.</returns>
         // GET api/locations/countries

@@ -24,7 +24,7 @@ namespace TravelApp.BusinessLogic.Interfaces
         Task<List<CityDTO>> GetCitiesAsync(GetCitiesFilterDTO filter);
 
         /// <summary>Retrieves countries, optionally filtered by continent.</summary>
-        /// <param name="continentId">The continent identifier to filter by, or <see langword="null"/> for all continents.</param>
+        /// <param name="continentId">The continent identifier to filter by, or null for all continents.</param>
         /// <returns>The matching countries.</returns>
         Task<List<CountryDTO>> GetCountriesAsync(int? continentId);
 
@@ -38,17 +38,17 @@ namespace TravelApp.BusinessLogic.Interfaces
 
         /// <summary>Retrieves a city by ID.</summary>
         /// <param name="cityId">The city identifier.</param>
-        /// <returns>The city, or <see langword="null"/> when it does not exist.</returns>
+        /// <returns>The city, or null when it does not exist.</returns>
         Task<CityDTO?> GetCityAsync(int cityId);
 
         /// <summary>Retrieves a city by ID, including its country.</summary>
         /// <param name="cityId">The city identifier.</param>
-        /// <returns>The city, or <see langword="null"/> when it does not exist.</returns>
+        /// <returns>The city, or null when it does not exist.</returns>
         Task<City?> GetCityByIdAsync(int cityId);
 
         /// <summary>Retrieves statistics for a city.</summary>
         /// <param name="cityId">The city identifier.</param>
-        /// <returns>The statistics, or <see langword="null"/> when the city does not exist.</returns>
+        /// <returns>The statistics, or null when the city does not exist.</returns>
         Task<DestinationStatsView?> GetCityStatsAsync(int cityId);
 
         #endregion
@@ -57,12 +57,12 @@ namespace TravelApp.BusinessLogic.Interfaces
 
         /// <summary>Checks whether a city exists.</summary>
         /// <param name="cityId">The city identifier.</param>
-        /// <returns><see langword="true"/> when the city exists; otherwise, <see langword="false"/>.</returns>
+        /// <returns>true when the city exists; otherwise, false.</returns>
         Task<bool> CityExistsAsync(int cityId);
 
         /// <summary>Checks whether a country exists.</summary>
         /// <param name="countryId">The country identifier.</param>
-        /// <returns><see langword="true"/> when the country exists; otherwise, <see langword="false"/>.</returns>
+        /// <returns>true when the country exists; otherwise, false.</returns>
         Task<bool> CountryExistsAsync(int countryId);
 
         #endregion

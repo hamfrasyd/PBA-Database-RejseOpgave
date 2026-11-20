@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using TravelApp.BusinessLogic.DTOs.Locations;
 using TravelApp.BusinessLogic.DTOs.Users;
+using TravelApp.BusinessLogic.Exceptions.SpecificCustomException;
 using TravelApp.BusinessLogic.Interfaces;
 using TravelApp.BusinessLogic.Models.Users;
 using TravelApp.DataAccess.SQLRepositories.EntityFramework;
@@ -123,8 +124,15 @@ namespace TravelApp.DataAccess.SQLRepositories
                 return false;
             }
 
-            userInDb.FirstName = userToUpdate.FirstName;
-            userInDb.LastName = userToUpdate.LastName;
+            if (string.IsNullOrEmpty(userToUpdate.FirstName) is false)
+            {
+                userInDb.FirstName = userToUpdate.FirstName;
+            }
+
+            if (string.IsNullOrEmpty(userToUpdate.LastName) is false)
+            {
+                userInDb.LastName = userToUpdate.LastName;
+            }
 
             if (userToUpdate.IsPrivate is not null)
             {
@@ -143,12 +151,14 @@ namespace TravelApp.DataAccess.SQLRepositories
         /// <inheritdoc />
         public async Task DeleteAsync(int userId)
         {
-            TravelUser? user = await _context.TravelUserEntities.FirstOrDefaultAsync(item => item.Id == userId);
+            TravelUser? user = await _context.TravelUserEntities.FirstOrDefaultAsync(user => user.Id == userId);
 
-            if (user is not null)
+            if (user is null)
             {
-                _context.TravelUserEntities.Remove(user);
+                throw new TravelAppNotFoundException($"User with ID {userId} was not found.");
             }
+
+            _context.TravelUserEntities.Remove(user);
         }
 
         #endregion

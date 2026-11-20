@@ -21,9 +21,20 @@ namespace TravelApp.BusinessLogic.Handlers.Activities.UpdateActivity
         /// <param name="request">The updated activity details.</param>
         /// <returns>The updated activity.</returns>
         /// <exception cref="TravelAppNotFoundException">Thrown when the activity does not exist.</exception>
-        /// <exception cref="TravelAppValidationException">Thrown when the city does not exist or the description is empty.</exception>
+        /// <exception cref="TravelAppValidationException">Thrown when no field is provided, the name or description is empty, or the city does not exist.</exception>
         public async Task<UpdateActivityResponse> UpdateActivityAsync(int activityId, UpdateActivityRequest request)
         {
+            bool activityUpdateIsEmpty = request.Name is null && request.Description is null;
+            if (activityUpdateIsEmpty)
+            {
+                throw new TravelAppValidationException("At least one field must be provided.");
+            }
+
+            if (request.Name is not null && string.IsNullOrWhiteSpace(request.Name))
+            {
+                throw new TravelAppValidationException("Activity name cannot be empty.");
+            }
+
             if (request.Description is not null && string.IsNullOrWhiteSpace(request.Description))
             {
                 throw new TravelAppValidationException("Activity description cannot be empty.");
@@ -37,11 +48,11 @@ namespace TravelApp.BusinessLogic.Handlers.Activities.UpdateActivity
                 throw new TravelAppValidationException($"City with ID {request.CityId} does not exist.");
             }
 
-            ActivityDTO activityToUpdate = new ActivityDTO
+            UpdateActivityDTO activityToUpdate = new UpdateActivityDTO
             {
                 Id = activityId,
                 CityId = request.CityId,
-                Name = request.Name.Trim(),
+                Name = request.Name?.Trim(),
                 Description = request.Description?.Trim()
             };
 

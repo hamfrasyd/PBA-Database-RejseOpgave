@@ -60,6 +60,9 @@ using TravelApp.BusinessLogic.Handlers.Invitations.SendInvitation;
 using TravelApp.BusinessLogic.Handlers.Invitations.GetInvitations;
 using TravelApp.BusinessLogic.Handlers.Invitations.GetInvitesById;
 using TravelApp.BusinessLogic.Handlers.Invitations.AcceptInvitation;
+using TravelApp.BusinessLogic.Handlers.Invitations.RejectInvitation;
+using TravelApp.BusinessLogic.Handlers.Invitations.DeleteInvitation;
+using TravelApp.BusinessLogic.Handlers.Invitations.SendGroupInvitations;
 
 namespace TravelApp.BusinessLogic.DependencyInjection
 {
@@ -190,6 +193,9 @@ namespace TravelApp.BusinessLogic.DependencyInjection
             services.AddScoped<GetInvitationByIdHandler>();
             services.AddScoped<GetPendingInvitationsHandler>();
             services.AddScoped<AcceptInvitationHandler>();
+            services.AddScoped<RejectInvitationHandler>();
+            services.AddScoped<DeleteInvitationHandler>();
+            services.AddScoped<SendGroupInvitationsHandler>();
         }
     }
 }

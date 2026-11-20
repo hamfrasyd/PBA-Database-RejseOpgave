@@ -26,7 +26,7 @@ namespace TravelApp.BusinessLogic.Handlers.Invitations.GetInvitations
 
             await using IUnitOfWork unitOfWork = _unitOfWorkFactory.Create();
 
-            List<Invite> invitations = await unitOfWork.Invitations.GetPendingInvitesByReceiverAsync(userId, todayUtc);
+            List<Invite> invitations = await unitOfWork.Invitations.GetInvitesByReceiverAsync(userId, todayUtc);
 
             return invitations.Select(invite => new GetMyPendingInvitationResponse
             {

@@ -28,15 +28,6 @@ namespace TravelApp.DataAccess.SQLRepositories
         }
         #endregion
 
-
-        /// <summary>Checks if a user is a participant in a specific trip.</summary>
-        public async Task<bool> IsParticipantAsync(int tripId, int userId)
-        {
-            return await _context.TripParticipantEntities
-                .AsNoTracking()
-                .AnyAsync(participant => participant.Trip!.Id == tripId && participant.User!.Id == userId);
-        }
-
         #region Read by id
         /// <summary>Retrieves an invitation by its identifier.</summary>
         public async Task<Invite?> GetInviteByIdAsync(int invitationId)
@@ -53,44 +44,41 @@ namespace TravelApp.DataAccess.SQLRepositories
         #endregion
 
         #region Read by receiver
-        /// <summary>Retrieves pending invitations for a specific receiver.</summary>
-        public async Task<List<Invite>> GetPendingInvitesByReceiverAsync(int receiverId, DateTime todayUtc)
+        /// <summary>Retrieves invitations for a receiver, excluding expired pending invitations.</summary>
+        public async Task<List<Invite>> GetInvitesByReceiverAsync(int receiverId, DateTime todayUtc)
         {
-            return await _context.InviteEntities
-                .AsNoTracking()
+            return await _context.InviteEntities.AsNoTracking()
                 .Include(invite => invite.Trip).Include(invite => invite.Sender)
-                .Where(invite =>
-                    EF.Property<int>(invite, "ReceiverId") == receiverId && invite.IsAccepted == null &&
-                    (invite.Trip!.StartDate == null || invite.Trip.StartDate >= todayUtc.AddDays(1)))
-                .OrderBy(invite => invite.Trip!.StartDate)
+                .Where(invite => EF.Property<int>(invite, "ReceiverId") == receiverId &&
+                    (
+                        invite.IsAccepted != null ||
+                        invite.Trip!.StartDate == null ||
+                        invite.Trip.StartDate >= todayUtc.AddDays(1)
+                    ))
+                .OrderByDescending(invite => invite.SendDate)
                 .ToListAsync();
         }
         #endregion
 
-
-        /// <summary>Checks if a pending invitation exists for a specific trip and receiver.</summary>
-        public async Task<bool> PendingInviteExistsForTripAsync(int tripId, int receiverId)
-        {
-            return await _context.InviteEntities
-                .AsNoTracking()
-                .AnyAsync(invite =>  EF.Property<int>(invite, "TripId") == tripId &&
-                    EF.Property<int>(invite, "ReceiverId") == receiverId && invite.IsAccepted == null);
-        }
-
+        #region Update
         /// <summary>Updates an existing invitation in the repository.</summary>
         public Task UpdateInviteAsync(Invite invite)
         {
             _context.InviteEntities.Update(invite);
             return Task.CompletedTask;
         }
+        #endregion
 
+        #region Delete
         /// <summary>Deletes an existing invitation from the repository.</summary>
         public Task DeleteInviteAsync(Invite invite)
         {
             _context.InviteEntities.Remove(invite);
             return Task.CompletedTask;
         }
+        #endregion
 
+        #region DeleteExpired
         /// <summary>Deletes expired pending invitations from the repository.</summary>
         //Denne går uden om unit of work, da den ikke skal bruge transaction. Den skal bare slette alle udløbne invitationer.
         public async Task<int> DeleteExpiredPendingInvitesAsync(
@@ -103,5 +91,25 @@ namespace TravelApp.DataAccess.SQLRepositories
                     invite.Trip.StartDate < todayUtc.AddDays(1))
                 .ExecuteDeleteAsync();
         }
+        #endregion
+
+        #region Checks
+        /// <summary>Checks if a user is a participant in a specific trip.</summary>
+        public async Task<bool> IsParticipantAsync(int tripId, int userId)
+        {
+            return await _context.TripParticipantEntities
+                .AsNoTracking()
+                .AnyAsync(participant => participant.Trip!.Id == tripId && participant.User!.Id == userId);
+        }
+
+        /// <summary>Checks if a pending invitation exists for a specific trip and receiver.</summary>
+        public async Task<bool> PendingInviteExistsForTripAsync(int tripId, int receiverId)
+        {
+            return await _context.InviteEntities
+                .AsNoTracking()
+                .AnyAsync(invite => EF.Property<int>(invite, "TripId") == tripId &&
+                    EF.Property<int>(invite, "ReceiverId") == receiverId && invite.IsAccepted == null);
+        }
+        #endregion
     }
 }

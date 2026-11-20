@@ -3,8 +3,11 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using TravelApp.API.ExceptionFilters;
 using TravelApp.BusinessLogic.Handlers.Invitations.AcceptInvitation;
+using TravelApp.BusinessLogic.Handlers.Invitations.DeleteInvitation;
 using TravelApp.BusinessLogic.Handlers.Invitations.GetInvitations;
 using TravelApp.BusinessLogic.Handlers.Invitations.GetInvitesById;
+using TravelApp.BusinessLogic.Handlers.Invitations.RejectInvitation;
+using TravelApp.BusinessLogic.Handlers.Invitations.SendGroupInvitations;
 using TravelApp.BusinessLogic.Handlers.Invitations.SendInvitation;
 
 namespace TravelApp.API.Controllers
@@ -39,6 +42,28 @@ namespace TravelApp.API.Controllers
             SendInvitationResponse result = await createInvitationHandler.SendInvitationAsync(tripId, userId);
 
             return Created($"/api/invitations/{result.Id}", result);
+        }
+
+        #endregion
+
+        #region POST - Send Group Invitations
+
+        /// <summary>Sends invitations to eligible members of a group.</summary>
+        /// <param name="tripId">The trip identifier.</param>
+        /// <param name="groupId">The group identifier.</param>
+        /// <param name="handler">The handler for sending group invitations.</param>
+        /// <returns>The number of created and skipped invitations.</returns>
+        [HttpPost("/api/trips/{tripId:int}/invitations/groups/{groupId:int}")]
+        [ProducesResponseType(typeof(SendGroupInvitationsResponse), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status404NotFound)]
+        [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status409Conflict)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        public async Task<ActionResult<SendGroupInvitationsResponse>>
+            SendGroupInvitations([FromRoute] int tripId, [FromRoute] int groupId, [FromServices] SendGroupInvitationsHandler handler)
+        {
+            SendGroupInvitationsResponse result = await handler.SendGroupInvitationsAsync(tripId, groupId);
+            return Ok(result);
         }
 
         #endregion
@@ -94,6 +119,43 @@ namespace TravelApp.API.Controllers
         public async Task<IActionResult> AcceptInvitation([FromRoute] int invitationId, [FromServices] AcceptInvitationHandler handler)
         {
             await handler.AcceptInvitationAsync(invitationId);
+            return NoContent();
+        }
+
+        #endregion
+
+        #region PUT - Reject Invitation
+
+        /// <summary>Rejects an invitation to participate in a trip.</summary>
+        /// <param name="invitationId">The invitation identifier.</param>
+        /// <param name="handler">The handler for rejecting invitations.</param>
+        [HttpPut("{invitationId:int}/reject")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status404NotFound)]
+        [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status409Conflict)]
+        public async Task<IActionResult> RejectInvitation([FromRoute] int invitationId, [FromServices] RejectInvitationHandler handler)
+        {
+            await handler.RejectInvitationAsync(invitationId);
+            return NoContent();
+        }
+
+        #endregion
+
+        #region DELETE - Invitation
+
+        /// <summary>Cancels a pending invitation sent by the authenticated user.</summary>
+        /// <param name="invitationId">The invitation identifier.</param>
+        /// <param name="handler">The handler for cancelling invitations.</param>
+        [HttpDelete("{invitationId:int}")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status404NotFound)]
+        [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status409Conflict)]
+        public async Task<IActionResult> DeleteInvitation([FromRoute] int invitationId, [FromServices] DeleteInvitationHandler handler)
+        {
+            await handler.DeleteInvitationAsync(invitationId);
+
             return NoContent();
         }
 

@@ -11,9 +11,6 @@ namespace TravelApp.BusinessLogic.Interfaces
         Task SendInviteAsync(Invite invite, int tripId, int senderId, int receiverId);
         #endregion
 
-        /// <summary>Checks if a user is a participant in a specific trip.</summary>
-        Task<bool> IsParticipantAsync(int tripId, int userId);
-
         #region Read by id
         /// <summary>Retrieves an invitation by its identifier.</summary>
         Task<Invite?> GetInviteByIdAsync(int invitationId);
@@ -21,12 +18,7 @@ namespace TravelApp.BusinessLogic.Interfaces
 
         #region Read by receiver
         /// <summary>Retrieves pending invitations for a specific receiver.</summary>
-        Task<List<Invite>> GetPendingInvitesByReceiverAsync(int receiverId, DateTime todayUtc);
-        #endregion
-
-        #region Read by trip
-        /// <summary>Checks if a pending invitation exists for a specific trip and receiver.</summary>
-        Task<bool> PendingInviteExistsForTripAsync(int tripId, int receiverId);
+        Task<List<Invite>> GetInvitesByReceiverAsync(int receiverId, DateTime todayUtc);
         #endregion
 
         #region Update
@@ -42,6 +34,14 @@ namespace TravelApp.BusinessLogic.Interfaces
         #region DeleteExpired
         /// <summary>Deletes expired pending invitations from the repository.</summary>
         Task<int> DeleteExpiredPendingInvitesAsync(DateTime todayUtc);
+        #endregion
+
+        #region Checks
+        /// <summary>Checks if a user is a participant in a specific trip.</summary>
+        Task<bool> IsParticipantAsync(int tripId, int userId);
+
+        /// <summary>Checks if a pending invitation exists for a specific trip and receiver.</summary>
+        Task<bool> PendingInviteExistsForTripAsync(int tripId, int receiverId);
         #endregion
     }
 }

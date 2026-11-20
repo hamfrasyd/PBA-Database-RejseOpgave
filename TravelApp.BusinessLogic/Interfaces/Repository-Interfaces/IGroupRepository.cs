@@ -32,5 +32,11 @@ namespace TravelApp.BusinessLogic.Interfaces
 
         ///<summary>Removes trips in a group</summary>
         public Task RemoveGroupTripsAsync(int groupId, List<int> tripIds);
+
+        /// <summary>Checks whether a group exists.</summary>
+        Task<bool> GroupExistsAsync(int groupId);
+
+        /// <summary>Retrieves the user IDs of all group members.</summary>
+        Task<List<int>> GetMemberIdsAsync(int groupId);
     }
 }

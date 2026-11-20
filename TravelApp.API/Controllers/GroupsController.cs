@@ -36,10 +36,10 @@ namespace TravelApp.API.Controllers
         ///<summary>Gets a specific group by its id</summary>
         // GET api/groups/{id}
         [HttpGet("{id:int}")]
-        [ProducesResponseType(typeof(List<GetGroupResponse>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(GetGroupResponse), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status404NotFound)]
         [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult<GetGroupResponse>> GetPost([FromRoute] int id, [FromServices] GetGroupHandler getGroupHandler)
+        public async Task<ActionResult<GetGroupResponse>> GetGroup([FromRoute] int id, [FromServices] GetGroupHandler getGroupHandler)
         {
             GetGroupResponse result = await getGroupHandler.GetGroupByIdAsync(id);
             return Ok(result);
@@ -48,12 +48,12 @@ namespace TravelApp.API.Controllers
         /// <summary>Creates a group and returns its id.</summary>
         // POST api/groups
         [HttpPost]
-        [ProducesResponseType(typeof(int), StatusCodes.Status201Created)]
+        [ProducesResponseType(typeof(CreateGroupResponse), StatusCodes.Status201Created)]
         [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status400BadRequest)] // May be thrown from CreateGroupHandler.
         [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status409Conflict)] // May be thrown from CreateGroupHandler.
         [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status500InternalServerError)]
         [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status404NotFound)]
-        public async Task<ActionResult<int>> CreateGroup([FromBody] CreateGroupRequest request, [FromServices] CreateGroupHandler createGroupHandler)
+        public async Task<ActionResult<CreateGroupResponse>> CreateGroup([FromBody] CreateGroupRequest request, [FromServices] CreateGroupHandler createGroupHandler)
         {
             CreateGroupResponse response = await createGroupHandler.CreateGroupAsync(request);
             return Created($"/api/groups/{response.Id}", response);
@@ -61,7 +61,7 @@ namespace TravelApp.API.Controllers
 
         /// <summary>Adds members to a group</summary>
         // POST api/groups/{groupId}/members
-        [HttpPost("{groupId}/members")]
+        [HttpPost("{groupId:int}/members")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status400BadRequest)] // May be thrown from AddGroupMembersHandler.
         [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status404NotFound)] // Group or user not found.
@@ -74,7 +74,7 @@ namespace TravelApp.API.Controllers
 
         /// <summary>Adds trips to a group</summary>
         // POST api/groups/{groupId}/trips
-        [HttpPost("{groupId}/trips")]
+        [HttpPost("{groupId:int}/trips")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status400BadRequest)] // May be thrown from AddGroupTripsHandler.
         [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status404NotFound)] // Group or trip not found.

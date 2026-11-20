@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Neo4j.Driver;
 using TravelApp.API.ExceptionFilters;
 using TravelApp.BusinessLogic.DTOs.Pagination;
 using TravelApp.BusinessLogic.Handlers.Activities.GetActivity;
@@ -24,6 +23,7 @@ namespace TravelApp.API.Controllers
     {
         /// <summary>Retrieves all trips in the system.</summary>
         [HttpGet]
+        [ProducesResponseType(typeof(PagedResultDTO<GetTripsResponse>), StatusCodes.Status200OK)]
         public async Task<ActionResult<PagedResultDTO<GetTripsResponse>>> GetAllTrips(
             [FromServices] GetAllTripsHandler handler, 
             [FromQuery] int? countryId = null, [FromQuery] int? continentId = null, [FromQuery] bool? isCompleted = null, [FromQuery] int pageNumber = 1)
@@ -34,6 +34,7 @@ namespace TravelApp.API.Controllers
 
         /// <summary>Retrieves the current user's trips.</summary>
         [HttpGet("mine")]
+        [ProducesResponseType(typeof(PagedResultDTO<GetTripsResponse>), StatusCodes.Status200OK)]
         public async Task<ActionResult<PagedResultDTO<GetTripsResponse>>> GetMyTrips(
             [FromServices] GetTripsHandler handler,
             [FromQuery] int? countryId = null, [FromQuery] int? continentId = null, [FromQuery] int pageNumber = 1)
@@ -89,7 +90,7 @@ namespace TravelApp.API.Controllers
         /// <summary>Creates a trip for the current user.</summary>
         // POST api/trips
         [HttpPost]
-        [ProducesResponseType(typeof(GetTripResponse), StatusCodes.Status201Created)]
+        [ProducesResponseType(typeof(CreateTripResponse), StatusCodes.Status201Created)]
         [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(UnauthorizedResult), StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status404NotFound)]

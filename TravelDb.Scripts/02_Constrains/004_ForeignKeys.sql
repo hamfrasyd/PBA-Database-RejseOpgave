@@ -86,10 +86,6 @@ ALTER TABLE dbo.Invite
 ADD CONSTRAINT FK_Invite_User_SenderId
 FOREIGN KEY (Sender_Id) REFERENCES dbo.[User](Id);
 
-ALTER TABLE dbo.Invite
-ADD CONSTRAINT FK_Invite_InvitationStatus_InvitationStatusId
-FOREIGN KEY (InvitationStatus_Id) REFERENCES dbo.InvitationStatus(Id);
-
 ALTER TABLE dbo.GroupMembership
 ADD CONSTRAINT FK_GroupMembership_User_UserId
 FOREIGN KEY (User_Id) REFERENCES dbo.[User](Id) ON DELETE CASCADE;

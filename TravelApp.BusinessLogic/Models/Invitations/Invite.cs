@@ -1,3 +1,4 @@
+
 using TravelApp.BusinessLogic.Models.Trips;
 using TravelApp.BusinessLogic.Models.Users;
 
@@ -12,7 +13,7 @@ namespace TravelApp.BusinessLogic.Models.Invitations
         private Trip? _trip;
         private TravelUser? _receiver;
         private TravelUser? _sender;
-        private InvitationStatus? _invitationStatus;
+        private bool? _isAccepted;
 
         // Properties
         /// <summary>Gets or sets the identifier.</summary>
@@ -50,16 +51,14 @@ namespace TravelApp.BusinessLogic.Models.Invitations
             set { _sender = value; }
         }
 
-        /// <summary>Gets or sets the invitation status.</summary>
-        public InvitationStatus? InvitationStatus
+        /// <summary>
+        /// Gets or sets the invitation response.
+        /// Null = Pending, true = Accepted, false = Declined.
+        /// </summary>
+        public bool? IsAccepted
         {
-            get { return _invitationStatus; }
-            set { _invitationStatus = value; }
-        }
-
-        /// <summary>Initializes a new instance of the <see cref="Invite"/> class.</summary>
-        public Invite()
-        {
+            get { return _isAccepted; }
+            set { _isAccepted = value; }
         }
     }
 }

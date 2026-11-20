@@ -71,7 +71,6 @@ namespace TravelApp.API.Controllers
         // GET api/users/{userId}/visited-countries
         [HttpGet("{userId:int}/visited-countries")]
         [ProducesResponseType(typeof(List<GetVisitedCountriesResponse>), StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(typeof(UnauthorizedResult), StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status403Forbidden)]
         [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status404NotFound)]
@@ -79,12 +78,6 @@ namespace TravelApp.API.Controllers
         public async Task<ActionResult<List<GetVisitedCountriesResponse>>> GetVisitedCountries([FromRoute] int userId, [FromServices] GetVisitedCountriesHandler getVisitedCountriesHandler)
         {
             List<GetVisitedCountriesResponse> result = await getVisitedCountriesHandler.GetVisitedCountriesAsync(userId);
-
-            if (result.Count == 0)
-            {
-                return NoContent();
-            }
-
             return Ok(result);
         }
 

@@ -46,8 +46,6 @@ namespace TravelApp.DataAccess.SQLRepositories.EntityFramework
         public DbSet<Friendship> FriendshipEntities => Set<Friendship>();
         /// <summary>Gets the achievement entities.</summary>
         public DbSet<Achievement> AchievementEntities => Set<Achievement>();
-        /// <summary>Gets the invitation status entities.</summary>
-        public DbSet<InvitationStatus> InvitationStatusEntities => Set<InvitationStatus>();
         /// <summary>Gets the invite entities.</summary>
         public DbSet<Invite> InviteEntities => Set<Invite>();
         /// <summary>Gets the travel group entities.</summary>
@@ -72,8 +70,6 @@ namespace TravelApp.DataAccess.SQLRepositories.EntityFramework
         public DbSet<DestinationStatsView> DestinationStatsViews => Set<DestinationStatsView>();
         /// <summary>Gets the trip overview views.</summary>
         public DbSet<TripOverviewView> TripOverviewViews => Set<TripOverviewView>();
-        /// <summary>Gets the pending invitation views.</summary>
-        public DbSet<PendingInvitationView> PendingInvitationViews => Set<PendingInvitationView>();
 
         /// <summary>Configures the SQL schema mappings.</summary>
         /// <param name="modelBuilder">The model builder used to configure the entities.</param>
@@ -200,30 +196,22 @@ namespace TravelApp.DataAccess.SQLRepositories.EntityFramework
                     .HasDatabaseName("UQ_Achievement_Name");
             });
 
-            modelBuilder.Entity<InvitationStatus>(entity =>
-            {
-                entity.ToTable("InvitationStatus", "dbo");
-                entity.HasKey(item => item.Id).HasName("PK_InvitationStatus");
-                entity.Property(item => item.StatusName).HasMaxLength(64);
-                entity.HasIndex(item => item.StatusName)
-                    .IsUnique()
-                    .HasDatabaseName("UQ_InvitationStatus_StatusName");
-            });
-
             modelBuilder.Entity<Invite>(entity =>
             {
                 entity.ToTable("Invite", "dbo", table =>
                 {
-                    table.HasCheckConstraint("CK_Invite_DifferentUsers", "[Sender_Id] <> [Receiver_Id]");
+                    table.HasCheckConstraint(
+                        "CK_Invite_DifferentUsers",
+                        "[Sender_Id] <> [Receiver_Id]");
                 });
                 entity.HasKey(item => item.Id).HasName("PK_Invite");
                 entity.Property<int>("TripId").HasColumnName("Trip_Id").IsRequired();
                 entity.Property<int>("ReceiverId").HasColumnName("Receiver_Id").IsRequired();
                 entity.Property<int>("SenderId").HasColumnName("Sender_Id").IsRequired();
-                entity.Property<int>("InvitationStatusId").HasColumnName("InvitationStatus_Id").IsRequired();
-                entity.HasIndex("InvitationStatusId", nameof(Invite.SendDate))
-                    .IsClustered(false)
-                    .HasDatabaseName("IX_Invite_Status_SendDate");
+                entity.Property(item => item.IsAccepted).HasColumnName("IsAccepted");
+                entity.Property(item => item.SendDate).HasColumnName("SendDate").IsRequired();
+                entity.HasIndex("TripId", "ReceiverId").IsUnique().HasFilter("[IsAccepted] IS NULL").HasDatabaseName("UX_Invite_Pending");
+                entity.HasIndex("ReceiverId", nameof(Invite.IsAccepted)).HasDatabaseName("IX_Invite_Receiver");
             });
 
             modelBuilder.Entity<TravelGroup>(entity =>
@@ -452,14 +440,6 @@ namespace TravelApp.DataAccess.SQLRepositories.EntityFramework
                 .OnDelete(DeleteBehavior.NoAction)
                 .HasConstraintName("FK_Invite_User_SenderId");
 
-            modelBuilder.Entity<Invite>()
-                .HasOne(item => item.InvitationStatus)
-                .WithMany()
-                .HasForeignKey("InvitationStatusId")
-                .IsRequired()
-                .OnDelete(DeleteBehavior.NoAction)
-                .HasConstraintName("FK_Invite_InvitationStatus_InvitationStatusId");
-
             modelBuilder.Entity<GroupMembership>()
                 .HasOne(item => item.User)
                 .WithMany(principal => principal.GroupMemberships)
@@ -509,14 +489,6 @@ namespace TravelApp.DataAccess.SQLRepositories.EntityFramework
                 entity.Property(item => item.GroupName).HasMaxLength(64);
                 entity.Property(item => item.Cities).HasColumnType("nvarchar(max)");
                 entity.Property(item => item.AvgStars).HasPrecision(3, 1);
-            });
-
-            modelBuilder.Entity<PendingInvitationView>(entity =>
-            {
-                entity.HasNoKey();
-                entity.ToView("vw_PendingInvitations", "dbo");
-                entity.Property(item => item.SenderName).HasMaxLength(257);
-                entity.Property(item => item.ReceiverName).HasMaxLength(257);
             });
 
             modelBuilder.Entity<ReviewAudit>(entity =>

@@ -31,4 +31,12 @@
   			<Link>TravelDb.Scripts\%(RecursiveDir)%(Filename)%(Extension)</Link>
 		</EmbeddedResource>
 	</ItemGroup>
+
+	<ItemGroup>
+	  <EmbeddedResource Remove="..\TravelDb.Scripts\01_Setup\015_CreateTable_InvitationStatus.sql" />
+	  <EmbeddedResource Remove="..\TravelDb.Scripts\03_StoredProcedures\003_ExpireInvitation.sql" />
+	  <EmbeddedResource Remove="..\TravelDb.Scripts\06_Views\004_vw_PendingInvitations.sql" />
+	  <EmbeddedResource Remove="..\TravelDb.Scripts\08_Events\001_ExpireInvitationsJob.sql" />
+	  <EmbeddedResource Remove="..\TravelDb.Scripts\09_InsertData\002_InsertStatus.sql" />
+	</ItemGroup>
 </Project>

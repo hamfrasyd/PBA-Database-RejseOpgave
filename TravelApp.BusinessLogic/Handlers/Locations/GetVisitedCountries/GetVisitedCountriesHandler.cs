@@ -37,7 +37,7 @@ namespace TravelApp.BusinessLogic.Handlers.Locations.GetVisitedCountries
                 throw new TravelAppNotFoundException($"User with ID {userId} was not found.");
             }
 
-            AccessRules.RequirePublicOrOwnerOrAdmin(_currentUser, userId, profileFromDb.IsPrivate);
+            AccessRules.RequireCurrentUserIsOwnerOrAdminWhenProfileIsPrivate(_currentUser, userId, profileFromDb.IsPrivate);
 
             List<VisitedCountryDTO> countriesFromDb = await unitOfWork.Users.GetVisitedCountriesAsync(userId);
 

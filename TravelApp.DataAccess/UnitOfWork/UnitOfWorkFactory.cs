@@ -16,10 +16,7 @@ namespace TravelApp.DataAccess.UnitOfWork
         /// <param name="connectionStrings">The configured database connection strings.</param>
         /// <param name="providerSelection">The selected database provider.</param>
         /// <param name="loggerFactory">The logger factory used by the created unit of work.</param>
-        public UnitOfWorkFactory(
-            DatabaseConnectionStrings connectionStrings,
-            SelectedDatabaseProvider providerSelection,
-            ILoggerFactory loggerFactory)
+        public UnitOfWorkFactory(DatabaseConnectionStrings connectionStrings, SelectedDatabaseProvider providerSelection, ILoggerFactory loggerFactory)
         {
             _connectionStrings = connectionStrings;
             _providerSelection = providerSelection;

@@ -93,7 +93,7 @@ namespace TravelApp.API.Controllers
         /// <param name="updateActivityHandler">The handler that updates the activity.</param>
         /// <returns>The updated activity.</returns>
         /// <exception cref="TravelAppNotFoundException">Thrown when the activity does not exist.</exception>
-        /// <exception cref="TravelAppValidationException">Thrown when the city does not exist.</exception>
+        /// <exception cref="TravelAppValidationException">Thrown when the city does not exist, or when the name and description are both null.</exception>
         // PUT api/activities/{activityId}
         [HttpPut("{activityId:int}")]
         [Authorize(Roles = "Admin")]

@@ -28,7 +28,7 @@ namespace TravelApp.BusinessLogic.Handlers.Achievements.GetEarnedAchievements
         /// <exception cref="TravelAppNotFoundException">Thrown when the user does not exist.</exception>
         public async Task<List<EarnedAchievementResponse>> GetEarnedAchievementsAsync(int userId)
         {
-            AccessRules.RequireOwnerOrAdmin(_currentUser, userId);
+            AccessRules.RequireCurrentUserIsOwnerOrAdmin(_currentUser, userId);
 
             await using IUnitOfWork unitOfWork = _unitOfWorkFactory.Create();
 

@@ -52,6 +52,11 @@ using TravelApp.BusinessLogic.Handlers.Users.GetAllUserProfiles;
 using TravelApp.BusinessLogic.Handlers.Users.GetUserProfile;
 using TravelApp.BusinessLogic.Handlers.Users.UpdateUser;
 
+using TravelApp.BusinessLogic.Handlers.Friendships.AddFriend;
+using TravelApp.BusinessLogic.Handlers.Friendships.GetFriendship;
+using TravelApp.BusinessLogic.Handlers.Friendships.GetFriends;
+using TravelApp.BusinessLogic.Handlers.Friendships.RemoveFriend;
+
 namespace TravelApp.BusinessLogic.DependencyInjection
 {
     /// <summary>Registers application handlers grouped by feature.</summary>
@@ -72,6 +77,7 @@ namespace TravelApp.BusinessLogic.DependencyInjection
             RegisterPosts(services);
             RegisterGroups(services);
             RegisterReviews(services);
+            RegisterFriendships(services);
 
             return services;
         }
@@ -164,6 +170,13 @@ namespace TravelApp.BusinessLogic.DependencyInjection
             services.AddScoped<CreateReviewHandler>();
             services.AddScoped<UpdateReviewHandler>();
             services.AddScoped<DeleteReviewHandler>();
+        }
+        private static void RegisterFriendships(IServiceCollection services)
+        {
+            services.AddScoped<GetFriendsHandler>();
+            services.AddScoped<GetFriendshipHandler>();
+            services.AddScoped<AddFriendHandler>();
+            services.AddScoped<RemoveFriendHandler>();
         }
     }
 }

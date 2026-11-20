@@ -16,7 +16,7 @@ namespace TravelApp.BusinessLogic.Handlers.Locations.GetCountries
         }
 
         /// <summary>Retrieves countries.</summary>
-        /// <param name="continentId">The continent identifier to filter by, or <see langword="null"/> for all continents.</param>
+        /// <param name="continentId">The continent identifier to filter by, or null for all continents.</param>
         /// <returns>The matching countries.</returns>
         public async Task<List<GetCountriesResponse>> GetCountriesAsync(int? continentId)
         {

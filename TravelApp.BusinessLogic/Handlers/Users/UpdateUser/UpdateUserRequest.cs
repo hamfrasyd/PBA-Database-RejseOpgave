@@ -6,11 +6,11 @@ namespace TravelApp.BusinessLogic.Handlers.Users.UpdateUser
     public class UpdateUserRequest
     {
         /// <summary>Gets or sets the first name.</summary>
-        [Required, StringLength(128)]
-        public string FirstName { get; set; } = string.Empty;
+        [StringLength(128)]
+        public string? FirstName { get; set; }
         /// <summary>Gets or sets the last name.</summary>
-        [Required, StringLength(128)]
-        public string LastName { get; set; } = string.Empty;
+        [StringLength(128)]
+        public string? LastName { get; set; }
         /// <summary>Gets or sets the city id.</summary>
         [Range(1, int.MaxValue)]
         public int CityId { get; set; }

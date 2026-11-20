@@ -52,7 +52,7 @@ namespace TravelApp.API.Controllers
         // GET api/activities/cities/{cityId}
         [HttpGet("cities/{cityId:int}")]
         [AllowAnonymous]
-        [ProducesResponseType(typeof(List<GetAllActivitiesByCityResponse>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(PagedResultDTO<GetAllActivitiesByCityResponse>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status500InternalServerError)]
         public async Task<ActionResult<List<GetAllActivitiesByCityResponse>>> GetActivitiesByCity([FromRoute] int cityId, [FromServices] GetAllActivitiesByCityHandler getActivitiesByCityHandler, [FromQuery] int pageNumber = 1)
         {

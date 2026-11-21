@@ -26,6 +26,16 @@ function isAuthenticationLoginRequest(httpRequest) {
 }
 
 export default {
+
+    // // ---------------------------------------------------------------------------------------------------------------
+    // // Kevin - Sikkerhedsindstillinger jeg kommer til at bruge i PFA :)
+    // agent: { disabled: true },   // Deaktiverer Scalars AI-assistent.
+    // showDeveloperTools: "never", // Skjuler udviklerværktøjer, toolbar og visse promoverende elementer i Scalar.
+    // telemetry: false,            // Deaktiverer eventuel telemetri.
+    // persistAuth: false,          // Undgår at gemme loginoplysninger i localStorage.
+    // withDefaultFonts: false,     // Undgår at hente skrifttyper fra eksterne servere. (fx. fonts.scalar.com)
+    // // ---------------------------------------------------------------------------------------------------------------
+
     // Capture and save the JWT after a successful login.
     async onResponseReceived({ request: httpRequest, response: httpResponse }) {
         const isSuccessfulLoginResponse = isAuthenticationLoginRequest(httpRequest) && httpResponse.status === 200;

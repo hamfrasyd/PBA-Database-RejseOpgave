@@ -143,7 +143,6 @@ public static class UserMapper
         // Finder invitationens rejse og status fra SQL.
         var tripId = Id(invite, "Trip_Id");
         var trip = Find(snapshot, "Trip", tripId);
-        var status = Find(snapshot, "InvitationStatus", Id(invite, "InvitationStatus_Id"));
 
         // Opretter korte oplysninger om rejsen.
         var tripDocument = new BsonDocument
@@ -157,9 +156,8 @@ public static class UserMapper
         var document = new BsonDocument
         {
             ["_id"] = Id(invite),
-            ["status"] = Value(status, "StatusName"),
+            ["isAccepted"] = Value(invite, "IsAccepted"),
             ["sendDate"] = Value(invite, "SendDate"),
-            ["invitationStatusId"] = Id(invite, "InvitationStatus_Id"),
             ["trip"] = tripDocument
         };
 

@@ -32,9 +32,11 @@ public static class Neo4jNodeMapper
             // Almindelig string i stedet for interpoleret
             // raw string, så Cypher-klammerne virker.
             string cypher =
-                "UNWIND $rows AS row " +
-                $"MERGE (n:`{label}` {{id: row.id}}) " +
-                "SET n += row.properties";
+             "UNWIND $rows AS row " +
+                $"MERGE (n:`{label}` {{id: row.id}}) " + (label == "Invite"
+                ? "REMOVE n.IsAccepted, n.InvitationStatus_Id "
+                : "") +
+             "SET n += row.properties";
 
             foreach (var batch in rows.Chunk(500))
             {

@@ -235,5 +235,26 @@ namespace TravelApp.DataAccess.SQLRepositories
 
             _context.GroupTripEntities.RemoveRange(groupTrips);
         }
+
+
+        #region Group invitations
+
+        /// <summary>Checks whether a group exists.</summary>
+        public async Task<bool> GroupExistsAsync(int groupId)
+        {
+            return await _context.TravelGroupEntities
+                .AsNoTracking().AnyAsync(group => group.Id == groupId);
+        }
+
+        /// <summary>Retrieves the user IDs of all group members.</summary>
+        public async Task<List<int>> GetMemberIdsAsync(int groupId)
+        {
+            return await _context.GroupMembershipEntities
+                .AsNoTracking()
+                .Where(member => member.Group!.Id == groupId).Select(member => member.User!.Id)
+                .ToListAsync();
+        }
+
+        #endregion
     }
 }

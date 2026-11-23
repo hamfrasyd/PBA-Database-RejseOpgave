@@ -40,9 +40,6 @@ ADD CONSTRAINT PK_Achievement PRIMARY KEY (Id);
 ALTER TABLE dbo.EarnedAchievement
 ADD CONSTRAINT PK_EarnedAchievement PRIMARY KEY (User_Id, Achievement_Id);
 
-ALTER TABLE dbo.InvitationStatus
-ADD CONSTRAINT PK_InvitationStatus PRIMARY KEY (Id);
-
 ALTER TABLE dbo.Invite
 ADD CONSTRAINT PK_Invite PRIMARY KEY (Id);
 

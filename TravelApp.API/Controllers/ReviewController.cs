@@ -18,7 +18,7 @@ namespace TravelApp.API.Controllers
     {
         /// <summary>Creates a review for a trip.</summary>
         // POST api/trips/{tripId}/reviews
-        [HttpPost("trips/{tripId:int}/reviews")]
+        [HttpPost("/api/trips/{tripId:int}/reviews")]
         [ProducesResponseType(typeof(CreateReviewResponse), StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
@@ -33,7 +33,7 @@ namespace TravelApp.API.Controllers
 
         /// <summary>Retrieves reviews for a trip.</summary>
         // GET api/trips/{tripId}/reviews
-        [HttpGet("trips/{tripId:int}/reviews")]
+        [HttpGet("/api/trips/{tripId:int}/reviews")]
         [ProducesResponseType(typeof(List<GetReviewsResponse>), StatusCodes.Status200OK)]
         public async Task<ActionResult<List<GetReviewsResponse>>> GetReviews([FromRoute] int tripId, [FromQuery] byte? stars, [FromServices] GetReviewsHandler handler)
         {
@@ -44,7 +44,7 @@ namespace TravelApp.API.Controllers
 
         /// <summary>Retrieves a review by its identifier.</summary>
         // GET api/reviews/{reviewId}
-        [HttpGet("reviews/{reviewId:int}")]
+        [HttpGet("{reviewId:int}")]
         [ProducesResponseType(typeof(GetReviewResponse), StatusCodes.Status200OK)]
         public async Task<ActionResult<GetReviewResponse>> GetReview([FromRoute] int reviewId, [FromServices] GetReviewHandler handler)
         {

@@ -3,6 +3,6 @@
     Trip_Id INT,
     Receiver_Id INT,
     Sender_Id INT,
-    InvitationStatus_Id INT,
+    IsAccepted BIT NULL,
     SendDate DATETIME2
 );
